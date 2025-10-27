@@ -7,10 +7,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;
 import mx.uam.ayd.proyecto.datos.PacienteRepository;
 import mx.uam.ayd.proyecto.datos.PsicologoRepository;
+import mx.uam.ayd.proyecto.negocio.modelo.CorreoService;
 import mx.uam.ayd.proyecto.negocio.modelo.Paciente;
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import mx.uam.ayd.proyecto.negocio.modelo.TipoEspecialidad;
@@ -31,12 +34,36 @@ import mx.uam.ayd.proyecto.negocio.modelo.TipoEspecialidad;
 public class ServicioPsicologo {
 
     private static final Logger log = LoggerFactory.getLogger(ServicioPsicologo.class);
-    
     @Autowired
     private PacienteRepository pacienteRepository;
     
     @Autowired
     private PsicologoRepository psicologoRepository;
+
+    @Autowired
+    private CorreoService correoService;
+    
+    @PostConstruct
+    public void crearAdminSiNoExiste() {
+        Psicologo admin = psicologoRepository.findByUsuario("Admin");
+        if (admin == null) {
+            admin = new Psicologo();
+            admin.setNombre("Admin");
+            admin.setCorreo("admin@admin.com");
+            admin.setTelefono("0000000000");
+            admin.setEspecialidad(TipoEspecialidad.MARITAL);
+            admin.setUsuario("Admin");
+
+            
+            String contrasena = "admin1234";
+            admin.setContrasena(contrasena);
+                    //POR SI CAMBIAMOS A TENER ENCRIPTADO
+            // admin.setContrasena(passwordEncoder.encode(contrasena)); // si usas BCrypt
+
+            psicologoRepository.save(admin);
+            System.out.println("Admin creado automáticamente con usuario 'Admin' y contraseña 'admin1234'");
+        }
+    }
 
     /**
      * Recupera todos los pacientes y los filtra, devolviendo
@@ -105,12 +132,47 @@ public class ServicioPsicologo {
         psicologo.setCorreo(correo);
         psicologo.setTelefono(telefono);
         psicologo.setEspecialidad(especialidad);
+            //Generamos credenciales
+        String usuario=generarUsuario(nombre);
+        String contrasena=generarContrasena();
+        psicologo.setUsuario(usuario);
+        psicologo.setContrasena(contrasena);
 
         psicologoRepository.save(psicologo);
-
+            //Enviamos el correo
+        correoService.enviarCredenciales(correo,usuario,contrasena);
         return psicologo;
     }
+    /*Metodo auxiliar para generar un Usuario
+     * @return una cadena con el usuario creado
+     */
+    private String generarUsuario(String a){
+        int numero=(int)(Math.random()*1000);
+        return a.toLowerCase().replaceAll("\\s", "")+numero;
+    }
+    /*Metodo para encriptar la contraseña en la base de datos
+     * 
+     */
 
+
+    /*private String encriptar(String a){
+        return new BCryptPasswordEncoder().encode(a);
+    }*/
+    
+
+    /*Metodo auxiliar para generar una contraseña segura
+     * para el psicologo
+     */
+    private String generarContrasena(){
+        // Contraseña aleatoria de 8 caracteres (puedes usar letras + números)
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < 8; i++) {
+            int idx = (int)(Math.random() * chars.length());
+            sb.append(chars.charAt(idx));
+        }
+        return sb.toString();
+    }
     /**
      * Lista todos los psicólogos registrados.
      *

@@ -1,4 +1,7 @@
 package mx.uam.ayd.proyecto.presentacion.principal;
+import mx.uam.ayd.proyecto.datos.PsicologoRepository;
+//import mx.uam.ayd.proyecto.negocio.ServicioPsicologo;
+import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import mx.uam.ayd.proyecto.presentacion.menu.ControlMenu;
 
 import jakarta.annotation.PostConstruct;
@@ -37,6 +40,8 @@ public class ControlPrincipalCentro {
     private final VentanaPrincipalCentro ventanaLogin;
     private final ControlMenu controlMenu;
     
+    @Autowired
+    private PsicologoRepository servicioPsicologo;
     /**
      * Constructor con inyección de dependencias.
      *
@@ -84,11 +89,20 @@ public class ControlPrincipalCentro {
         }
         
         // Autenticación para el centro psicológico
-        if ("Admin".equals(usuario) && "admin1234".equals(contrasena)) {
-            ventanaLogin.cerrarLogin();
-            mostrarSistemaPrincipal();
-        } else {
-            ventanaLogin.mostrarError("Usuario o contraseña incorrectos");
+        try{
+            Psicologo psicologo=servicioPsicologo.findByUsuario(usuario);
+            if(psicologo==null){
+                ventanaLogin.mostrarError("Usuario no encontrado");
+                return;
+            }
+            if(psicologo.getContrasena().equals(contrasena)){
+                ventanaLogin.cerrarLogin();
+                mostrarSistemaPrincipal();
+            }else{
+                ventanaLogin.mostrarError("Contraseña incorrecta");
+            }
+        }catch(Exception e){
+            ventanaLogin.mostrarError("Error al autenticar: "+e.getMessage());
         }
     }
     

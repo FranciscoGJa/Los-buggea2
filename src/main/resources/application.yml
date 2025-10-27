@@ -15,6 +15,13 @@ spring:
   h2:
     console:
       enabled: true
-      
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: pazzamoranomoisesalejandro@gmail.com
+    password: "zjul nrdo jbwy zifj"
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 server:
   port: 8080

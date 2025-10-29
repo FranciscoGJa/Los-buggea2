@@ -80,6 +80,7 @@ public class VentanaAgregarPaciente {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaAgregarPaciente.fxml"));
             loader.setController(this); 
             Scene scene = new Scene(loader.load());
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
             stage.setScene(scene);
             initialized = true;
         } catch (IOException e) {

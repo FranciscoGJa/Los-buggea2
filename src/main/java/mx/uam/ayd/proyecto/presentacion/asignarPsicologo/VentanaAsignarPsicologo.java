@@ -1,6 +1,5 @@
 package mx.uam.ayd.proyecto.presentacion.asignarPsicologo;
 
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,30 +15,9 @@ import javafx.scene.control.TableView;
 
 import org.springframework.stereotype.Component;
 
+import java.io.IOException; // Importar IOException
 import java.util.List;
 
-/**
- * Ventana para asignar un psicólogo a un paciente.
- *
- * <p>Responsabilidades:
- * <ul>
- *   <li>Cargar y mostrar la interfaz JavaFX para la asignación.</li>
- *   <li>Mostrar la lista de psicólogos disponibles en una tabla.</li>
- *   <li>Permitir la selección de un psicólogo y delegar la asignación al {@link ControlAsignarPsicologo}.</li>
- *   <li>Mostrar mensajes informativos al usuario.</li>
- * </ul>
- * </p>
- *
- * <p>Flujo típico:
- * <ol>
- *   <li>Invocar {@link #muestra(Paciente, List)} para abrir la ventana con la lista de psicólogos.</li>
- *   <li>Seleccionar un psicólogo y presionar el botón de asignar.</li>
- *   <li>La acción se delega al controlador, que realiza la asignación.</li>
- * </ol>
- * </p>
- *
- * @version 1.0
- */
 @Slf4j
 @Component
 public class VentanaAsignarPsicologo {
@@ -47,162 +25,245 @@ public class VentanaAsignarPsicologo {
     private boolean initialized = false;
     private ControlAsignarPsicologo controlAsignarPsicologo;
 
-    @FXML
-    private TableView<Psicologo> tableViewPsicologos;
+    // --- Componentes FXML ---
+    @FXML private TableView<Psicologo> tableViewPsicologos;
+    @FXML private TableColumn<Psicologo, Integer> tableColumnID;
+    @FXML private TableColumn<Psicologo, String> tableColumnNombre;
+    @FXML private TableColumn<Psicologo, String> tableColumnCorreo;
+    @FXML private TableColumn<Psicologo, String> tableColumnTelefono;
+    @FXML private TableColumn<Psicologo, String> tableColumnEspecialidad;
 
-    @FXML
-    private TableColumn<Psicologo, Integer> tableColumnID;
+    private Paciente pacienteActual; // Guardamos el paciente
 
-    @FXML
-    private TableColumn<Psicologo, String> tableColumnNombre;
-
-    @FXML
-    private TableColumn<Psicologo, String> tableColumnCorreo;
-
-    @FXML
-    private TableColumn<Psicologo, String> tableColumnTelefono;
-
-    @FXML
-    private TableColumn<Psicologo, String> tableColumnEspecialidad;
-
-    /**
-     * Asigna el controlador que gestionará las acciones de esta ventana.
-     * @param controlAsignarPsicologo controlador de la ventana
-     */
     public void setControlAsignarPsicologo(ControlAsignarPsicologo controlAsignarPsicologo) {
         this.controlAsignarPsicologo = controlAsignarPsicologo;
     }
 
     /**
-     * Inicializa la UI: carga el FXML, crea el Stage y configura la tabla.
-     * <p>Si no se está en el hilo de JavaFX, la acción se reprograma con {@link Platform#runLater(Runnable)}.</p>
+     * Muestra la ventana. Inicializa la UI si es necesario.
+     */
+    public void muestra(Paciente paciente, List<Psicologo> psicologos) {
+        if (!Platform.isFxApplicationThread()) {
+            Platform.runLater(() -> muestra(paciente, psicologos));
+            return;
+        }
+        this.pacienteActual = paciente;
+
+        // Asegura que la UI esté inicializada ANTES de intentar mostrar
+        initializeUI();
+
+        // Verifica que el stage y la tabla existan después de inicializar
+        if (stage == null || tableViewPsicologos == null) {
+            log.error("El Stage o TableView no se inicializaron correctamente. No se puede mostrar la ventana.");
+            muestraDialogoConMensaje("Error crítico: No se pudo preparar la ventana 'Asignar Psicólogo'. Contacte al administrador.");
+            return; // No continuar si la inicialización falló
+        }
+
+        limpiarCampos(); // Limpia la tabla
+
+        // Carga los psicólogos ANTES de ajustar tamaño y mostrar
+        if (psicologos != null) {
+            tableViewPsicologos.getItems().setAll(psicologos);
+            if (psicologos.isEmpty()) {
+                // Opcional: Mostrar mensaje si no hay psicólogos
+                // muestraDialogoConMensaje("No se encontraron psicólogos disponibles para este paciente.");
+            }
+        } else {
+            log.warn("La lista de psicólogos es nula.");
+            // Opcional: Mostrar mensaje
+            // muestraDialogoConMensaje("Error al obtener la lista de psicólogos.");
+        }
+
+        stage.sizeToScene(); // Ajusta tamaño al contenido
+        stage.show();        // Muestra la ventana
+        stage.toFront();     // La trae al frente
+    }
+
+
+    /**
+     * Inicializa la interfaz de usuario (Stage, Scene, FXML).
+     * Se llama una sola vez.
      */
     private void initializeUI() {
         if (initialized) {
-            return;
+            return; // Ya inicializado
         }
 
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(this::initializeUI);
             return;
         }
+
         try {
-            stage = new Stage();
-            stage.setTitle("Asignar Psicólogo");
+            // Crea el Stage solo si no existe
+            if (stage == null) {
+                stage = new Stage();
+                stage.setTitle("Asignar Psicólogo");
+                // Opcional: stage.initModality(Modality.APPLICATION_MODAL); si quieres que bloquee otras ventanas
+            }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaAsignarPsicologo.fxml"));
-            loader.setController(this);
-            
-            stage.setScene(new Scene(loader.load()));
-            
-            stage.setResizable(false);
+            loader.setController(this); // Asegura que esta clase sea el controlador
 
-            // Configurar las columnas de la tabla
+            // Carga el FXML y crea la Scene
+            Scene scene = new Scene(loader.load());
 
-            tableColumnID.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getId()).asObject());
-            tableColumnNombre.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getNombre()));
-            tableColumnCorreo.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getCorreo()));
-            tableColumnTelefono.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTelefono()));
-            tableColumnEspecialidad.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getEspecialidad().toString()));
+            // *** LA LÍNEA CLAVE QUE FALTABA ***
+            stage.setScene(scene); // Establece la escena cargada en el stage
 
-            initialized = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("Error al inicializar la interfaz de usuario {}", e.getMessage());
+            // Aplica el CSS (Opcional, si lo tienes)
+            try {
+                 String css = getClass().getResource("/css/style.css").toExternalForm();
+                 scene.getStylesheets().add(css);
+            } catch (NullPointerException e) {
+                 log.warn("No se encontró el archivo CSS global en /css/style.css");
+            }
+
+
+            stage.setResizable(true); // Permitir redimensionar
+
+            // Configura las CellValueFactory DESPUÉS de cargar el FXML (cuando los @FXML ya están inyectados)
+            configureTableColumns();
+
+            initialized = true; // Marca como inicializado
+
+        } catch (IOException e) {
+            log.error("Error al cargar FXML /fxml/ventanaAsignarPsicologo.fxml: {}", e.getMessage(), e);
+            // Mostrar error al usuario
+            Platform.runLater(() -> muestraDialogoConMensaje("Error al cargar la ventana de asignación: " + e.getMessage()));
+            stage = null; // Anula stage si falla
+        } catch (Exception e) { // Captura otros posibles errores
+            log.error("Error inesperado al inicializar la UI de Asignar Psicólogo: {}", e.getMessage(), e);
+            Platform.runLater(() -> muestraDialogoConMensaje("Error inesperado al preparar la ventana: " + e.getMessage()));
+            stage = null; // Anula stage si falla
         }
     }
 
     /**
-     * Limpia la tabla de psicólogos.
+     * Configura las CellValueFactory para las columnas de la tabla.
+     * Llamar DESPUÉS de que FXMLLoader haya inyectado los @FXML.
      */
+    private void configureTableColumns() {
+        // Asegúrate de que las columnas no sean null antes de configurarlas
+        if (tableColumnID != null) {
+            tableColumnID.setCellValueFactory(cellData -> {
+                Psicologo p = cellData.getValue();
+                return new javafx.beans.property.SimpleIntegerProperty(p != null ? p.getId() : 0).asObject();
+            });
+        }
+        if (tableColumnNombre != null) {
+            tableColumnNombre.setCellValueFactory(cellData -> {
+                Psicologo p = cellData.getValue();
+                return new javafx.beans.property.SimpleStringProperty(p != null ? p.getNombre() : "");
+            });
+        }
+        if (tableColumnCorreo != null) {
+            tableColumnCorreo.setCellValueFactory(cellData -> {
+                Psicologo p = cellData.getValue();
+                return new javafx.beans.property.SimpleStringProperty(p != null ? p.getCorreo() : "");
+            });
+        }
+        if (tableColumnTelefono != null) {
+            tableColumnTelefono.setCellValueFactory(cellData -> {
+                Psicologo p = cellData.getValue();
+                return new javafx.beans.property.SimpleStringProperty(p != null ? p.getTelefono() : "");
+            });
+        }
+        if (tableColumnEspecialidad != null) {
+            tableColumnEspecialidad.setCellValueFactory(cellData -> {
+                Psicologo p = cellData.getValue();
+                // Maneja el caso en que la especialidad pueda ser null
+                String especialidadStr = (p != null && p.getEspecialidad() != null) ? p.getEspecialidad().toString() : "N/A";
+                return new javafx.beans.property.SimpleStringProperty(especialidadStr);
+            });
+        }
+    }
+
+
+    /** Limpia la tabla de psicólogos. */
     private void limpiarCampos() {
-        tableViewPsicologos.getItems().clear();
-    }
-
-    private Paciente pacienteActual;
-
-    /**
-     * Muestra la ventana con la lista de psicólogos disponibles para un paciente.
-     *
-     * @param paciente paciente al que se le asignará el psicólogo
-     * @param psicologos lista de psicólogos filtrados según la edad del paciente
-     */
-    public void muestra(Paciente paciente, List<Psicologo> psicologos) {
-        if(!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> muestra(paciente, psicologos));
-            return;
+        if (tableViewPsicologos != null) {
+            tableViewPsicologos.getItems().clear();
         }
-        this.pacienteActual = paciente;
-
-        initializeUI();
-        limpiarCampos();
-        stage.show();
-        stage.toFront();
-        // Cargar los psicólogos en la tabla
-        tableViewPsicologos.getItems().setAll(psicologos);
     }
 
-    /**
-     * Cambia la visibilidad de la ventana.
-     * @param visible {@code true} para mostrar; {@code false} para ocultar
-     */
+    /** Cambia la visibilidad de la ventana. */
     public void setVisible(boolean visible) {
         if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> this.setVisible(visible));
+            Platform.runLater(() -> setVisible(visible));
             return;
         }
 
-        if (!initialized) {
-            if (visible) {
-                initializeUI();
-            } else {
-                return;
-            }
+        // Si se pide mostrar y no está inicializada, inicializarla
+        if (visible && !initialized) {
+            initializeUI();
         }
 
-        if (visible) {
-            stage.show();
-        } else {
-            stage.hide();
+        // Si la inicialización falló, stage será null
+        if (stage != null) {
+            if (visible) {
+                stage.show();
+            } else {
+                stage.hide();
+            }
+        } else if (visible) {
+            // Solo muestra error si se intentó mostrar y falló la inicialización
+             log.error("Intento de mostrar VentanaAsignarPsicologo pero el stage es nulo (falló la inicialización).");
+             muestraDialogoConMensaje("No se puede mostrar la ventana 'Asignar Psicólogo' debido a un error previo.");
         }
     }
 
-    /**
-     * Muestra un diálogo informativo con el mensaje indicado.
-     * @param mensaje texto a mostrar
-     */
+    /** Muestra un diálogo informativo. */
     public void muestraDialogoConMensaje(String mensaje) {
+        // Asegura que se ejecute en el hilo de JavaFX
         if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> this.muestraDialogoConMensaje(mensaje));
+            Platform.runLater(() -> muestraDialogoConMensaje(mensaje));
             return;
         }
 
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Información");
-        alert.setHeaderText(null);
+        alert.setHeaderText(null); // Sin cabecera
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
 
-    /**
-     * Acción del botón "Asignar".
-     * <p>Valida que se haya seleccionado un psicólogo y delega la asignación al controlador.</p>
-     */
+    /** Acción del botón "Asignar". */
     @FXML
     private void handleAsignar() {
+         // Verifica que la tabla no sea null antes de acceder a ella
+         if (tableViewPsicologos == null) {
+              log.error("handleAsignar llamado pero tableViewPsicologos es nulo.");
+              muestraDialogoConMensaje("Error interno: La tabla de psicólogos no está disponible.");
+              return;
+         }
+
         if (tableViewPsicologos.getSelectionModel().isEmpty()) {
-            muestraDialogoConMensaje("Por favor, selecciona un psicólogo.");
+            muestraDialogoConMensaje("Por favor, selecciona un psicólogo de la lista.");
             return;
         }
 
         Psicologo psicologoSeleccionado = tableViewPsicologos.getSelectionModel().getSelectedItem();
         if (psicologoSeleccionado == null) {
-            muestraDialogoConMensaje("No se ha seleccionado ningún psicólogo.");
+            // Esto no debería pasar si !isEmpty(), pero es una doble verificación
+            muestraDialogoConMensaje("No se ha seleccionado ningún psicólogo válido.");
             return;
         }
 
-        controlAsignarPsicologo.asignarPsicologo(pacienteActual, psicologoSeleccionado);
-        
-    }
+        // Verifica que pacienteActual no sea null
+        if (pacienteActual == null) {
+             log.error("handleAsignar llamado pero pacienteActual es nulo.");
+             muestraDialogoConMensaje("Error interno: No se ha especificado el paciente.");
+             return;
+        }
 
+        // Verifica que el control no sea null
+        if (controlAsignarPsicologo == null) {
+             log.error("handleAsignar llamado pero controlAsignarPsicologo es nulo.");
+             muestraDialogoConMensaje("Error interno: El controlador no está disponible.");
+             return;
+        }
+
+        controlAsignarPsicologo.asignarPsicologo(pacienteActual, psicologoSeleccionado);
+    }
 }

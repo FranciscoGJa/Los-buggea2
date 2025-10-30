@@ -105,6 +105,7 @@ public class VentanaPrincipalCentro {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaLogin.fxml"));
             loader.setController(this);
             Scene scene = new Scene(loader.load(), 640, 400);
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm()); 
             stage.setScene(scene);
             
             // Cerrar aplicación al cerrar ventana de login

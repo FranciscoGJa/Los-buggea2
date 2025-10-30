@@ -51,6 +51,10 @@ public interface PsicologoRepository extends CrudRepository<Psicologo, Integer> 
      */
     Psicologo findByCorreo(String correo);
 
+    Psicologo findByUsuario(String usuario);
+
+
+
     /**
      * Encuentra todos los psicólogos que tienen pacientes asignados.
      *

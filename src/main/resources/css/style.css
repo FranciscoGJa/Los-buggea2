@@ -1,0 +1,539 @@
+/* ====================================================================
+ * CSS GLOBAL - Centro de Atención Psicológica SIA
+ * Aplicado automáticamente a TODAS las ventanas JavaFX
+ * ==================================================================== */
+
+/* === BASE === */
+.root {
+    -fx-font-family: "Segoe UI", "System", sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: linear-gradient(to bottom right, #f0f2ff 0%, #e8ebf9 50%, #f5f0ff 100%);
+    -fx-text-fill: #2C3E50;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 20, 0, 0, 5); /* Sombra para la ventana */
+}
+
+/* === PANELES, FONDOS Y ESPACIADO === */
+.split-pane {
+    -fx-background-color: transparent;
+}
+
+.split-pane > .split-pane-divider {
+    -fx-background-color: rgba(232, 236, 235, 0.6);
+    -fx-padding: 0 1 0 1;
+}
+
+.anchor-pane,
+.border-pane,
+.pane {
+    -fx-background-color: transparent; /* Transparente para ver el degradado */
+}
+
+.vbox, .hbox {
+    -fx-background-color: transparent; /* Fondos transparentes para contenedores de layout */
+    -fx-spacing: 10; /* Espaciado global por defecto */
+}
+
+.grid-pane {
+    -fx-hgap: 12; /* Espaciado global horizontal por defecto */
+    -fx-vgap: 12; /* Espaciado global vertical por defecto */
+    -fx-padding: 20; /* Relleno global por defecto */
+    -fx-background-color: transparent; /* Fondo transparente */
+}
+
+/* === TARJETAS BLANCAS PARA CONTENIDO === */
+.content-card {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.15), 20, 0, 0, 5);
+    -fx-padding: 30;
+}
+
+.menu-panel {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
+    -fx-background-radius: 20 0 0 20;
+}
+
+/* === ETIQUETAS Y TEXTO === */
+.label {
+    -fx-text-fill: #2C3E50; /* Color de texto principal */
+    -fx-font-size: 14px;
+    -fx-font-smoothing-type: lcd; /* Considera quitarlo si causa problemas */
+}
+
+.label:disabled,
+.text:disabled {
+    -fx-opacity: 0.5;
+}
+
+/* === BOTONES === */
+.button {
+    -fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: 600;
+    -fx-font-size: 14px;
+    -fx-background-radius: 10;
+    -fx-padding: 12 20 12 20;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 8, 0, 0, 2);
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #5568d3 0%, #653a8a 100%);
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 12, 0, 0, 3);
+}
+
+.button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #4557bd 0%, #542d72 100%);
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 4, 0, 0, 1);
+}
+
+.button:disabled {
+    -fx-opacity: 0.5;
+    -fx-effect: none;
+}
+
+/* === TABLAS === */
+.table-view {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-padding: 16 12 16 12;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #667eea;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #495057;
+    -fx-font-weight: 700;
+    -fx-font-size: 13px;
+    -fx-alignment: center-left;
+    -fx-effect: none; /* Quitar sombra de etiquetas de cabecera */
+}
+
+.table-cell {
+    -fx-padding: 14 12 14 12;
+    -fx-border-color: transparent transparent #f1f3f5 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-text-fill: #495057;
+}
+
+.table-row-cell {
+    -fx-background-color: transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: rgba(250, 252, 252, 0.5);
+}
+
+.table-row-cell:selected {
+    -fx-background-color: linear-gradient(to right, rgba(102, 126, 234, 0.12) 0%, transparent 100%);
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: #667eea;
+    -fx-font-weight: 600;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: rgba(102, 126, 234, 0.05);
+}
+
+/* === CAMPOS DE ENTRADA === */
+.text-field, .text-area, .password-field {
+    -fx-background-color: rgba(248, 249, 250, 0.9);
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 12 16 12 16;
+    -fx-font-size: 14px;
+    -fx-text-fill: #495057;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 4, 0, 0, 1);
+    -fx-prompt-text-fill: #adb5bd;
+}
+
+.text-field:focused, .text-area:focused, .password-field:focused {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #667eea;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 8, 0, 0, 2);
+}
+
+.text-field:disabled, .text-area:disabled {
+    -fx-opacity: 0.6;
+    -fx-background-color: #e9ecef;
+}
+
+.text-area {
+    -fx-padding: 12;
+}
+
+.text-area .content {
+    -fx-background-color: transparent;
+}
+
+/* === COMBOBOX (SELECTS) === */
+.combo-box {
+    -fx-background-color: rgba(248, 249, 250, 0.9);
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 4, 0, 0, 1);
+}
+
+.combo-box:focused {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #667eea;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 8, 0, 0, 2);
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #495057;
+    -fx-padding: 8 12 8 12;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 12, 0, 0, 4);
+}
+
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: rgba(102, 126, 234, 0.08);
+}
+
+.combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: #667eea;
+    -fx-text-fill: white;
+}
+
+/* === LISTAS === */
+.list-view {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.06), 8, 0, 0, 2);
+}
+
+.list-cell {
+    -fx-padding: 12;
+    -fx-background-color: transparent;
+    -fx-text-fill: #495057;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #667eea;
+    -fx-text-fill: white;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: rgba(102, 126, 234, 0.08);
+    -fx-text-fill: #667eea;
+}
+
+/* === PESTAÑAS (TABS) === */
+.tab-pane {
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab-header-area {
+    -fx-padding: 0;
+}
+
+.tab-pane .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+.tab {
+    -fx-background-color: rgba(244, 247, 246, 0.8);
+    -fx-background-radius: 12 12 0 0;
+    -fx-padding: 14 24 14 24;
+}
+
+.tab:selected {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-border-color: #e9ecef #e9ecef transparent #e9ecef;
+    -fx-border-width: 2 2 0 2;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.06), 4, 0, 0, -1);
+}
+
+.tab .tab-label {
+    -fx-text-fill: #7F8C8D;
+    -fx-font-weight: 600;
+    -fx-font-size: 14px;
+    -fx-effect: none; /* Quitar sombra de etiquetas de tabs */
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: #667eea;
+    -fx-font-weight: 700;
+}
+
+.tab:hover {
+    -fx-background-color: rgba(102, 126, 234, 0.05);
+}
+
+.tab-pane .tab-content-area {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 2 2 2 2;
+    -fx-border-radius: 0 12 12 12;
+    -fx-background-radius: 0 12 12 12;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.06), 8, 0, 0, 2);
+}
+
+/* === SCROLLBARS Y SCROLLPANES === */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);
+    -fx-background-radius: 10;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: linear-gradient(to bottom, #5568d3 0%, #653a8a 100%);
+}
+
+.scroll-bar .track {
+    -fx-background-color: rgba(241, 243, 245, 0.5);
+    -fx-background-radius: 10;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* === SEPARADORES === */
+.separator .line {
+    -fx-border-color: rgba(232, 236, 235, 0.8);
+    -fx-border-width: 1;
+}
+
+/* === CHECKBOX Y RADIO BUTTONS === */
+.check-box .box,
+.radio-button .radio {
+    -fx-background-color: rgba(248, 249, 250, 0.9);
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 2;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.check-box:hover .box,
+.radio-button:hover .radio {
+    -fx-border-color: #667eea;
+}
+
+.check-box:selected .box,
+.radio-button:selected .radio {
+    -fx-background-color: #667eea;
+    -fx-border-color: #667eea;
+}
+
+.check-box:selected .mark,
+.radio-button:selected .dot {
+    -fx-background-color: white;
+}
+
+.radio-button {
+    -fx-text-fill: #495057;
+    -fx-font-size: 14px;
+}
+
+.radio-button .radio {
+    -fx-padding: 3;
+}
+
+/* === DIÁLOGOS Y ALERTAS === */
+.alert {
+    -fx-background-color: white;
+}
+
+.alert .header-panel {
+    -fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);
+    -fx-padding: 20;
+}
+
+.alert .header-panel .label {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-effect: none; /* Quitar sombra de etiquetas de alerta */
+}
+
+.alert .content {
+    -fx-padding: 20;
+    -fx-background-color: #FFFFFF;
+}
+
+.alert .button-bar {
+    -fx-padding: 20;
+    -fx-background-color: #f8f9fa;
+}
+
+/* === TOOLTIPS === */
+.tooltip {
+    -fx-background-color: #2C3E50;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12 8 12;
+    -fx-font-size: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 2);
+}
+
+/* === BARRAS DE PROGRESO === */
+.progress-bar {
+    -fx-background-color: rgba(241, 243, 245, 0.8);
+    -fx-background-radius: 10;
+}
+
+.progress-bar .bar {
+    -fx-background-color: linear-gradient(to right, #667eea 0%, #764ba2 100%);
+    -fx-background-radius: 10;
+    -fx-padding: 6; /* Ajusta el grosor de la barra */
+}
+
+.progress-indicator {
+    -fx-progress-color: #667eea;
+}
+
+/* === TITLED PANE === */
+.titled-pane > .title {
+    -fx-background-color: linear-gradient(to bottom, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+    -fx-padding: 12;
+    -fx-font-weight: 600;
+}
+
+.titled-pane > .title .label { /* Estilo para el texto dentro del TitledPane */
+    -fx-text-fill: #667eea;
+    -fx-effect: none; /* Quitar sombra de etiqueta */
+}
+
+/* ====================================================================
+ * ESTILOS ESPECÍFICOS PARA LOGIN (AÑADIDOS Y AJUSTADOS)
+ * ==================================================================== */
+
+/* Contenedor del logo en el login (panel izquierdo) */
+.login-logo-container {
+    -fx-background-color: linear-gradient(to bottom, rgba(240, 242, 255, 0.5) 0%, rgba(232, 235, 249, 0.5) 100%);
+    -fx-alignment: center;
+    -fx-padding: 40;
+}
+
+/* Formulario del login (panel derecho) */
+.login-form-container {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-padding: 40 50 40 50;
+    -fx-background-radius: 0 20 20 0;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.15), 20, 0, 0, 5);
+}
+
+/* La imagen del logo */
+.login-logo {
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 15, 0, 0, 4);
+}
+
+/* Título "Bienvenido" en el login */
+.login-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 600; /* semi-bold */
+    -fx-text-fill: #2C3E50; /* Azul oscuro */
+    -fx-effect: none; /* Quitar sombra si la heredó */
+}
+
+/* Subtítulo "Iniciar sesión" en el login */
+.login-subtitle {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495E; /* Azul/gris */
+    -fx-effect: none; /* Quitar sombra si la heredó */
+}
+
+/* Botón "Ingresar" en el login */
+.login-button {
+    /* Hereda .button, pero ajustamos padding si es necesario */
+    -fx-padding: 15 20 15 20; /* Más alto */
+}
+
+/* Botón para ver/ocultar contraseña en el login (#fx:id) */
+#btnTogglePassword {
+    -fx-background-color: transparent;
+    -fx-border-color: #e9ecef; /* Mismo borde que text-field */
+    -fx-border-width: 2;
+    -fx-border-radius: 10; /* Mismo radio que text-field */
+    -fx-background-radius: 10;
+    -fx-font-size: 14px;
+    -fx-padding: 8 10 8 10; /* Padding interno */
+    -fx-cursor: hand;
+    -fx-effect: none; /* Sin sombra */
+    -fx-text-fill: #495057; /* Color del icono/texto */
+}
+
+#btnTogglePassword:hover {
+    -fx-background-color: rgba(248, 249, 250, 0.9); /* Fondo sutil al pasar el mouse */
+    -fx-border-color: #dee2e6;
+}
+#btnTogglePassword:pressed {
+     -fx-background-color: #e9ecef; /* Más oscuro al presionar */
+}
+
+/* === REGLAS PARA ESPACIADO EN LOGIN (MÁS ESPECÍFICAS) === */
+
+/* VBox principal dentro del panel derecho del login */
+.login-form-container > .vbox { /* Selector más específico */
+    -fx-spacing: 35px; /* Espacio vertical entre título, grid y botón */
+    -fx-effect: none; /* Asegura no tener sombra heredada */
+    -fx-background-color: transparent; /* Asegura fondo transparente */
+}
+
+/* GridPane dentro del VBox del login */
+.login-form-container > .vbox > .grid-pane { /* Selector más específico */
+    -fx-vgap: 20px; /* Espacio vertical entre filas (usuario/contraseña) */
+    -fx-hgap: 15px; /* Espacio horizontal entre etiqueta y campo */
+    -fx-padding: 0; /* Sin padding interno en el grid */
+    -fx-background-color: transparent; /* Asegura fondo transparente */
+}
+
+/* HBox dentro del GridPane del login (para contraseña) */
+.login-form-container > .vbox > .grid-pane > .hbox { /* Selector más específico */
+     -fx-spacing: 8px; /* Espacio entre campo contraseña y botón de ojo */
+     -fx-background-color: transparent; /* Asegura fondo transparente */
+     -fx-effect: none; /* Asegura no tener sombra heredada */
+}
+
+/* === FIN DEL CSS === */

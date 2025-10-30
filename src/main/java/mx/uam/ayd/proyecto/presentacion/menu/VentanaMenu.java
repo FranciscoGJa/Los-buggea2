@@ -67,8 +67,15 @@ public class VentanaMenu {
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaPrincipal.fxml"));
             loader.setController(this);
-            Scene scene = new Scene(loader.load(), 640, 400);
+            
+            // Cargar el FXML sin forzar dimensiones - usa las del FXML
+            Scene scene = new Scene(loader.load());
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
             stage.setScene(scene);
+            
+            // Configurar tamaños mínimos
+            stage.setMinWidth(950);
+            stage.setMinHeight(700);
             
             initialized = true;
         } catch (IOException e) {

@@ -1,6 +1,7 @@
 package mx.uam.ayd.proyecto.presentacion.agregarPsicologo;
 
 import jakarta.annotation.PostConstruct;
+import javafx.scene.Node;
 import mx.uam.ayd.proyecto.negocio.ServicioPsicologo;
 import mx.uam.ayd.proyecto.negocio.modelo.TipoEspecialidad;
 
@@ -59,13 +60,17 @@ public class ControlAgregarPsicologo {
     public void init(){
         ventanaAgregarPsicologo.setControlAgregarPsicologo(this);
     }
+    /** Inicializa la vista */
+    public void inicia() {
+        ventanaAgregarPsicologo.cargarFXML();
+    }
 
     /**
      * Inicia la historia de usuario mostrando la ventana.
      */
-    public void inicia(){
-        ventanaAgregarPsicologo.muestra();
-    }
+     public Node getVista() {
+    return ventanaAgregarPsicologo.getVista();
+}
 
     /**
      * Agrega un nuevo psicólogo utilizando el servicio de negocio.
@@ -90,6 +95,6 @@ public class ControlAgregarPsicologo {
      * Finaliza la operación ocultando la ventana.
      */
     public void termina() {
-        ventanaAgregarPsicologo.setVisible(false);
+        ventanaAgregarPsicologo.limpiarCampos();;
     }
 }

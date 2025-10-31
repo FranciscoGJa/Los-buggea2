@@ -6,11 +6,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import java.util.List;
@@ -35,9 +34,6 @@ import java.util.List;
 @Component
 public class VentanaListarPsicologo {
 
-    private ControlListarPsicologo controlListarPsicologo;
-    private Stage stage;
-
     @FXML
     private TableView<Psicologo> tableViewPsicologos;
     @FXML
@@ -50,6 +46,10 @@ public class VentanaListarPsicologo {
     private TableColumn<Psicologo, String> tableColumnTelefono;
     @FXML
     private TableColumn<Psicologo, String> tableColumnEspecialidad;
+   @FXML
+   private Parent root; // Generico para cualquier contenedor (parent de Node)
+   private ControlListarPsicologo controlListarPsicologo;
+
 
     /**
      * Establece la referencia al controlador de la vista.
@@ -69,26 +69,28 @@ public class VentanaListarPsicologo {
      *
      * @param psicologos lista de psicólogos a mostrar en la tabla
      */
-    public void muestra(List<Psicologo> psicologos) {
-        try {
-            if (stage == null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaListarPsicologos.fxml"));
-                loader.setController(this);
-                Parent root = loader.load();
-
-                stage = new Stage();
-                stage.setTitle("Listar Psicólogos");
-                stage.setScene(new Scene(root));
-            }
-            stage.show();
-
-            ObservableList<Psicologo> datos = FXCollections.observableArrayList(psicologos);
-            tableViewPsicologos.setItems(datos);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error al cargar la ventana de listar psicólogos: " + e.getMessage());
-        }
+    public void cargarFXML() {
+    if (root != null) return; // ya cargado
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaListarPsicologos.fxml"));
+        loader.setController(this);
+        root = loader.load();
+    } catch (Exception e) {
+        e.printStackTrace();
+        System.err.println("Error al cargar la vista de listar psicólogos: " + e.getMessage());
     }
+}
+public void muestra(List<Psicologo> psicologos) {
+    cargarFXML(); // asegura que root está cargado
+
+    ObservableList<Psicologo> datos = FXCollections.observableArrayList(psicologos);
+    tableViewPsicologos.setItems(datos);
+}
+public Node getVista() {
+    return root;
+}
+
+
 
     /**
      * Inicializa las columnas de la tabla para vincularlas a las propiedades del modelo {@link Psicologo}.
@@ -109,13 +111,7 @@ public class VentanaListarPsicologo {
      * @param visible {@code true} para mostrar la ventana, {@code false} para ocultarla
      */
     public void setVisible(boolean visible) {
-        if (stage != null) {
-            if (visible) {
-                stage.show();
-            } else {
-                stage.hide();
-            }
-        }
+        
     }
 
     /**
@@ -125,8 +121,6 @@ public class VentanaListarPsicologo {
      * </p>
      */
     public void handleRegresar() {
-        if (controlListarPsicologo != null) {
-            controlListarPsicologo.termina();
-        }
+       
     }
 }

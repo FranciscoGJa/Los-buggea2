@@ -4,16 +4,19 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="400.0" prefWidth="640.0"
+      xmlns="http://javafx.com/javafx/24.0.1"
+      xmlns:fx="http://javafx.com/fxml/1">
+
     <children>
-        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+        <AnchorPane prefHeight="400.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
             <children>
-                <SplitPane dividerPositions="0.3" layoutX="0.0" layoutY="0.0" prefHeight="408.0" prefWidth="647.0">
+                <SplitPane dividerPositions="0.3" prefHeight="408.0" prefWidth="647.0">
                     <items>
                         <!-- Panel izquierdo: menú -->
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                        <AnchorPane prefHeight="160.0" prefWidth="100.0">
                             <children>
-                                <VBox alignment="TOP_LEFT" layoutX="9.0" layoutY="14.0" spacing="5.0" prefHeight="300.0" prefWidth="171.0">
+                                <VBox alignment="TOP_LEFT" spacing="5.0" layoutX="9.0" layoutY="14.0" prefHeight="300.0" prefWidth="171.0">
                                     <children>
                                         <Label text="Pacientes"/>
                                         <Button mnemonicParsing="false" onAction="#handleAgregarPaciente" text="Agregar paciente" prefWidth="150.0" prefHeight="25.0"/>
@@ -30,17 +33,16 @@
                         </AnchorPane>
 
                         <!-- Panel derecho: breadcrumbs + contenido dinámico -->
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                        <AnchorPane prefHeight="160.0" prefWidth="100.0">
                             <children>
-                                <BorderPane layoutX="5.0" layoutY="4.0" prefHeight="398.0" prefWidth="442.0">
+                                <BorderPane prefHeight="398.0" prefWidth="442.0">
                                     <!-- Top: Breadcrumbs -->
                                     <top>
-                                        <FlowPane fx:id="breadcrumbContainer" hgap="5" vgap="3" style="-fx-padding:5;" BorderPane.alignment="CENTER_LEFT"/>
+                                        <AnchorPane fx:id="breadcrumbPlaceholder" BorderPane.alignment="CENTER_LEFT"/>
                                     </top>
                                     <!-- Center: Contenido dinámico -->
                                     <center>
                                         <StackPane fx:id="contentArea">
-                                            <!-- Contenido inicial de bienvenida -->
                                             <Pane prefHeight="200.0" prefWidth="200.0">
                                                 <children>
                                                     <Label layoutX="77.0" layoutY="19.0" text="Centro de atención psicológica">

@@ -3,6 +3,8 @@ package mx.uam.ayd.proyecto.presentacion.listarpacientes;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javafx.scene.Node;
 import mx.uam.ayd.proyecto.negocio.ServicioBateriaClinica;
 import mx.uam.ayd.proyecto.negocio.ServicioPaciente;
 import mx.uam.ayd.proyecto.negocio.modelo.BateriaClinica;
@@ -35,9 +37,20 @@ public class ControlListarPacientes {
      * la pasa a la ventana para su visualización.</p>
      */
     public void inicia() {
-        List<Paciente> todosLosPacientes = servicioPaciente.recuperarTodosLosPacientes();
-        ventana.muestra(this, todosLosPacientes);
-    }
+    // Cargar el archivo FXML solo una vez
+    ventana.cargarFXML();
+
+    // Obtener los pacientes desde el servicio
+    List<Paciente> todosLosPacientes = servicioPaciente.recuperarTodosLosPacientes();
+
+    // Pasar los datos a la vista
+    ventana.muestra(this, todosLosPacientes);
+}
+public Node getVista() {
+    return ventana.getVista();
+}
+
+
 
     /**
      * Maneja la selección de un paciente en la vista.
@@ -102,9 +115,10 @@ public class ControlListarPacientes {
     }
     
     /**
-     * Cierra la ventana de listado de pacientes.
+     * Limpia los datos mostrados en la ventana al cerrar la vista.
      */
     public void cerrar() {
-        ventana.cierra();
+       ventana.limpiarDetallesDeBateria();
+       ventana.limpiarHistorialEnPestana();
     }
 }

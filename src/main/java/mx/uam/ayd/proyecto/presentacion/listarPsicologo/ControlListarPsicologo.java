@@ -1,6 +1,8 @@
 package mx.uam.ayd.proyecto.presentacion.listarPsicologo;
 
 import jakarta.annotation.PostConstruct;
+import javafx.scene.Node;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -27,6 +29,7 @@ import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
  */
 @Component
 public class ControlListarPsicologo {
+    private ControlListarPsicologo controlListarPsicologo;
 
     private final VentanaListarPsicologo ventanaListarPsicologo;
 
@@ -61,6 +64,9 @@ public class ControlListarPsicologo {
         List<Psicologo> psicologos = servicioPsicologo.listarPsicologos();
         ventanaListarPsicologo.muestra(psicologos);
     }
+    public Node getVista() {
+    return ventanaListarPsicologo.getVista();
+}
 
     /**
      * Finaliza el flujo actual ocultando la ventana de listado de psicólogos.

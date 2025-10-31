@@ -1,6 +1,12 @@
 package mx.uam.ayd.proyecto.presentacion.menu;
 
 import jakarta.annotation.PostConstruct;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.layout.StackPane;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +44,8 @@ public class ControlMenu {
     private final ControlAgregarPsicologo controlAgregarPsicologo;
     private final ControlListarPsicologo controlListarPsicologo;
     
+    @FXML
+    private StackPane contentArea;
     /**
      * Constructor que inyecta todas las dependencias necesarias para gestionar las opciones del menú.
      * 
@@ -77,34 +85,43 @@ public class ControlMenu {
     public void inicia() {
         ventana.muestra();
     }
-    
+    public void cargarVista(Node nuevaVista) {
+    System.out.println("Cargando vista: " + nuevaVista);
+    contentArea.getChildren().setAll(nuevaVista);
+}
+
     /**
      * Abre el flujo para agregar un nuevo paciente.
      */
     public void agregarPaciente() {
-        controlAgregarPaciente.inicia();
-    }
+    // Actualiza el breadcrumb
+    ventana.actualizaBreadcrumb(List.of("Inicio", "Pacientes", "Agregar Paciente"));
     
-    /**
-     * Abre la ventana para listar todos los pacientes registrados.
-     */
-    public void listarPacientes() {
-        controlListarPacientes.inicia();
-    }
+    // Inicializa el módulo (si tiene método getVista() que retorna un Node)
+    controlAgregarPaciente.inicia();
     
-    /**
-     * Abre el flujo para agregar un nuevo psicólogo.
-     */
-    public void agregarPsicologo() {
-        controlAgregarPsicologo.inicia();
-    }
-    
-    /**
-     * Abre la ventana para listar todos los psicólogos registrados.
-     */
-    public void listarPsicologo() {
-        controlListarPsicologo.inicia();
-    }
+    // Carga la vista en el StackPane del menú
+    ventana.cargarVista(controlAgregarPaciente.getVista());
+}
+
+   public void listarPacientes() {
+    ventana.actualizaBreadcrumb(List.of("Inicio", "Pacientes", "Listar Pacientes"));
+    controlListarPacientes.inicia();
+    ventana.cargarVista(controlListarPacientes.getVista());
+}
+
+public void agregarPsicologo() {
+    ventana.actualizaBreadcrumb(List.of("Inicio", "Psicólogos", "Agregar Psicólogo"));
+    controlAgregarPsicologo.inicia();
+    ventana.cargarVista(controlAgregarPsicologo.getVista());
+}
+
+public void listarPsicologo() {
+    ventana.actualizaBreadcrumb(List.of("Inicio", "Psicólogos", "Listar Psicólogos"));
+    controlListarPsicologo.inicia();
+    ventana.cargarVista(controlListarPsicologo.getVista());
+}
+
     
     /**
      * Finaliza la ejecución de la aplicación.

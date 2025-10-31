@@ -18,103 +18,115 @@
   <children>
     <AnchorPane VBox.vgrow="ALWAYS">
       <children>
-            <SplitPane dividerPositions="0.25" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-              <items>
-                <!-- PANEL IZQUIERDO: Menú de navegación -->
-                <AnchorPane minWidth="200.0" maxWidth="280.0">
-                   <children>
-                        <VBox spacing="12.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
-                           <children>
-                              <!-- Sección Pacientes -->
-                              <Label text="Pacientes" style="-fx-font-weight: bold; -fx-font-size: 14px;">
-                                 <VBox.margin>
-                                    <Insets bottom="5.0" top="5.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <Button mnemonicParsing="false" onAction="#handleAgregarPaciente" text="Agregar paciente" maxWidth="Infinity"/>
-                              <Button mnemonicParsing="false" onAction="#handleListarPacientes" text="Listar pacientes" maxWidth="Infinity"/>
+        <SplitPane dividerPositions="0.25" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <items>
+            <!-- PANEL IZQUIERDO: Menú de navegación -->
+            <AnchorPane minWidth="200.0" maxWidth="280.0">
+              <children>
+                <VBox spacing="12.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                  <children>
 
-                              <Separator prefWidth="200.0">
-                                 <VBox.margin>
-                                    <Insets bottom="10.0" top="15.0" />
-                                 </VBox.margin>
-                              </Separator>
+                    <!-- Sección Pacientes -->
+                    <Label text="Pacientes" style="-fx-font-weight: bold; -fx-font-size: 14px;">
+                      <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                      </VBox.margin>
+                    </Label>
+                    <Button mnemonicParsing="false" onAction="#handleAgregarPaciente" text="Agregar paciente" maxWidth="Infinity"/>
+                    <Button mnemonicParsing="false" onAction="#handleListarPacientes" text="Listar pacientes" maxWidth="Infinity"/>
 
-                              <!-- Sección Psicólogos -->
-                              <Label text="Psicólogos" style="-fx-font-weight: bold; -fx-font-size: 14px;">
-                                 <VBox.margin>
-                                    <Insets bottom="5.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <Button mnemonicParsing="false" onAction="#handleAgregarPsicologo" text="Agregar psicólogo" maxWidth="Infinity"/>
-                              <Button mnemonicParsing="false" onAction="#handleListarPsicologo" text="Listar psicólogos" maxWidth="Infinity"/>
+                    <!-- Botón Encuesta -->
+                    <Button mnemonicParsing="false" 
+                            onAction="#handleEncuesta" 
+                            text="Responder Encuesta 📋" 
+                            maxWidth="Infinity"
+                            style="-fx-background-color: linear-gradient(to bottom, #8a9cf8, #6c7df2);
+                                   -fx-text-fill: white; 
+                                   -fx-font-weight: bold; 
+                                   -fx-background-radius: 10;" />
 
-                              <!-- Espaciador flexible -->
-                              <Region VBox.vgrow="ALWAYS" />
+                    <Separator prefWidth="200.0">
+                      <VBox.margin>
+                        <Insets bottom="10.0" top="15.0" />
+                      </VBox.margin>
+                    </Separator>
 
-                              <Separator prefWidth="200.0">
-                                  <VBox.margin>
-                                     <Insets bottom="10.0" top="10.0" />
-                                  </VBox.margin>
-                              </Separator>
+                    <!-- Sección Psicólogos -->
+                    <Label text="Psicólogos" style="-fx-font-weight: bold; -fx-font-size: 14px;">
+                      <VBox.margin>
+                        <Insets bottom="5.0" />
+                      </VBox.margin>
+                    </Label>
+                    <Button mnemonicParsing="false" onAction="#handleAgregarPsicologo" text="Agregar psicólogo" maxWidth="Infinity"/>
+                    <Button mnemonicParsing="false" onAction="#handleListarPsicologo" text="Listar psicólogos" maxWidth="Infinity"/>
 
-                              <!-- Botón Salir -->
-                              <Button mnemonicParsing="false" onAction="#handleSalir" text="Salir" maxWidth="Infinity"/>
-                           </children>
-                        </VBox>
-                   </children>
-                </AnchorPane>
+                    <!-- Espaciador flexible -->
+                    <Region VBox.vgrow="ALWAYS" />
 
-                <!-- PANEL DERECHO: Contenido principal -->
-                <AnchorPane minWidth="400.0">
-                     <children>
-                        <BorderPane AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
-                           <!-- Título de bienvenida -->
-                           <top>
-                               <Label text="Bienvenido al Sistema" style="-fx-font-size: 28px; -fx-font-weight: bold;" BorderPane.alignment="CENTER">
-                                   <BorderPane.margin>
-                                       <Insets bottom="30.0" top="50.0" />
-                                   </BorderPane.margin>
-                               </Label>
-                           </top>
+                    <Separator prefWidth="200.0">
+                      <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                      </VBox.margin>
+                    </Separator>
 
-                           <!-- Contenido central -->
-                           <center>
-                              <VBox alignment="CENTER" spacing="25.0" BorderPane.alignment="CENTER">
-                                 <children>
-                                    <Label text="Centro de atención psicológica" style="-fx-font-size: 20px;">
-                                       <font>
-                                          <Font size="20.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="bienestar emocional" style="-fx-font-size: 20px;">
-                                       <font>
-                                          <Font size="20.0" />
-                                       </font>
-                                    </Label>
+                    <!-- Botón Salir -->
+                    <Button mnemonicParsing="false" onAction="#handleSalir" text="Salir" maxWidth="Infinity"/>
 
-                                    <Region VBox.vgrow="ALWAYS" minHeight="20.0" />
+                  </children>
+                </VBox>
+              </children>
+            </AnchorPane>
 
-                                    <!-- Contenedor de la imagen que crece - Usa StackPane para centrar -->
-                                    <StackPane VBox.vgrow="ALWAYS" minHeight="200.0" prefHeight="280.0">
-                                       <children>
-                                          <ImageView pickOnBounds="true" preserveRatio="true" styleClass="login-logo">
-                                             <image>
-                                                <Image url="@/images/logo.png" requestedWidth="250.0" requestedHeight="250.0" preserveRatio="true" />
-                                             </image>
-                                          </ImageView>
-                                       </children>
-                                    </StackPane>
+            <!-- PANEL DERECHO: Contenido principal -->
+            <AnchorPane minWidth="400.0">
+              <children>
+                <BorderPane AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
+                  <!-- Título de bienvenida -->
+                  <top>
+                    <Label text="Bienvenido al Sistema" style="-fx-font-size: 28px; -fx-font-weight: bold;" BorderPane.alignment="CENTER">
+                      <BorderPane.margin>
+                        <Insets bottom="30.0" top="50.0" />
+                      </BorderPane.margin>
+                    </Label>
+                  </top>
 
-                                    <Region minHeight="30.0" VBox.vgrow="ALWAYS" />
-                                 </children>
-                              </VBox>
-                           </center>
-                        </BorderPane>
-                     </children>
-                  </AnchorPane>
-              </items>
-            </SplitPane>
+                  <!-- Contenido central -->
+                  <center>
+                    <VBox alignment="CENTER" spacing="25.0" BorderPane.alignment="CENTER">
+                      <children>
+                        <Label text="Centro de atención psicológica" style="-fx-font-size: 20px;">
+                          <font>
+                            <Font size="20.0" />
+                          </font>
+                        </Label>
+                        <Label text="bienestar emocional" style="-fx-font-size: 20px;">
+                          <font>
+                            <Font size="20.0" />
+                          </font>
+                        </Label>
+
+                        <Region VBox.vgrow="ALWAYS" minHeight="20.0" />
+
+                        <!-- Contenedor de la imagen -->
+                        <StackPane VBox.vgrow="ALWAYS" minHeight="200.0" prefHeight="280.0">
+                          <children>
+                            <ImageView pickOnBounds="true" preserveRatio="true" styleClass="login-logo">
+                              <image>
+                                <Image url="@/images/logo.png" requestedWidth="250.0" requestedHeight="250.0" preserveRatio="true" />
+                              </image>
+                            </ImageView>
+                          </children>
+                        </StackPane>
+
+                        <Region minHeight="30.0" VBox.vgrow="ALWAYS" />
+                      </children>
+                    </VBox>
+                  </center>
+                </BorderPane>
+              </children>
+            </AnchorPane>
+          </items>
+        </SplitPane>
       </children>
     </AnchorPane>
   </children>

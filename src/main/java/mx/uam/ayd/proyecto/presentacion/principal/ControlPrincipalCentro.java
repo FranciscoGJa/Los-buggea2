@@ -1,4 +1,4 @@
-package mx.uam.ayd.proyecto.presentacion.principal;
+ package mx.uam.ayd.proyecto.presentacion.principal;
 import mx.uam.ayd.proyecto.datos.PsicologoRepository;
 //import mx.uam.ayd.proyecto.negocio.ServicioPsicologo;
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;

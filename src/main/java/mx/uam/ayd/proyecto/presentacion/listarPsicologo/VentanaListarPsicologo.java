@@ -8,10 +8,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import java.util.List;
@@ -37,7 +35,6 @@ import java.util.List;
 public class VentanaListarPsicologo {
 
     private ControlListarPsicologo controlListarPsicologo;
-    private Stage stage;
 
     @FXML
     private TableView<Psicologo> tableViewPsicologos;
@@ -72,7 +69,7 @@ public class VentanaListarPsicologo {
      *
      * @param psicologos lista de psicólogos a mostrar en la tabla
      */
-     public void cargarFXML() {
+    public void cargarFXML() {
     if (root != null) return; // ya cargado
     try {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaListarPsicologos.fxml"));
@@ -82,6 +79,7 @@ public class VentanaListarPsicologo {
         e.printStackTrace();
         System.err.println("Error al cargar la vista de listar psicólogos: " + e.getMessage());
     }
+}
 
     public void muestra(List<Psicologo> psicologos) {
     cargarFXML(); // asegura que root está cargado

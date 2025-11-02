@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Encuesta de Satisfacción</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f7f9fb;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    form {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      width: 400px;
+      margin: auto;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #5b8bf7;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #426fe6;
+    }
+    table {
+      margin-top: 20px;
+      border-collapse: collapse;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    #mensajeExito {
+      display: none;
+      text-align: center;
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-radius: 5px;
+      padding: 10px;
+      width: 60%;
+      margin: 10px auto;
+      animation: fadeInOut 3s ease forwards;
+    }
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(-10px); }
+      10% { opacity: 1; transform: translateY(0); }
+      90% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Encuesta de Satisfacción del Paciente</h2>
+
+  <div id="mensajeExito">✅ ¡Encuesta enviada con éxito!</div>
+
+  <form id="encuestaForm">
+    <label>Nombre del Paciente:</label>
+    <input type="text" id="paciente" required>
+
+    <label>Psicólogo que lo atendió:</label>
+    <input type="text" id="psicologo" required>
+
+    <label>Fecha de la Consulta:</label>
+    <input type="text" id="fecha" placeholder="Ejemplo: dd-mm-aaaa" pattern="\d{2}-\d{2}-\d{4}" required>
+
+
+    <label>Puntuación (1-5):</label>
+    <select id="puntuacion" required>
+      <option value="">Seleccione</option>
+      <option value="1">1 - Muy insatisfecho</option>
+      <option value="2">2 - Insatisfecho</option>
+      <option value="3">3 - Neutral</option>
+      <option value="4">4 - Satisfecho</option>
+      <option value="5">5 - Muy satisfecho</option>
+    </select>
+
+    <label>Comentarios (opcional):</label>
+    <textarea id="comentarios" rows="3"></textarea>
+
+    <button type="submit">Enviar Encuesta</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('encuestaForm');
+    const mensaje = document.getElementById('mensajeExito');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const encuesta = {
+        paciente: form.paciente.value,
+        psicologo: form.psicologo.value,
+        fecha: form.fecha.value,
+        puntuacion: form.puntuacion.value,
+        comentarios: form.comentarios.value
+      };
+
+      guardarEncuesta(encuesta);
+      form.reset();
+      mostrarMensaje();
+    });
+
+    function guardarEncuesta(encuesta) {
+      const encuestas = JSON.parse(localStorage.getItem('encuestas')) || [];
+      encuestas.push(encuesta);
+      localStorage.setItem('encuestas', JSON.stringify(encuestas));
+    }
+
+    function mostrarMensaje() {
+      mensaje.style.display = 'block';
+      setTimeout(() => {
+        mensaje.style.display = 'none';
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>

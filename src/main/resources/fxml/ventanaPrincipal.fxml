@@ -1,52 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
-  All rights reserved. Use is subject to license terms.
-
-  This file is available and licensed under the following license:
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
-
-  - Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-  - Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in
-    the documentation and/or other materials provided with the distribution.
-  - Neither the name of Oracle Corporation nor the names of its
-    contributors may be used to endorse or promote products derived
-    from this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--->
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<<<<<<< HEAD
 <VBox prefHeight="500.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+=======
+<VBox prefHeight="700.0" prefWidth="1100.0" minHeight="700.0" minWidth="950.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+>>>>>>> bf24e2d8a33dd8795953999786680a96ec7d61cb
   <children>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <AnchorPane VBox.vgrow="ALWAYS">
       <children>
+<<<<<<< HEAD
             <SplitPane dividerPositions="0.29797979797979796" layoutX="-2.0" layoutY="-2.0" prefHeight="408.0" prefWidth="647.0">
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -133,6 +109,117 @@
                   </AnchorPane>
               </items>
             </SplitPane>
+=======
+        <SplitPane dividerPositions="0.25" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <items>
+            <!-- PANEL IZQUIERDO: Menú de navegación -->
+            <AnchorPane minWidth="200.0" maxWidth="280.0">
+              <children>
+                <VBox spacing="12.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                  <children>
+
+                    <!-- Sección Pacientes -->
+                    <Label text="Pacientes" style="-fx-font-weight: bold; -fx-font-size: 14px;">
+                      <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                      </VBox.margin>
+                    </Label>
+                    <Button mnemonicParsing="false" onAction="#handleAgregarPaciente" text="Agregar paciente" maxWidth="Infinity"/>
+                    <Button mnemonicParsing="false" onAction="#handleListarPacientes" text="Listar pacientes" maxWidth="Infinity"/>
+
+                    <!-- Botón Encuesta -->
+                    <Button mnemonicParsing="false" 
+                            onAction="#handleEncuesta" 
+                            text="Responder Encuesta 📋" 
+                            maxWidth="Infinity"
+                            style="-fx-background-color: linear-gradient(to bottom, #8a9cf8, #6c7df2);
+                                   -fx-text-fill: white; 
+                                   -fx-font-weight: bold; 
+                                   -fx-background-radius: 10;" />
+
+                    <Separator prefWidth="200.0">
+                      <VBox.margin>
+                        <Insets bottom="10.0" top="15.0" />
+                      </VBox.margin>
+                    </Separator>
+
+                    <!-- Sección Psicólogos -->
+                    <Label text="Psicólogos" style="-fx-font-weight: bold; -fx-font-size: 14px;">
+                      <VBox.margin>
+                        <Insets bottom="5.0" />
+                      </VBox.margin>
+                    </Label>
+                    <Button mnemonicParsing="false" onAction="#handleAgregarPsicologo" text="Agregar psicólogo" maxWidth="Infinity"/>
+                    <Button mnemonicParsing="false" onAction="#handleListarPsicologo" text="Listar psicólogos" maxWidth="Infinity"/>
+
+                    <!-- Espaciador flexible -->
+                    <Region VBox.vgrow="ALWAYS" />
+
+                    <Separator prefWidth="200.0">
+                      <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                      </VBox.margin>
+                    </Separator>
+
+                    <!-- Botón Salir -->
+                    <Button mnemonicParsing="false" onAction="#handleSalir" text="Salir" maxWidth="Infinity"/>
+
+                  </children>
+                </VBox>
+              </children>
+            </AnchorPane>
+
+            <!-- PANEL DERECHO: Contenido principal -->
+            <AnchorPane minWidth="400.0">
+              <children>
+                <BorderPane AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
+                  <!-- Título de bienvenida -->
+                  <top>
+                    <Label text="Bienvenido al Sistema" style="-fx-font-size: 28px; -fx-font-weight: bold;" BorderPane.alignment="CENTER">
+                      <BorderPane.margin>
+                        <Insets bottom="30.0" top="50.0" />
+                      </BorderPane.margin>
+                    </Label>
+                  </top>
+
+                  <!-- Contenido central -->
+                  <center>
+                    <VBox alignment="CENTER" spacing="25.0" BorderPane.alignment="CENTER">
+                      <children>
+                        <Label text="Centro de atención psicológica" style="-fx-font-size: 20px;">
+                          <font>
+                            <Font size="20.0" />
+                          </font>
+                        </Label>
+                        <Label text="bienestar emocional" style="-fx-font-size: 20px;">
+                          <font>
+                            <Font size="20.0" />
+                          </font>
+                        </Label>
+
+                        <Region VBox.vgrow="ALWAYS" minHeight="20.0" />
+
+                        <!-- Contenedor de la imagen -->
+                        <StackPane VBox.vgrow="ALWAYS" minHeight="200.0" prefHeight="280.0">
+                          <children>
+                            <ImageView pickOnBounds="true" preserveRatio="true" styleClass="login-logo">
+                              <image>
+                                <Image url="@/images/logo.png" requestedWidth="250.0" requestedHeight="250.0" preserveRatio="true" />
+                              </image>
+                            </ImageView>
+                          </children>
+                        </StackPane>
+
+                        <Region minHeight="30.0" VBox.vgrow="ALWAYS" />
+                      </children>
+                    </VBox>
+                  </center>
+                </BorderPane>
+              </children>
+            </AnchorPane>
+          </items>
+        </SplitPane>
+>>>>>>> bf24e2d8a33dd8795953999786680a96ec7d61cb
       </children>
     </AnchorPane>
   </children>

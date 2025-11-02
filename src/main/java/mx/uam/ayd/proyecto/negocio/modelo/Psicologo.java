@@ -30,6 +30,12 @@ public class Psicologo {
     private String telefono;
     private TipoEspecialidad especialidad;
 
+    @Column(unique = true, nullable = false)
+    private String usuario;
+
+    @Column(nullable = false)
+    private String contrasena;
+    
     // Relación: Psicologo atiende 1 <--> 0...* Paciente
     @OneToMany(mappedBy = "psicologo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Paciente> pacientes;

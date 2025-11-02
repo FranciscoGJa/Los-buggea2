@@ -126,6 +126,7 @@ public class VentanaAgregarCEPER {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-CEPER.fxml"));
             loader.setController(this); // Solo si NO hay fx:controller en el FXML
             Scene scene = new Scene(loader.load());
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
             stage.setScene(scene);
             initialized = true;
         } catch (IOException e) {

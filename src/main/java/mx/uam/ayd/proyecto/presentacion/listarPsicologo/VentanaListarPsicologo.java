@@ -77,10 +77,12 @@ public class VentanaListarPsicologo {
                 Parent root = loader.load();
 
                 stage = new Stage();
-                stage.setTitle("Listar Psicólogos");
-                stage.setScene(new Scene(root));
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+                stage.setScene(scene);
             }
             stage.show();
+
 
             ObservableList<Psicologo> datos = FXCollections.observableArrayList(psicologos);
             tableViewPsicologos.setItems(datos);

@@ -139,6 +139,7 @@ public class VentanaListarPacientes {
             // Crea y muestra la ventana
             stage = new Stage();
             Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
             stage.setScene(scene);
             stage.setTitle("Listado de Pacientes");
             stage.show();

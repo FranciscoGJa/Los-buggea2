@@ -14,6 +14,7 @@ import mx.uam.ayd.proyecto.presentacion.CrearPerfilCitas.VentanaCrearPerfilCitas
 import mx.uam.ayd.proyecto.negocio.ServicioPerfilCitas;
 import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
 import java.util.List;
+import java.util.Collections;
 
 /*
  * Controla la transición de de datos entre la capa de negocio (ServicioPerfilCitas) y la capa de presentación Ventana perfil
@@ -110,7 +111,11 @@ public class ControladorPerfil {
             }
         } catch (Exception e) {
             System.err.println("Error al cargar perfiles: " + e.getMessage());
-            mostrarAlerta("Error", "No se pudieron cargar los perfiles: " + e.getMessage());
+            // En caso de error, mostrar tabla vacía
+            if (tablaResultados != null) {
+                tablaResultados.getItems().clear();
+            }
+            mostrarAlerta("Información", "No hay perfiles registrados o no se pudieron cargar");
         }
     }
 
@@ -124,7 +129,8 @@ public class ControladorPerfil {
         
         // Validar que al menos un campo tenga información
         if (nombre.isEmpty() && telefono.isEmpty()) {
-            mostrarAlerta("Error de validación", "Debe ingresar al menos un criterio de búsqueda (nombre o teléfono)");
+            mostrarAlerta("Información", "Mostrando todos los perfiles registrados");
+            cargarTodosLosPerfiles();
             return;
         }
         
@@ -141,11 +147,13 @@ public class ControladorPerfil {
                     "Se encontraron " + resultados.size() + " resultado(s)");
             } else {
                 mostrarAlerta("Búsqueda completada", "No se encontraron resultados para los criterios especificados");
+                cargarTodosLosPerfiles(); // Recargar todos si no hay resultados
             }
             
         } catch (Exception e) {
             mostrarAlerta("Error", "Ocurrió un error durante la búsqueda: " + e.getMessage());
             e.printStackTrace();
+            cargarTodosLosPerfiles(); // Recargar todos en caso de error
         }
     }
 
@@ -159,6 +167,8 @@ public class ControladorPerfil {
             
             if (ventanaCrearPerfil != null) {
                 ventanaCrearPerfil.muestra();
+                // Recargar la tabla cuando se cierre la ventana de creación
+                cargarTodosLosPerfiles();
             } else {
                 mostrarAlerta("Error", "No se pudo acceder a la ventana de creación de perfiles");
             }

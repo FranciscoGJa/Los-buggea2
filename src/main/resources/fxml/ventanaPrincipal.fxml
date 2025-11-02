@@ -9,41 +9,33 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="700.0" prefWidth="1100.0" minHeight="700.0" minWidth="950.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox minHeight="700.0" minWidth="950.0" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <AnchorPane VBox.vgrow="ALWAYS">
       <children>
             <SplitPane dividerPositions="0.25" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <items>
                 <!-- PANEL IZQUIERDO: Menú de navegación -->
-                <AnchorPane minWidth="200.0" maxWidth="280.0">
+                <AnchorPane maxWidth="280.0" minWidth="200.0">
                    <children>
                         <VBox spacing="12.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                            <children>
                               <!-- Sección Pacientes -->
-                              <Label text="Pacientes" style="-fx-font-weight: bold; -fx-font-size: 14px;">
+                              <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Pacientes">
                                  <VBox.margin>
                                     <Insets bottom="5.0" top="5.0" />
                                  </VBox.margin>
                               </Label>
-                              <Button mnemonicParsing="false" onAction="#handleAgregarPaciente" text="Agregar paciente" maxWidth="Infinity"/>
-                              <Button mnemonicParsing="false" onAction="#handleListarPacientes" text="Listar pacientes" maxWidth="Infinity"/>
+                              <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#handleAgregarPaciente" text="Agregar paciente" />
+                              <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#handleListarPacientes" text="Listar pacientes" />
 
                     <!-- Botón Encuesta -->
-                    <Button mnemonicParsing="false" 
-                            onAction="#handleEncuesta" 
-                            text="Responder Encuesta 📋" 
-                            maxWidth="Infinity"
-                            style="-fx-background-color: linear-gradient(to bottom, #8a9cf8, #6c7df2);
-                                   -fx-text-fill: white; 
-                                   -fx-font-weight: bold; 
-                                   -fx-background-radius: 10;" />
+                    <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#handleEncuesta" style="-fx-background-color: linear-gradient(to bottom, #8a9cf8, #6c7df2);                                    -fx-text-fill: white;                                     -fx-font-weight: bold;                                     -fx-background-radius: 10;" text="Responder Encuesta 📋" />
 
                     <Separator prefWidth="200.0">
                       <VBox.margin>
@@ -52,13 +44,27 @@
                     </Separator>
 
                               <!-- Sección Psicólogos -->
-                              <Label text="Psicólogos" style="-fx-font-weight: bold; -fx-font-size: 14px;">
+                              <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Psicólogos">
                                  <VBox.margin>
                                     <Insets bottom="5.0" />
                                  </VBox.margin>
                               </Label>
-                              <Button mnemonicParsing="false" onAction="#handleAgregarPsicologo" text="Agregar psicólogo" maxWidth="Infinity"/>
-                              <Button mnemonicParsing="false" onAction="#handleListarPsicologo" text="Listar psicólogos" maxWidth="Infinity"/>
+                              <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#handleAgregarPsicologo" text="Agregar psicólogo" />
+                              <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#handleListarPsicologo" text="Listar psicólogos" />
+                              
+                              <Separator prefWidth="200.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" top="15.0" />
+                                 </VBox.margin>
+                              </Separator>
+
+                              <!-- Sección Perfil de Citas -->
+                              <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Perfil de Citas">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#handlePerfilCitas" text="Consultar Perfiles" />
 
                     <!-- Espaciador flexible -->
                     <Region VBox.vgrow="ALWAYS" />
@@ -70,7 +76,7 @@
                     </Separator>
 
                               <!-- Botón Salir -->
-                              <Button mnemonicParsing="false" onAction="#handleSalir" text="Salir" maxWidth="Infinity"/>
+                              <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#handleSalir" text="Salir" />
                            </children>
                         </VBox>
                    </children>
@@ -82,7 +88,7 @@
                         <BorderPane AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
                            <!-- Título de bienvenida -->
                            <top>
-                               <Label text="Bienvenido al Sistema" style="-fx-font-size: 28px; -fx-font-weight: bold;" BorderPane.alignment="CENTER">
+                               <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Bienvenido al Sistema" BorderPane.alignment="CENTER">
                                    <BorderPane.margin>
                                        <Insets bottom="30.0" top="50.0" />
                                    </BorderPane.margin>
@@ -93,25 +99,25 @@
                            <center>
                               <VBox alignment="CENTER" spacing="25.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <Label text="Centro de atención psicológica" style="-fx-font-size: 20px;">
+                                    <Label style="-fx-font-size: 20px;" text="Centro de atención psicológica">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
                                     </Label>
-                                    <Label text="bienestar emocional" style="-fx-font-size: 20px;">
+                                    <Label style="-fx-font-size: 20px;" text="bienestar emocional">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
                                     </Label>
 
-                                    <Region VBox.vgrow="ALWAYS" minHeight="20.0" />
+                                    <Region minHeight="20.0" VBox.vgrow="ALWAYS" />
 
                                     <!-- Contenedor de la imagen que crece - Usa StackPane para centrar -->
-                                    <StackPane VBox.vgrow="ALWAYS" minHeight="200.0" prefHeight="280.0">
+                                    <StackPane minHeight="200.0" prefHeight="280.0" VBox.vgrow="ALWAYS">
                                        <children>
                                           <ImageView pickOnBounds="true" preserveRatio="true" styleClass="login-logo">
                                              <image>
-                                                <Image url="@/images/logo.png" requestedWidth="250.0" requestedHeight="250.0" preserveRatio="true" />
+                                                <Image preserveRatio="true" requestedHeight="250.0" requestedWidth="250.0" url="@/images/logo.png" />
                                              </image>
                                           </ImageView>
                                        </children>
@@ -126,7 +132,6 @@
             </AnchorPane>
           </items>
         </SplitPane>
->>>>>>> bf24e2d8a33dd8795953999786680a96ec7d61cb
       </children>
     </AnchorPane>
   </children>

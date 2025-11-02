@@ -22,6 +22,7 @@ import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
  *   <li>Agregar psicólogos</li>
  *   <li>Listar psicólogos</li>
  *   <li>Responder Encuesta</li>
+ *   <li>Consultar Perfiles de Citas</li>
  *   <li>Salir de la aplicación</li>
  * </ul>
  * 
@@ -72,7 +73,8 @@ public class VentanaMenu {
             
             // Cargar el FXML sin forzar dimensiones - usa las del FXML
             Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+            // Si tienes CSS, descomenta la línea siguiente
+            // scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
             stage.setScene(scene);
             
             // Configurar tamaños mínimos
@@ -135,14 +137,6 @@ public class VentanaMenu {
     }
 
     /**
-     * Acción del botón "Pagar".
-     * Llama al controlador para iniciar el flujo de pago.
-     */
-    @FXML
-    private void handlePagar(){
-        if (control != null) {
-            control.pagoServicio();
-        }
      * Acción del botón "Responder Encuesta".
      * Abre la ventana que contiene el formulario HTML.
      */
@@ -175,6 +169,10 @@ public class VentanaMenu {
         }
     }
 
+    /**
+     * Acción del botón "Consultar Perfiles".
+     * Llama al controlador para iniciar el flujo de perfiles de citas.
+     */
     @FXML
     private void handlePerfilCitas() {
         if (control != null) {
@@ -192,7 +190,4 @@ public class VentanaMenu {
             control.salir();
         }
     }
-
-    
-}
 }

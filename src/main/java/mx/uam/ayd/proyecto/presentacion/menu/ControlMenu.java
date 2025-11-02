@@ -8,25 +8,10 @@ import mx.uam.ayd.proyecto.presentacion.listarpacientes.ControlListarPacientes;
 import mx.uam.ayd.proyecto.presentacion.agregarPsicologo.ControlAgregarPsicologo;
 import mx.uam.ayd.proyecto.presentacion.listarPsicologo.ControlListarPsicologo;
 import mx.uam.ayd.proyecto.presentacion.agregarPaciente.ControlAgregarPaciente;
+import mx.uam.ayd.proyecto.presentacion.PerfilCitas.VentanaPelfil;
 
 /**
  * Controlador principal del menú de la aplicación.
- * 
- * Esta clase actúa como punto central de navegación entre las distintas funcionalidades
- * del sistema. Recibe las acciones del usuario desde {@link VentanaMenu} y redirige el flujo
- * a los controladores correspondientes.
- * 
- * Sus responsabilidades incluyen:
- * <ul>
- *   <li>Inicializar la conexión con la vista del menú.</li>
- *   <li>Delegar la apertura de cada módulo según la acción seleccionada.</li>
- *   <li>Permitir la salida de la aplicación.</li>
- * </ul>
- * 
- * Es un bean administrado por Spring y se instancia una sola vez durante el ciclo de vida
- * de la aplicación.
- * 
- * @author 
  */
 @Component
 public class ControlMenu {
@@ -37,15 +22,10 @@ public class ControlMenu {
     private final ControlAgregarPaciente controlAgregarPaciente;
     private final ControlAgregarPsicologo controlAgregarPsicologo;
     private final ControlListarPsicologo controlListarPsicologo;
+    private final VentanaPelfil ventanaPelfil;
     
     /**
-     * Constructor que inyecta todas las dependencias necesarias para gestionar las opciones del menú.
-     * 
-     * @param ventana vista principal del menú
-     * @param controlListarPacientes controlador para la funcionalidad de listar pacientes
-     * @param controlAgregarPsicologo controlador para la funcionalidad de agregar psicólogos
-     * @param controlListarPsicologo controlador para la funcionalidad de listar psicólogos
-     * @param controlAgregarPaciente controlador para la funcionalidad de agregar pacientes
+     * Constructor que inyecta todas las dependencias necesarias
      */
     @Autowired
     public ControlMenu(
@@ -53,18 +33,19 @@ public class ControlMenu {
             ControlListarPacientes controlListarPacientes,
             ControlAgregarPsicologo controlAgregarPsicologo,
             ControlListarPsicologo controlListarPsicologo,
-            ControlAgregarPaciente controlAgregarPaciente
+            ControlAgregarPaciente controlAgregarPaciente,
+            VentanaPelfil ventanaPelfil
         ) {
         this.ventana = ventana;
         this.controlListarPacientes = controlListarPacientes;
         this.controlAgregarPsicologo = controlAgregarPsicologo;
         this.controlListarPsicologo = controlListarPsicologo;
         this.controlAgregarPaciente = controlAgregarPaciente;
+        this.ventanaPelfil = ventanaPelfil;
     }
     
     /**
      * Inicializa la conexión entre este controlador y la ventana de menú.
-     * Se ejecuta automáticamente tras la construcción del bean por Spring.
      */
     @PostConstruct
     public void init() {
@@ -104,6 +85,13 @@ public class ControlMenu {
      */
     public void listarPsicologo() {
         controlListarPsicologo.inicia();
+    }
+
+    /**
+     * Abre la ventana para consultar perfiles de citas.
+     */
+    public void consultarPerfilCitas() {
+        ventanaPelfil.muestra();
     }
     
     /**

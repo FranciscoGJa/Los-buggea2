@@ -150,6 +150,13 @@ public class VentanaMenu {
             control.listarPsicologo();
         }
     }
+
+    @FXML
+    private void handlePerfilCitas() {
+        if (control != null) {
+            control.consultarPerfilCitas();
+        }
+    }
     
     /**
      * Acción del botón "Salir".

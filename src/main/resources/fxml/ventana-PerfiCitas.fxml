@@ -1,80 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="600" prefWidth="800" spacing="20" style="-fx-padding: 20; -fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" 
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefHeight="600.0" prefWidth="800.0">
    
-   <Label style="-fx-font-size: 24; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Buscar Perfil de Citas">
-      <padding>
-         <Insets bottom="10" />
-      </padding>
-   </Label>
-   
-   <GridPane hgap="15" vgap="10">
-      <columnConstraints>
-         <ColumnConstraints prefWidth="200" />
-         <ColumnConstraints prefWidth="200" />
-         <ColumnConstraints prefWidth="100" />
-      </columnConstraints>
-      
-      <Label style="-fx-font-weight: bold; -fx-text-fill: #555;" text="Nombre Completo:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-      <Label style="-fx-font-weight: bold; -fx-text-fill: #555;" text="Número de Teléfono:" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-      
-      <TextField fx:id="txtNombre" style="-fx-pref-height: 35;" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-      <TextField fx:id="txtTelefono" style="-fx-pref-height: 35;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      
-      <Button onAction="#buscarPerfiles" style="-fx-pref-height: 35; -fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;" text="Buscar" textFill="#201e1e" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
-   </GridPane>
-   
-   <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #f8f9fa; -fx-border-color: #3498db; -fx-border-width: 0 0 0 4;">
-      <Label style="-fx-text-fill: #333;" text="¿El Paciente NO cuenta con Perfil de Citas?" />
-      <Hyperlink onAction="#crearNuevoPerfil" style="-fx-text-fill: #3498db; -fx-font-weight: bold;" text="Crear Nuevo Perfil de Citas" />
-   </VBox>
-   
-   <Label style="-fx-font-size: 20; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Resultados:" />
-   
-   <TableView fx:id="tablaResultados" prefHeight="300" style="-fx-border-color: #ddd;">
-      <columns>
-         <TableColumn prefWidth="50" text="ID">
-            <cellValueFactory>
-               <PropertyValueFactory property="id" />
-            </cellValueFactory>
-         </TableColumn>
-         <TableColumn prefWidth="250" text="Nombre Completo">
-            <cellValueFactory>
-               <PropertyValueFactory property="nombreCompleto" />
-            </cellValueFactory>
-         </TableColumn>
-         <TableColumn prefWidth="150" text="Número de Teléfono">
-            <cellValueFactory>
-               <PropertyValueFactory property="telefono" />
-            </cellValueFactory>
-         </TableColumn>
-         <TableColumn prefWidth="100" text="Perfil de Citas">
-            <cellValueFactory>
-               <PropertyValueFactory property="perfilCitas" />
-            </cellValueFactory>
-         </TableColumn>
-         <TableColumn prefWidth="100" text="Actualizar">
-            <cellValueFactory>
-               <PropertyValueFactory property="actualizar" />
-            </cellValueFactory>
-         </TableColumn>
-      </columns>
-   </TableView>
-   
-</VBox>
+   <center>
+      <VBox spacing="20.0" style="-fx-padding: 20;">
+         <Label text="Búsqueda de Perfiles de Citas" style="-fx-font-size: 24; -fx-font-weight: bold;" />
+         
+         <VBox spacing="10.0">
+            <Label text="Criterios de Búsqueda:" style="-fx-font-size: 16; -fx-font-weight: bold;" />
+            
+            <HBox spacing="15.0">
+               <VBox spacing="5.0">
+                  <Label text="Nombre:" />
+                  <TextField fx:id="txtNombre" prefWidth="250.0" />
+               </VBox>
+               
+               <VBox spacing="5.0">
+                  <Label text="Teléfono:" />
+                  <TextField fx:id="txtTelefono" prefWidth="200.0" />
+               </VBox>
+            </HBox>
+            
+            <HBox spacing="10.0">
+               <Button text="Buscar" onAction="#buscarPerfiles" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" />
+               <Button text="Limpiar" onAction="#limpiarCampos" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" />
+               <Button text="Nuevo Perfil" onAction="#crearNuevoPerfil" style="-fx-background-color: #3498db; -fx-text-fill: white;" />
+            </HBox>
+         </VBox>
+         
+         <VBox spacing="10.0">
+            <Label text="Resultados:" style="-fx-font-size: 16; -fx-font-weight: bold;" />
+            
+            <TableView fx:id="tablaResultados" prefHeight="300.0">
+               <columns>
+                  <TableColumn fx:id="colNombre" prefWidth="150.0" text="Nombre">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="nombreCompleto" />
+                     </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="colEdad" prefWidth="80.0" text="Edad">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="edad" />
+                     </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="colSexo" prefWidth="100.0" text="Sexo">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="sexo" />
+                     </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="colDireccion" prefWidth="200.0" text="Dirección">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="direccion" />
+                     </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="colOcupacion" prefWidth="150.0" text="Ocupación">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="ocupacion" />
+                     </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="colTelefono" prefWidth="120.0" text="Teléfono">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="telefono" />
+                     </cellValueFactory>
+                  </TableColumn>
+               </columns>
+            </TableView>
+         </VBox>
+      </VBox>
+   </center>
+</BorderPane>

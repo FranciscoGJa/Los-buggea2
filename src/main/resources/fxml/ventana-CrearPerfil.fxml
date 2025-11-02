@@ -3,85 +3,120 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
 
-<VBox prefHeight="637.0" prefWidth="769.0" spacing="25" style="-fx-padding: 30; -fx-background-color: #f8f9fa;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
-
-   <!-- Definición de objetos no visuales -->
-   <fx:define>
-      <ToggleGroup fx:id="grupoSexo" />
-   </fx:define>
-
-   <!-- Encabezado -->
-   <VBox spacing="10">
-      <Label style="-fx-font-size: 28; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Crear Perfil de Citas" />
-      <Label prefHeight="18.0" prefWidth="426.0" style="-fx-text-fill: #3498db; -fx-font-size: 12;" text="https://atencionpsicologicabienestaremocional.com" />
-   </VBox>
-
-   <!-- Línea separadora -->
-   <Separator style="-fx-background-color: #bdc3c7;" />
-
-   <!-- Sección Nuevo Perfil de Citas -->
-   <VBox spacing="20">
-      <Label style="-fx-font-size: 20; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Nuevo Perfil de Citas" />
-
-      <!-- Formulario -->
-      <GridPane hgap="20" prefHeight="205.0" prefWidth="740.0" vgap="15">
-         <columnConstraints>
-            <ColumnConstraints maxWidth="308.0" minWidth="106.40003204345703" prefWidth="121.59994354248047" />
-            <ColumnConstraints maxWidth="346.399967956543" minWidth="143.2" prefWidth="333.6000564575196" />
-         </columnConstraints>
-
-         <!-- Nombre Completo -->
-         <Label prefHeight="18.0" prefWidth="153.0" style="-fx-font-weight: bold; -fx-text-fill: #555;" text="Nombre Completo*:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-         <TextField fx:id="txtNombreCompleto" prefHeight="30.0" prefWidth="432.0" style="-fx-pref-height: 35; -fx-font-size: 14;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-
-         <!-- Edad -->
-         <Label style="-fx-font-weight: bold; -fx-text-fill: #555;" text="Edad*:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-         <TextField fx:id="txtEdad" style="-fx-pref-height: 35; -fx-font-size: 14;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
-         <!-- Sexo -->
-         <Label style="-fx-font-weight: bold; -fx-text-fill: #555;" text="Sexo*:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-         <HBox alignment="CENTER_LEFT" minHeight="-Infinity" prefHeight="26.0" prefWidth="304.0" spacing="20" GridPane.columnIndex="1" GridPane.rowIndex="2">
-            <RadioButton prefHeight="18.0" prefWidth="107.0" style="-fx-text-fill: #555;" text="Hombre" toggleGroup="${grupoSexo}" />
-            <RadioButton prefHeight="18.0" prefWidth="104.0" style="-fx-text-fill: #555;" text="Mujer" toggleGroup="${grupoSexo}" />
-            <HBox alignment="CENTER_LEFT" prefHeight="26.0" prefWidth="179.0" spacing="5">
-               <RadioButton prefHeight="18.0" prefWidth="70.0" style="-fx-text-fill: #555;" text="Otro:" toggleGroup="${grupoSexo}" />
-               <TextField fx:id="txtOtroSexo" disable="true" prefHeight="26.0" prefWidth="51.0" style="-fx-pref-height: 25; -fx-font-size: 12;" />
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" 
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefHeight="700.0" prefWidth="800.0"
+            style="-fx-background-color: #f8f9fa;">
+   
+   <center>
+      <VBox spacing="25.0" style="-fx-padding: 30;">
+         <Label text="Crear Nuevo Perfil de Citas" 
+                style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+         
+         <VBox spacing="20.0" style="-fx-background-color: white; -fx-padding: 25; -fx-border-color: #ddd; -fx-border-radius: 5;">
+            <Label text="Información Personal" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #34495e;" />
+            
+            <!-- Campo Nombre Completo -->
+            <VBox spacing="5.0">
+               <Label text="Nombre Completo *" style="-fx-font-weight: bold;" />
+               <TextField fx:id="txtNombreCompleto" prefWidth="400.0" 
+                         promptText="Ingrese el nombre completo"
+                         style="-fx-font-size: 14; -fx-padding: 8;" />
+            </VBox>
+            
+            <HBox spacing="30.0">
+               <!-- Campo Edad -->
+               <VBox spacing="5.0">
+                  <Label text="Edad *" style="-fx-font-weight: bold;" />
+                  <TextField fx:id="txtEdad" prefWidth="120.0" 
+                            promptText="Ej: 25"
+                            style="-fx-font-size: 14; -fx-padding: 8;" />
+               </VBox>
+               
+               <!-- Campo Sexo CORREGIDO -->
+               <VBox spacing="5.0">
+                  <Label text="Sexo *" style="-fx-font-weight: bold;" />
+                  <VBox spacing="8.0">
+                     <!-- ELIMINAR: <ToggleGroup fx:id="grupoSexo" /> -->
+                     <HBox spacing="15.0">
+                        <RadioButton fx:id="radioHombre" text="Hombre" />
+                        <RadioButton fx:id="radioMujer" text="Mujer" />
+                        <RadioButton fx:id="radioOtro" text="Otro" />
+                     </HBox>
+                     <TextField fx:id="txtOtroSexo" prefWidth="200.0" 
+                               promptText="Especifique el sexo"
+                               style="-fx-font-size: 14; -fx-padding: 8;"
+                               disable="true" />
+                  </VBox>
+               </VBox>
             </HBox>
-         </HBox>
-
-         <!-- Dirección -->
-         <Label style="-fx-font-weight: bold; -fx-text-fill: #555;" text="Dirección*:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-         <TextField fx:id="txtDireccion" minWidth="-Infinity" prefHeight="30.0" prefWidth="321.0" style="-fx-pref-height: 35; -fx-font-size: 14;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-         <!-- Ocupación -->
-         <Label style="-fx-font-weight: bold; -fx-text-fill: #555;" text="Ocupación*:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-         <TextField fx:id="txtOcupacion" style="-fx-pref-height: 35; -fx-font-size: 14;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-         <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-         </rowConstraints>
-      </GridPane>
-   </VBox>
-
-   <!-- Nota y Botones -->
-   <VBox spacing="20" style="-fx-padding: 20 0 0 0;">
-      <Label style="-fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-font-style: italic;" text="* Datos Obligatorios" />
-
-      <HBox alignment="CENTER" spacing="20">
-         <Button style="-fx-pref-width: 120; -fx-pref-height: 40; -fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;" text="Guardar" />
-         <Button style="-fx-pref-width: 120; -fx-pref-height: 40; -fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;" text="Cancelar" />
-      </HBox>
-   </VBox>
-
-</VBox>
+            
+            <!-- Campo Dirección -->
+            <VBox spacing="5.0">
+               <Label text="Dirección *" style="-fx-font-weight: bold;" />
+               <TextField fx:id="txtDireccion" prefWidth="400.0" 
+                         promptText="Ingrese la dirección completa"
+                         style="-fx-font-size: 14; -fx-padding: 8;" />
+            </VBox>
+            
+            <!-- Campo Ocupación -->
+            <VBox spacing="5.0">
+               <Label text="Ocupación *" style="-fx-font-weight: bold;" />
+               <TextField fx:id="txtOcupacion" prefWidth="400.0" 
+                         promptText="Ej: Estudiante, Empleado, Profesionista, etc."
+                         style="-fx-font-size: 14; -fx-padding: 8;" />
+            </VBox>
+            
+            <!-- Campos Opcionales -->
+            <VBox spacing="15.0">
+               <Label text="Información de Contacto (Opcional)" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #34495e;" />
+               
+               <HBox spacing="30.0">
+                  <VBox spacing="5.0">
+                     <Label text="Teléfono" />
+                     <TextField fx:id="txtTelefono" prefWidth="200.0" 
+                               promptText="Ej: 555-123-4567"
+                               style="-fx-font-size: 14; -fx-padding: 8;" />
+                  </VBox>
+                  
+                  <VBox spacing="5.0">
+                     <Label text="Email" />
+                     <TextField fx:id="txtEmail" prefWidth="250.0" 
+                               promptText="Ej: usuario@ejemplo.com"
+                               style="-fx-font-size: 14; -fx-padding: 8;" />
+                  </VBox>
+               </HBox>
+            </VBox>
+            
+            <!-- Botones de Acción -->
+            <HBox spacing="20.0" style="-fx-padding: 20 0 0 0;">
+               <Button text="Guardar Perfil" 
+                      onAction="#guardarPerfil" 
+                      style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 20;"
+                      prefWidth="150" />
+               
+               <Button text="Cancelar" 
+                      onAction="#cancelar" 
+                      style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 10 20;"
+                      prefWidth="150" />
+               
+               <Button text="Limpiar Formulario" 
+                      onAction="#limpiarFormulario" 
+                      style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 10 20;"
+                      prefWidth="150" />
+            </HBox>
+            
+            <!-- Nota sobre campos obligatorios -->
+            <Label text="* Campos obligatorios" 
+                   style="-fx-font-size: 12; -fx-text-fill: #7f8c8d; -fx-padding: 10 0 0 0;" />
+         </VBox>
+      </VBox>
+   </center>
+</BorderPane>

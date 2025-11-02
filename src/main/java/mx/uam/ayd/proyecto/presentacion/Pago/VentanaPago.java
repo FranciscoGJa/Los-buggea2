@@ -13,6 +13,8 @@ import java.util.function.UnaryOperator;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
+import mx.uam.ayd.proyecto.presentacion.menu.ControlMenu;
+
 import java.util.function.UnaryOperator;
 import javafx.scene.control.TextFormatter.Change;
 import javafx.util.StringConverter;
@@ -52,6 +54,10 @@ public class VentanaPago {
     private final int ANIOS_ADELANTE = 10;
 
     @FXML
+    /**
+     * Inicializa la interfaz de usuario cargando el archivo FXML.
+     * Este método se asegura de ejecutarse en el hilo de JavaFX.
+     */
     private void initialize() {
         // --- Configurar ComboBox de fecha ---
         configurarComboBoxesFecha();
@@ -144,7 +150,7 @@ public class VentanaPago {
                cbAno.getSelectionModel().getSelectedItem() != null;
     }
 
-    /** Método de ayuda: obtener la cadena MM/YY sin mostrarla */
+    //Método de ayuda: obtener la cadena MM/YY
     public String obtenerMMYY() {
         if (!haySeleccion()) return null;
         String mm = cbMes.getSelectionModel().getSelectedItem();
@@ -237,6 +243,10 @@ public class VentanaPago {
     });
     }
 
+    /**
+     * Inicializa la interfaz de usuario cargando el archivo FXML.
+     * Este método se asegura de ejecutarse en el hilo de JavaFX.
+     */
     private void initializeUI() {
         if (initialized) return;
 
@@ -275,7 +285,7 @@ public class VentanaPago {
         e.printStackTrace();
     }
 }
-
+    //boton para enviara a pagar
     @FXML
     private void handlePagado(){
         if (control != null) {
@@ -283,10 +293,18 @@ public class VentanaPago {
         }
     }
 
+    /**
+     * Establece la referencia al controlador de esta ventana.
+     * 
+     * @param control instancia de {@link ControlMenu}
+     */
     public void setControlPago(ControlPagar control) {
         this.control = control;
     }
-
+    /**
+     * Muestra la ventana del menú principal.
+     * Se asegura de ejecutarse en el hilo de aplicación JavaFX.
+     */
     public void mostrar() {
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(this::mostrar);

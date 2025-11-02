@@ -62,6 +62,7 @@
                         <Button fx:id="btnToggleCVV" text="👁" prefWidth="30" onAction="#toggleCVVVisibility" />
                     </HBox>
                 </VBox>
+                
             </VBox>
         </content>
     </ScrollPane>

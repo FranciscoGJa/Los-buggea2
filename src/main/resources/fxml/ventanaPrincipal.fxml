@@ -43,7 +43,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="500.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
@@ -66,6 +66,11 @@
                               <Button mnemonicParsing="false" onAction="#handleListarPacientes" prefHeight="25.0" prefWidth="150.0" text="Listar pacientes">
                                  <VBox.margin>
                                     <Insets bottom="5.0" left="10.0" right="5.0" top="10.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#handlePagar" prefHeight="25.0" prefWidth="150.0" text="Pagar">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                                  </VBox.margin>
                               </Button>
                               <Separator prefWidth="200.0">

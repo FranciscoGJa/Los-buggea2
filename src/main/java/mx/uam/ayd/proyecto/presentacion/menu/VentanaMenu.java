@@ -121,6 +121,17 @@ public class VentanaMenu {
             control.listarPacientes();
         }
     }
+
+    /**
+     * Acción del botón "Pagar".
+     * Llama al controlador para iniciar el flujo de pago.
+     */
+    @FXML
+    private void handlePagar(){
+        if (control != null) {
+            control.pagoServicio();
+        }
+    }
     
     /**
      * Acción del botón "Agregar Psicólogo".
@@ -154,4 +165,6 @@ public class VentanaMenu {
             control.salir();
         }
     }
+
+    
 }

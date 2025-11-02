@@ -27,6 +27,7 @@ import mx.uam.ayd.proyecto.negocio.modelo.BateriaClinica;
 import mx.uam.ayd.proyecto.negocio.modelo.HistorialClinico;
 import mx.uam.ayd.proyecto.negocio.modelo.Paciente;
 
+
 /**
  * Ventana de interfaz gráfica para listar pacientes y gestionar la visualización de sus datos clínicos.
  * 
@@ -82,10 +83,13 @@ public class VentanaListarPacientes {
      * @param control El controlador que gestionará la lógica de esta vista.
      * @param pacientes La lista inicial de pacientes a mostrar en la tabla.
      */
-    public void muestra(ControlListarPacientes control, List<Paciente> pacientes) {
-        this.control = control;
-        
+    /*public void muestra(ControlListarPacientes control, List<Paciente> pacientes) {
+        this.control = controlPagar;
+    } */   
         // Asegura que el código de la UI se ejecute en el hilo de aplicación de JavaFX
+
+        public void muestra(ControlListarPacientes control, List<Paciente> pacientes) {
+        this.control = control;
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(() -> muestra(control, pacientes));
             return;
@@ -114,13 +118,13 @@ public class VentanaListarPacientes {
                     btnAbrirDetalles.setDisable(!isSelected);
                     btnGuardarComentarios.setDisable(!isSelected); 
                     
-                    if (isSelected && bateriasDelPaciente != null) {
+                    /*if (isSelected && bateriasDelPaciente != null) {
                         // Busca la batería completa y notifica al controlador
                         bateriasDelPaciente.stream()
                             .filter(b -> b.getTipoDeBateria().toString().equals(newValue))
                             .findFirst()
-                            .ifPresent(b -> control.seleccionarBateria(b));
-                    }
+                            .ifPresent(b -> controlPagar.seleccionarBateria(b));
+                    }*/
                 }
             );
             
@@ -271,4 +275,5 @@ public class VentanaListarPacientes {
             control.abrirDetallesBateria(bateriaSeleccionada); 
         } 
     }
+
 }

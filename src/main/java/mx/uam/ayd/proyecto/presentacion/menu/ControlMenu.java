@@ -8,6 +8,7 @@ import mx.uam.ayd.proyecto.presentacion.listarpacientes.ControlListarPacientes;
 import mx.uam.ayd.proyecto.presentacion.agregarPsicologo.ControlAgregarPsicologo;
 import mx.uam.ayd.proyecto.presentacion.listarPsicologo.ControlListarPsicologo;
 import mx.uam.ayd.proyecto.presentacion.agregarPaciente.ControlAgregarPaciente;
+import mx.uam.ayd.proyecto.presentacion.Pago.ControlPagar;
 
 /**
  * Controlador principal del menú de la aplicación.
@@ -37,6 +38,7 @@ public class ControlMenu {
     private final ControlAgregarPaciente controlAgregarPaciente;
     private final ControlAgregarPsicologo controlAgregarPsicologo;
     private final ControlListarPsicologo controlListarPsicologo;
+    private final ControlPagar controlPagar;
     
     /**
      * Constructor que inyecta todas las dependencias necesarias para gestionar las opciones del menú.
@@ -46,6 +48,7 @@ public class ControlMenu {
      * @param controlAgregarPsicologo controlador para la funcionalidad de agregar psicólogos
      * @param controlListarPsicologo controlador para la funcionalidad de listar psicólogos
      * @param controlAgregarPaciente controlador para la funcionalidad de agregar pacientes
+     * @param controlPagar controlador para la funcionalidad de pago de servicios
      */
     @Autowired
     public ControlMenu(
@@ -53,13 +56,16 @@ public class ControlMenu {
             ControlListarPacientes controlListarPacientes,
             ControlAgregarPsicologo controlAgregarPsicologo,
             ControlListarPsicologo controlListarPsicologo,
-            ControlAgregarPaciente controlAgregarPaciente
-        ) {
+            ControlAgregarPaciente controlAgregarPaciente,
+            ControlPagar controlPagar
+            ) 
+            {
         this.ventana = ventana;
         this.controlListarPacientes = controlListarPacientes;
         this.controlAgregarPsicologo = controlAgregarPsicologo;
         this.controlListarPsicologo = controlListarPsicologo;
         this.controlAgregarPaciente = controlAgregarPaciente;
+        this.controlPagar = controlPagar;
     }
     
     /**
@@ -91,7 +97,14 @@ public class ControlMenu {
     public void listarPacientes() {
         controlListarPacientes.inicia();
     }
-    
+    /**
+     * Abre el flujo para el pago de servicios.
+     */
+    public void pagoServicio() {
+        // Aquí se podría agregar la lógica para iniciar el proceso de pago
+        controlPagar.inicia();
+    }
+
     /**
      * Abre el flujo para agregar un nuevo psicólogo.
      */

@@ -11,10 +11,10 @@
     
     <Button text="Agregar usuario" onAction="#handleAgregarUsuario" 
             style="-fx-min-width: 200px; -fx-min-height: 30px;"/>
-    
     <Button text="Listar usuarios" onAction="#handleListarUsuarios" 
             style="-fx-min-width: 200px; -fx-min-height: 30px;"/>
-    
+            <Button text="Pagar" onAction="#handlePagar" 
+            style="-fx-min-width: 200px; -fx-min-height: 30px;"/>
     <Button text="Listar grupos" onAction="#handleListarGrupos" 
             style="-fx-min-width: 200px; -fx-min-height: 30px;"/>
     <Button text="Listar Pacientes" onAction="#handleListarPacientes"

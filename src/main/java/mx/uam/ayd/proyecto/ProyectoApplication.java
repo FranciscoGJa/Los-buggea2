@@ -88,6 +88,5 @@ public class ProyectoApplication {
             // Se comenta el del profe
             // controlPrincipal.inicia();
         });
-
     }
 }

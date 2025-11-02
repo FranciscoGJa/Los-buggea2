@@ -135,7 +135,6 @@ public class VentanaMenu {
     }
 
     /**
-<<<<<<< HEAD
      * Acción del botón "Pagar".
      * Llama al controlador para iniciar el flujo de pago.
      */
@@ -144,7 +143,6 @@ public class VentanaMenu {
         if (control != null) {
             control.pagoServicio();
         }
-=======
      * Acción del botón "Responder Encuesta".
      * Abre la ventana que contiene el formulario HTML.
      */
@@ -153,7 +151,6 @@ public class VentanaMenu {
         // Abre la ventana creada para mostrar la encuesta HTML
         VentanaEncuesta ventana = new VentanaEncuesta();
         ventana.mostrarEncuesta();
->>>>>>> bf24e2d8a33dd8795953999786680a96ec7d61cb
     }
     
     /**
@@ -195,10 +192,7 @@ public class VentanaMenu {
             control.salir();
         }
     }
-<<<<<<< HEAD
 
     
 }
-=======
 }
->>>>>>> bf24e2d8a33dd8795953999786680a96ec7d61cb

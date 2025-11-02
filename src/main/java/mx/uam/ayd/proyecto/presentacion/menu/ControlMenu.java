@@ -8,6 +8,7 @@ import mx.uam.ayd.proyecto.presentacion.listarpacientes.ControlListarPacientes;
 import mx.uam.ayd.proyecto.presentacion.agregarPsicologo.ControlAgregarPsicologo;
 import mx.uam.ayd.proyecto.presentacion.listarPsicologo.ControlListarPsicologo;
 import mx.uam.ayd.proyecto.presentacion.agregarPaciente.ControlAgregarPaciente;
+import mx.uam.ayd.proyecto.presentacion.Pago.ControlPagar;
 import mx.uam.ayd.proyecto.presentacion.PerfilCitas.VentanaPelfil;
 
 /**
@@ -22,10 +23,12 @@ public class ControlMenu {
     private final ControlAgregarPaciente controlAgregarPaciente;
     private final ControlAgregarPsicologo controlAgregarPsicologo;
     private final ControlListarPsicologo controlListarPsicologo;
+    private final ControlPagar controlPagar;
     private final VentanaPelfil ventanaPelfil;
     
     /**
      * Constructor que inyecta todas las dependencias necesarias
+     * @param controlPagar controlador para la funcionalidad de pago de servicios
      */
     @Autowired
     public ControlMenu(
@@ -34,13 +37,16 @@ public class ControlMenu {
             ControlAgregarPsicologo controlAgregarPsicologo,
             ControlListarPsicologo controlListarPsicologo,
             ControlAgregarPaciente controlAgregarPaciente,
-            VentanaPelfil ventanaPelfil
-        ) {
+            VentanaPelfil ventanaPelfil,
+            ControlPagar controlPagar
+            ) 
+            {
         this.ventana = ventana;
         this.controlListarPacientes = controlListarPacientes;
         this.controlAgregarPsicologo = controlAgregarPsicologo;
         this.controlListarPsicologo = controlListarPsicologo;
         this.controlAgregarPaciente = controlAgregarPaciente;
+        this.controlPagar = controlPagar;
         this.ventanaPelfil = ventanaPelfil;
     }
     
@@ -72,7 +78,14 @@ public class ControlMenu {
     public void listarPacientes() {
         controlListarPacientes.inicia();
     }
-    
+    /**
+     * Abre el flujo para el pago de servicios.
+     */
+    public void pagoServicio() {
+        // Aquí se podría agregar la lógica para iniciar el proceso de pago
+        controlPagar.inicia();
+    }
+
     /**
      * Abre el flujo para agregar un nuevo psicólogo.
      */

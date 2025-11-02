@@ -8,6 +8,9 @@ import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 
+// 💜 Import necesario para abrir la ventana de encuesta
+import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
+
 /**
  * Ventana principal de menú de la aplicación.
  * 
@@ -18,6 +21,7 @@ import java.io.IOException;
  *   <li>Listar pacientes</li>
  *   <li>Agregar psicólogos</li>
  *   <li>Listar psicólogos</li>
+ *   <li>Responder Encuesta</li>
  *   <li>Salir de la aplicación</li>
  * </ul>
  * 
@@ -30,8 +34,6 @@ import java.io.IOException;
  * 
  * Es un bean administrado por Spring y se instancia una sola vez durante la ejecución
  * de la aplicación.
- * 
- * @author 
  */
 @Component
 public class VentanaMenu {
@@ -44,7 +46,7 @@ public class VentanaMenu {
      * Constructor vacío requerido por Spring y JavaFX.
      */
     public VentanaMenu() {
-        // Constructor vacio
+        // Constructor vacío
     }
     
     /**
@@ -106,11 +108,14 @@ public class VentanaMenu {
         stage.show();
     }
     
+    // =======================================================
+    // Handlers (métodos vinculados a los botones del menú)
+    // =======================================================
+
     /**
      * Acción del botón "Agregar Paciente".
      * Llama al controlador para iniciar el flujo de agregar paciente.
      */
-    // Handler para botones FXML
     @FXML
     private void handleAgregarPaciente() {
         if (control != null) {
@@ -127,6 +132,28 @@ public class VentanaMenu {
         if (control != null) {
             control.listarPacientes();
         }
+    }
+
+    /**
+<<<<<<< HEAD
+     * Acción del botón "Pagar".
+     * Llama al controlador para iniciar el flujo de pago.
+     */
+    @FXML
+    private void handlePagar(){
+        if (control != null) {
+            control.pagoServicio();
+        }
+=======
+     * Acción del botón "Responder Encuesta".
+     * Abre la ventana que contiene el formulario HTML.
+     */
+    @FXML
+    private void handleEncuesta() {
+        // Abre la ventana creada para mostrar la encuesta HTML
+        VentanaEncuesta ventana = new VentanaEncuesta();
+        ventana.mostrarEncuesta();
+>>>>>>> bf24e2d8a33dd8795953999786680a96ec7d61cb
     }
     
     /**
@@ -168,4 +195,10 @@ public class VentanaMenu {
             control.salir();
         }
     }
+<<<<<<< HEAD
+
+    
 }
+=======
+}
+>>>>>>> bf24e2d8a33dd8795953999786680a96ec7d61cb

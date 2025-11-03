@@ -5,62 +5,106 @@
   <title>Encuesta de Satisfacción</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Segoe UI", "System", sans-serif;
       margin: 30px;
-      background-color: #f7f9fb;
+      /* MODIFICADO: Fondo degradado similar al de la app */
+      background: linear-gradient(to bottom right, #f0f2ff 0%, #e8ebf9 50%, #f5f0ff 100%);
+      color: #2C3E50;
     }
     h2 {
       text-align: center;
-      color: #333;
+      color: #2C3E50;
+      font-weight: 600;
     }
     form {
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      width: 400px;
+      /* MODIFICADO: Estilo de tarjeta blanca similar a la app */
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.15);
+      width: 450px;
       margin: auto;
+      border: 1px solid #e9ecef;
     }
-    input, select, textarea, button {
+    
+    /* MODIFICADO: Estilos de inputs similares a la app */
+    input[type="text"], select, textarea {
       width: 100%;
       margin: 10px 0;
-      padding: 8px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 2px solid #e9ecef;
+      background-color: rgba(248, 249, 250, 0.9);
+      font-size: 14px;
+      color: #495057;
+      box-sizing: border-box; /* Importante para que el padding no rompa el ancho */
     }
+    
+    input[type="text"]:focus, select:focus, textarea:focus {
+        background-color: #FFFFFF;
+        border-color: #667eea;
+        outline: none;
+        box-shadow: 0 0 8px rgba(102, 126, 234, 0.2);
+    }
+
+    label {
+        font-weight: 600;
+        margin-top: 10px;
+        display: inline-block;
+    }
+
+    /* MODIFICADO: Estilo de botón principal similar a la app */
     button {
-      background-color: #5b8bf7;
+      width: 100%;
+      margin: 15px 0 0 0;
+      padding: 12px 20px;
+      background: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);
       color: white;
       font-weight: bold;
+      font-size: 14px;
       border: none;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background-color 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
     }
     button:hover {
-      background-color: #426fe6;
+      background: linear-gradient(to bottom, #5568d3 0%, #653a8a 100%);
+      box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
     }
+    
     table {
-      margin-top: 20px;
+      margin-top: 30px;
       border-collapse: collapse;
-      width: 80%;
+      width: 90%;
       margin-left: auto;
       margin-right: auto;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      overflow: hidden; /* Para que el radius afecte a las celdas */
     }
     th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
+      border: 1px solid #e9ecef;
+      padding: 14px;
       text-align: center;
     }
+    th {
+        background-color: rgba(102, 126, 234, 0.08);
+        color: #495057;
+        font-weight: 700;
+    }
+
     #mensajeExito {
       display: none;
       text-align: center;
       background-color: #d4edda;
       color: #155724;
       border: 1px solid #c3e6cb;
-      border-radius: 5px;
-      padding: 10px;
+      border-radius: 10px;
+      padding: 15px;
       width: 60%;
-      margin: 10px auto;
+      margin: 20px auto;
       animation: fadeInOut 3s ease forwards;
     }
     @keyframes fadeInOut {

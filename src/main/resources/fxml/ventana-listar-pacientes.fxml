@@ -18,8 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="550.0" minWidth="900.0" prefHeight="650.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
-   <!-- HEADER -->
+<BorderPane minHeight="650.0" minWidth="900.0" prefHeight="750.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <VBox spacing="8.0" BorderPane.alignment="CENTER">
          <padding>
@@ -40,9 +39,8 @@
       </VBox>
    </top>
 
-   <!-- PANEL IZQUIERDO: Lista de pacientes -->
    <left>
-      <VBox minWidth="350.0" prefWidth="420.0" spacing="12.0" BorderPane.alignment="CENTER">
+      <VBox minWidth="300.0" prefWidth="350.0" spacing="12.0" BorderPane.alignment="CENTER">
          <padding>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </padding>
@@ -70,27 +68,24 @@
       </VBox>
    </left>
 
-   <!-- PANEL CENTRAL: Tabs con información -->
    <center>
       <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <!-- TAB 1: Baterías Aplicadas -->
           <Tab text="Baterías Aplicadas">
             <content>
               <VBox spacing="20.0">
-                  <padding>
+                 <padding>
                      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                   </padding>
                   <children>
                       <Label text="Detalles de la Batería">
-                          <font>
+                         <font>
                              <Font name="System Bold" size="14.0" />
                           </font>
                       </Label>
 
                       <HBox spacing="30.0" VBox.vgrow="ALWAYS">
                           <children>
-                              <!-- Lista de baterías -->
                               <VBox spacing="12.0" HBox.hgrow="ALWAYS">
                                   <children>
                                       <Label text="Baterías Aplicadas" />
@@ -103,12 +98,11 @@
                                   </children>
                               </VBox>
 
-                              <!-- Puntaje -->
                               <VBox alignment="TOP_CENTER" minWidth="150.0" spacing="12.0">
-                                  <children>
+                                 <children>
                                       <Label text="Puntaje Obtenido" />
                                       <Label fx:id="puntajeObtenidoLabel" text="-">
-                                          <font>
+                                         <font>
                                              <Font name="System Bold" size="36.0" />
                                           </font>
                                       </Label>
@@ -117,21 +111,19 @@
                           </children>
                       </HBox>
 
-                      <!-- Comentarios -->
                       <Label text="Comentarios sobre la prueba" />
                       <TextArea fx:id="comentariosTextArea" prefHeight="120.0" wrapText="true" VBox.vgrow="ALWAYS" />
 
                       <HBox alignment="CENTER_RIGHT" spacing="10.0">
-                          <children>
+                         <children>
                               <Button fx:id="btnGuardarComentarios" disable="true" mnemonicParsing="false" onAction="#handleGuardarComentarios" prefWidth="180.0" text="Almacenar Comentarios" />
                           </children>
                       </HBox>
-                  </children>
+                 </children>
               </VBox>
             </content>
           </Tab>
 
-          <!-- TAB 2: Historial Clínico -->
           <Tab text="Historial Clínico">
             <content>
                  <VBox spacing="15.0">
@@ -139,18 +131,16 @@
                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
                     <children>
-                        <!-- Placeholder cuando no hay selección -->
                         <VBox fx:id="historialPlaceholder" alignment="CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
                            <children>
-                                <Label text="Seleccione un paciente para ver su historial clínico." />
+                               <Label text="Seleccione un paciente para ver su historial clínico." />
                             </children>
                         </VBox>
 
-                        <!-- Grid con detalles del historial -->
                         <GridPane fx:id="historialDetailsPane" hgap="15.0" managed="false" maxWidth="700.0" vgap="18.0" visible="false">
                            <columnConstraints>
                                 <ColumnConstraints hgrow="NEVER" maxWidth="200.0" minWidth="180.0" prefWidth="180.0" />
-                                <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" />
+                              <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" />
                            </columnConstraints>
                            <rowConstraints>
                                 <RowConstraints minHeight="30.0" vgrow="NEVER" />
@@ -176,7 +166,7 @@
                                 <Label fx:id="lblHistorialConsentimiento" text="-" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                            </children>
                         </GridPane>
-                    </children>
+                     </children>
                 </VBox>
             </content>
           </Tab>
@@ -184,7 +174,6 @@
       </TabPane>
    </center>
 
-   <!-- FOOTER -->
    <bottom>
       <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
          <padding>

@@ -167,8 +167,8 @@ public class VentanaPago {
             txtCVV.setVisible(!mostrando);
             txtCVV.setManaged(!mostrando);
         if(btnToggleCVV != null) {
-            // No puede procesar emoji por eso usamos prefijo
-            btnToggleCVV.setText(mostrando ? "🙈" : "👁");
+            // MODIFICADO: Cambiado de emojis a texto
+            btnToggleCVV.setText(mostrando ? "Ocultar" : "Ver");
         }
         // 👇 Forzamos un relayout y refresco visual para mantener selección de los ComboBox
         if (cbMes != null) {
@@ -278,6 +278,10 @@ public class VentanaPago {
 });
 
         Scene scene = new Scene(root, 640, 400);
+        
+        // Esta línea ya la habías añadido, la mantengo
+        scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+        
         stage.setScene(scene);
 
         initialized = true;
@@ -295,8 +299,7 @@ public class VentanaPago {
 
     /**
      * Establece la referencia al controlador de esta ventana.
-     * 
-     * @param control instancia de {@link ControlMenu}
+     * * @param control instancia de {@link ControlMenu}
      */
     public void setControlPago(ControlPagar control) {
         this.control = control;

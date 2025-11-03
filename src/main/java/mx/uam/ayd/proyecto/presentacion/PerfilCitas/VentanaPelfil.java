@@ -67,6 +67,10 @@ public class VentanaPelfil {
             System.out.println("Controlador establecido: " + controlador);
             
             Scene scene = new Scene(loader.load(), 800, 600);
+            
+            // MODIFICACIÓN: Añadir hoja de estilos
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+            
             stage.setScene(scene);
             
             System.out.println("FXML cargado exitosamente");

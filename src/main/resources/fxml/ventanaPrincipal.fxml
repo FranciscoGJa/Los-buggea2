@@ -39,7 +39,7 @@
                     </Label>
                     <Button mnemonicParsing="false" onAction="#handleAgregarPaciente" text="Agregar paciente" maxWidth="Infinity"/>
                     <Button mnemonicParsing="false" onAction="#handleListarPacientes" text="Listar pacientes" maxWidth="Infinity"/>
-
+                    <Button mnemonicParsing="false" onAction="#handlePagar" text="Pagar" maxWidth="Infinity"/>
                     <Button mnemonicParsing="false"
                             onAction="#handleEncuesta"
                             text="Responder Encuesta 📋"

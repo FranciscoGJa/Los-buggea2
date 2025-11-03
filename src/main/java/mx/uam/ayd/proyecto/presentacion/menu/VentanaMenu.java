@@ -15,6 +15,7 @@ import java.util.List;
 import mx.uam.ayd.proyecto.presentacion.BreadcrumbController;
 // 💜 Import necesario para abrir la ventana de encuesta
 import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
+import mx.uam.ayd.proyecto.presentacion.Pago.VentanaPago;
 
 /**
  * Ventana principal de menú de la aplicación.
@@ -179,6 +180,13 @@ public void muestra() {
         // Abre la ventana creada para mostrar la encuesta HTML
         VentanaEncuesta ventana = new VentanaEncuesta();
         ventana.mostrarEncuesta();
+    }
+
+    @FXML
+    private void handlePagar() {
+        //abre la ventana de pago
+        VentanaPago ventanaPago = new VentanaPago();
+        ventanaPago.mostrar();
     }
     
     /**

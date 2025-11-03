@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 
+
 /**
  * Ventana para registrar nuevos pacientes.
  *
@@ -39,9 +40,10 @@ import javafx.scene.control.TextField;
  */
 @Component
 public class VentanaAgregarPaciente {
-    private Parent root;    
+    private Parent root;
     private boolean initialized = false;
     private ControlAgregarPaciente controlAgregarPaciente;
+    
 
     @FXML
     private TextField textFieldNombre;
@@ -68,7 +70,9 @@ public class VentanaAgregarPaciente {
      * Inicializa la interfaz de usuario.
      * <p>Si no se está en el hilo de JavaFX, la acción se delega a {@link Platform#runLater(Runnable)}.</p>
      */
-       public void cargarFXML() {
+    //Cambiamos la logica para que no se abra una ventana nueva cada vez,
+    //sino que se cargue el FXML en el StackPane del menú
+    public void cargarFXML() {
         if (initialized) return;
 
         try {
@@ -85,7 +89,6 @@ public class VentanaAgregarPaciente {
     public Node getVista() {
         return root;
     }
-
 
 
     /**
@@ -138,7 +141,7 @@ public class VentanaAgregarPaciente {
      * 
      * @param visible {@code true} para mostrar; {@code false} para ocultar
      */
-
+   
 
     /**
      * Maneja el evento del botón "Agregar paciente" en la ventana.

@@ -84,18 +84,19 @@ public class ControlAgregarPaciente {
     public void inicializa() {
         ventanaAgregarPaciente.setControlAgregarPaciente(this);
     }
-    
-     public Node getVista() {
-    return ventanaAgregarPaciente.getVista();
-}
 
     /**
      * Inicia la historia de usuario
      * 
      */
-    public void inicia() {
-        ventanaAgregarPaciente.muestra();
+    public void inicia () {
+        ventanaAgregarPaciente.cargarFXML();
     }
+    
+    public Node getVista() {
+    return ventanaAgregarPaciente.getVista();
+}
+
     
     /**
      * Agrega un paciente utilizando el servicio de pacientes.

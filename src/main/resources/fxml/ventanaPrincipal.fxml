@@ -126,11 +126,11 @@
 
                         <Region VBox.vgrow="ALWAYS" minHeight="20.0" />
 
-                        <StackPane VBox.vgrow="ALWAYS" minHeight="200.0" prefHeight="280.0">
+                        <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS" minHeight="200.0" prefHeight="280.0">
                           <children>
                             <ImageView pickOnBounds="true" preserveRatio="true" styleClass="login-logo">
                               <image>
-                                <Image url="@/images/logo.png"
+                                <Image url="@/images/Logo.png"
                                        requestedWidth="250.0"
                                        requestedHeight="250.0"
                                        preserveRatio="true" />

@@ -3,6 +3,8 @@ package mx.uam.ayd.proyecto.presentacion.agregarPaciente;
 //Notaciones
 import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
+import javafx.scene.Node;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import mx.uam.ayd.proyecto.presentacion.agregarBAI.VentanaAgregarBAI;
@@ -87,9 +89,14 @@ public class ControlAgregarPaciente {
      * Inicia la historia de usuario
      * 
      */
-    public void inicia() {
-        ventanaAgregarPaciente.muestra();
+    public void inicia () {
+        ventanaAgregarPaciente.cargarFXML();
     }
+    
+    public Node getVista() {
+    return ventanaAgregarPaciente.getVista();
+}
+
     
     /**
      * Agrega un paciente utilizando el servicio de pacientes.

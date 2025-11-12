@@ -9,11 +9,12 @@ import org.springframework.stereotype.Component;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+
 
 /**
  * Ventana para registrar nuevos pacientes.
@@ -39,9 +40,10 @@ import javafx.stage.Stage;
  */
 @Component
 public class VentanaAgregarPaciente {
-    private Stage stage;
+    private Parent root;
     private boolean initialized = false;
     private ControlAgregarPaciente controlAgregarPaciente;
+    
 
     @FXML
     private TextField textFieldNombre;
@@ -68,26 +70,26 @@ public class VentanaAgregarPaciente {
      * Inicializa la interfaz de usuario.
      * <p>Si no se está en el hilo de JavaFX, la acción se delega a {@link Platform#runLater(Runnable)}.</p>
      */
-    private void initializeUI() {
+    //Cambiamos la logica para que no se abra una ventana nueva cada vez,
+    //sino que se cargue el FXML en el StackPane del menú
+    public void cargarFXML() {
         if (initialized) return;
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(this::initializeUI);
-            return;
-        }
+
         try {
-            stage = new Stage();
-            stage.setTitle("Agregar Paciente");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaAgregarPaciente.fxml"));
-            loader.setController(this); 
-            Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
-            stage.setScene(scene);
+
+            loader.setController(this);
+            root = loader.load();
             initialized = true;
         } catch (IOException e) {
             e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "No se pudo cargar la ventana: " + e.getMessage()).showAndWait();
         }
     }
+     /** Retorna el nodo raíz para poder insertarlo en el StackPane del menú */
+    public Node getVista() {
+        return root;
+    }
+
 
     /**
      * Limpia los campos de texto de la ventana.
@@ -102,12 +104,11 @@ public class VentanaAgregarPaciente {
     /**
      * Muestra la ventana.
      */
-    public void muestra() {
+    public void inicia() {
         if (!initialized) {
-            initializeUI();
+            cargarFXML();
         }
         limpiarCampos();
-        stage.show();
     }
 
     /**
@@ -140,27 +141,7 @@ public class VentanaAgregarPaciente {
      * 
      * @param visible {@code true} para mostrar; {@code false} para ocultar
      */
-    public void setVisible(boolean visible) {
-		if (!Platform.isFxApplicationThread()) {
-			Platform.runLater(() -> this.setVisible(visible));
-			return;
-		}
-		
-		if (!initialized) {
-			if (visible) {
-				initializeUI();
-			} else {
-				return;
-			}
-		}
-		
-		if (visible) {
-			stage.show();
-		} else {
-			stage.hide();
-		}
-	}
-
+   
 
     /**
      * Maneja el evento del botón "Agregar paciente" en la ventana.

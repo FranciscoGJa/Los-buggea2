@@ -37,7 +37,7 @@
                   <center>
                     <ImageView pickOnBounds="true" preserveRatio="true" fitWidth="250" fitHeight="250" styleClass="login-logo" BorderPane.alignment="CENTER">
                       <image>
-                        <Image url="@/images/logo.png" />
+                        <Image url="@/images/Logo.png" />
                       </image>
                     </ImageView>
                   </center>

@@ -3,13 +3,19 @@ package mx.uam.ayd.proyecto.presentacion.menu;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
+import java.util.List;
 
+import mx.uam.ayd.proyecto.presentacion.BreadcrumbController;
 // 💜 Import necesario para abrir la ventana de encuesta
 import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
+import mx.uam.ayd.proyecto.presentacion.Pago.VentanaPago;
 
 /**
  * Ventana principal de menú de la aplicación.
@@ -22,6 +28,7 @@ import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
  *   <li>Agregar psicólogos</li>
  *   <li>Listar psicólogos</li>
  *   <li>Responder Encuesta</li>
+ *   <li>Consultar Perfiles de Citas</li>
  *   <li>Salir de la aplicación</li>
  * </ul>
  * 
@@ -41,6 +48,11 @@ public class VentanaMenu {
     private Stage stage;
     private ControlMenu control;
     private boolean initialized = false;
+    @FXML
+    private FlowPane breadcrumbContainer;
+    private BreadcrumbController breadcrumbController;// Controlador del breadcrumb
+    @FXML
+    private StackPane contentArea; // Este es el StackPane del centro de la ventana
 
     /**
      * Constructor vacío requerido por Spring y JavaFX.
@@ -48,12 +60,17 @@ public class VentanaMenu {
     public VentanaMenu() {
         // Constructor vacío
     }
+
+    // Método para inyectar el controlador
+    public void setControlMenu(ControlMenu control) {
+        this.control = control;
+    }
     
     /**
      * Inicializa la interfaz de usuario cargando el archivo FXML.
      * Este método se asegura de ejecutarse en el hilo de JavaFX.
      */
-    private void initializeUI() {
+      private void initializeUI() {
         if (initialized) {
             return;
         }
@@ -68,6 +85,8 @@ public class VentanaMenu {
             stage.setTitle("Centro Psicológico - Menú Principal");
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaPrincipal.fxml"));
+            System.out.println(getClass().getResource("/fxml/ventanaPrincipal.fxml"));
+
             loader.setController(this);
             
             // Cargar el FXML sin forzar dimensiones - usa las del FXML
@@ -79,26 +98,26 @@ public class VentanaMenu {
             stage.setMinWidth(950);
             stage.setMinHeight(700);
             
+            cargarBreadcrumb();
             initialized = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
-    /**
-     * Establece la referencia al controlador de esta ventana.
-     * 
-     * @param control instancia de {@link ControlMenu}
-     */
-    public void setControlMenu(ControlMenu control) {
-        this.control = control;
-    }
 
-    /**
-     * Muestra la ventana del menú principal.
-     * Se asegura de ejecutarse en el hilo de aplicación JavaFX.
-     */
-    public void muestra() {
+
+    // Carga el componente breadcrumb en el placeholder designado
+    private void cargarBreadcrumb() {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/breadcrumb.fxml"));
+        Node breadcrumbNode = loader.load();
+        breadcrumbController = loader.getController();
+        breadcrumbContainer.getChildren().add(breadcrumbNode);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+public void muestra() {
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(() -> this.muestra());
             return;
@@ -107,6 +126,24 @@ public class VentanaMenu {
         initializeUI();
         stage.show();
     }
+     // Actualiza el breadcrumb con la ruta proporcionada
+    public void actualizaBreadcrumb(List<String> ruta) {
+        breadcrumbController.setPath(ruta, this::handleBreadcrumbClick);
+    }
+    //Aquí puedes decidir la acción al hacer click en un item del breadcrumb
+    private void handleBreadcrumbClick(String item) {
+        
+        System.out.println("Clic en breadcrumb: " + item);
+    }
+    // Carga una nueva vista en el área de contenido central
+    public void cargarVista(Node vista) {
+    if (contentArea != null) {
+        contentArea.getChildren().setAll(vista);
+    } else {
+        System.err.println("contentArea no está inicializado");
+    }
+}
+
     
     // =======================================================
     // Handlers (métodos vinculados a los botones del menú)
@@ -144,6 +181,13 @@ public class VentanaMenu {
         VentanaEncuesta ventana = new VentanaEncuesta();
         ventana.mostrarEncuesta();
     }
+
+    @FXML
+    private void handlePagar() {
+        //abre la ventana de pago
+        VentanaPago ventanaPago = new VentanaPago();
+        ventanaPago.mostrar();
+    }
     
     /**
      * Acción del botón "Agregar Psicólogo".
@@ -164,6 +208,17 @@ public class VentanaMenu {
     private void handleListarPsicologo() {
         if (control != null) {
             control.listarPsicologo();
+        }
+    }
+
+    /**
+     * Acción del botón "Consultar Perfiles".
+     * Llama al controlador para iniciar el flujo de perfiles de citas.
+     */
+    @FXML
+    private void handlePerfilCitas() {
+        if (control != null) {
+            control.consultarPerfilCitas();
         }
     }
     

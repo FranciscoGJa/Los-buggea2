@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml">
+
+    <top>
+        <VBox alignment="CENTER" prefHeight="60.0" spacing="5.0" BorderPane.alignment="CENTER">
+            <Label text="Pago">
+                <font>
+                    <Font name="System Bold" size="18.0"/>
+                </font>
+            </Label>
+        </VBox>
+    </top>
+        
+    <center>
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+        <content>
+            <VBox spacing="20.0" alignment="CENTER_LEFT">
+                <padding>
+                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                </padding>
+
+                <VBox spacing="5">
+                    <Label text="Número de tarjeta:" />
+                     <TextField fx:id="txtCardNumber" promptText="Número de tarjeta" prefWidth="250.0" />
+                </VBox>
+
+                <VBox spacing="5">
+                    <Label text="Nombre del titular:" />
+                     <TextField fx:id="txtCardHolder" promptText="Nombre del titular" prefWidth="250.0" />
+                </VBox>
+
+                <VBox spacing="5">
+                    <Label text="Fecha de expiración:" />
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Mes:" />
+                        <ComboBox fx:id="cbMes" promptText="MM" prefWidth="80.0"/>
+                        <Label text="Año:" />
+                         <ComboBox fx:id="cbAno" promptText="AA" prefWidth="80.0"/>
+                         <Region HBox.hgrow="ALWAYS" />
+                         <Button text="Validar" onAction="#onValidar"/> 
+                    </HBox>
+                    </VBox>
+
+                <VBox spacing="5">
+                    <Label text="Código CVV:" />
+                     <HBox spacing="5" alignment="CENTER_LEFT">
+                        <PasswordField fx:id="txtCVV" promptText="Código CVV" HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="CVVvisible" promptText="Código CVV" 
+                                   HBox.hgrow="ALWAYS" visible="false" managed="false" />
+                        <Button fx:id="btnToggleCVV" text="Ver" prefWidth="60" onAction="#toggleCVVVisibility" />
+                    </HBox>
+                </VBox>
+                
+            </VBox>
+         </content>
+    </ScrollPane>
+</center>
+
+    <bottom>
+        <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="10.0" bottom="15.0" />
+            </padding>
+            <children>
+                <Button layoutX="266.0" layoutY="11.0" prefHeight="35.0" prefWidth="120.0" text="Pagar" fx:id="btnPagar" onAction="#handlePagado"/>
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>

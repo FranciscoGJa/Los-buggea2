@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+
+<BorderPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx"
+             xmlns:fx="http://javafx.com/fxml">
+
+    <!-- TÍTULO -->
+    <top>
+        <VBox alignment="CENTER" prefHeight="60.0" spacing="5.0">
+            <Label text="Pago en efectivo" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+        </VBox>
+    </top>
+
+    <!-- CONTENIDO CENTRAL -->
+    <center>
+        <VBox spacing="25.0" alignment="CENTER">
+            <padding>
+                <Insets top="20.0" bottom="20.0" left="30.0" right="30.0"/>
+            </padding>
+
+            <!-- MONTO A PAGAR -->
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Monto a pagar:"/>
+                <Label fx:id="lblMonto" style="-fx-font-weight: bold;"/>
+            </HBox>
+
+            <!-- INGRESO DE MONTO -->
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Monto entregado:"/>
+                <TextField fx:id="txtPago" promptText="Ingresa el monto" prefWidth="120"/>
+                <Button text="Calcular" onAction="#calcularCambio"/>
+            </HBox>
+
+            <!-- CAMBIO -->
+            <Label fx:id="lblCambio" style="-fx-font-weight: bold; -fx-text-fill: green;"/>
+
+            <!-- BOTONES DE CAJA -->
+            <HBox spacing="15" alignment="CENTER">
+                <Button fx:id="btnAbrirCaja" text="Abrir Caja" onAction="#abrirCaja" disable="true"/>
+                <Button fx:id="btnCerrarCaja" text="Cerrar Caja" onAction="#cerrarCaja" disable="true"/>
+            </HBox>
+
+            <!-- BOTONES DE CONFIRMACIÓN Y CIERRE -->
+            <HBox spacing="15" alignment="CENTER">
+                <Button fx:id="btnConfirmar" text="Confirmar Pago" onAction="#confirmarPago" disable="true"/>
+                <Button fx:id="btnCerrar" text="Cerrar" onAction="#cerrarVentana" visible="false"/>
+            </HBox>
+
+            <!-- MENSAJE DE ESTADO -->
+            <VBox alignment="CENTER">
+                <Label fx:id="lblMensaje"
+                       wrapText="true"
+                       alignment="CENTER"
+                       style="-fx-text-fill: #c0392b; -fx-font-size: 14px; -fx-font-weight: bold;"
+                       maxWidth="500"
+                       BorderPane.alignment="CENTER"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

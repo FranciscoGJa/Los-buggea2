@@ -1,0 +1,153 @@
+[33mcommit 25245aba311edeb54185c570d4c6165326700057[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mCodificacion-de-pagos[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: Victor <snucul5000@gmail.com>
+Date:   Sun Nov 2 20:36:03 2025 -0600
+
+    Agregue el boton de pagar eb el fxml de ventanaPrincipal
+
+[33mcommit ee770e8802eaf2a0d8d020ef07591447158fa04e[m
+Author: Gabriel <gabrielcansecorivera@gmail.com>
+Date:   Sun Nov 2 19:44:28 2025 -0600
+
+    Ventanas y controladores modificados para breadcrumb
+
+[33mcommit 335ef2fb518faa9c55f626764eba4d6e06f73c8c[m
+Author: Gabriel <gabrielcansecorivera@gmail.com>
+Date:   Fri Oct 31 21:03:20 2025 -0600
+
+    Controlador y ventana actualizada para el BreadCrumb
+
+[33mcommit 9ef3c464b98d968cb0faf53871b62a4cc902663e[m
+Author: Gabriel <gabrielcansecorivera@gmail.com>
+Date:   Fri Oct 31 20:58:51 2025 -0600
+
+    Controlador y ventana actualizada para el BreadCrumb Agregar Psicologo
+
+[33mcommit 11d315c665fc601dcdb6bdb371155d094092d116[m
+Author: Gabriel <gabrielcansecorivera@gmail.com>
+Date:   Fri Oct 31 20:31:00 2025 -0600
+
+    Controlador y ventana actualizada para el BreadCrumb Agregar Pacientes
+
+[33mcommit 2718171579f3f23d56214bdb0ebf5bd6200c9f4c[m
+Author: Gabriel <gabrielcansecorivera@gmail.com>
+Date:   Fri Oct 31 20:20:27 2025 -0600
+
+    Controlador y ventana actualizada para el BreadCrumb de listar pacientes
+
+[33mcommit c48c17fdc54dc294d0aff58705e52ba1b92dbb07[m
+Author: Gabriel <gabrielcansecorivera@gmail.com>
+Date:   Fri Oct 31 19:57:07 2025 -0600
+
+    Controlador y ventana actualizada para el BreadCrumb
+
+[33mcommit 6c2baa052953fd5a1cd63cb32f908af161acc4cd[m
+Author: Gabriel <gabrielcansecorivera@gmail.com>
+Date:   Fri Oct 31 19:42:06 2025 -0600
+
+    Fxml del BreadCrumb
+
+[33mcommit fb6a5fe53ebd2dcc555a1afc8d0e4dc234581719[m
+Author: Gabriel <gabrielcansecorivera@gmail.com>
+Date:   Fri Oct 31 19:40:39 2025 -0600
+
+    Controlador del BreadCumb
+
+[33mcommit b185500a90f2a79bc65a8d1d90c2e889bfaff5c4[m
+Author: Gabriel <gabrielcansecorivera@gmail.com>
+Date:   Fri Oct 31 19:29:47 2025 -0600
+
+    Modificacion de la ventana principal para el Breadcrumb
+
+[33mcommit ddd43577b61c89fa3ac6554214b0fff2f21a5d56[m
+Author: Alvaro Alfonso Franco <cbi2173013228@izt.uam.mx>
+Date:   Sun Nov 2 15:00:16 2025 -0600
+
+    Correccion de colsulta de perfiles
+
+[33mcommit a7f0f475bf9214a63b1fcd46b13fd4de3e80f89a[m
+Author: Alvaro Alfonso Franco <cbi2173013228@izt.uam.mx>
+Date:   Sun Nov 2 14:30:30 2025 -0600
+
+    Actualiza configuración y clases tras merge
+
+[33mcommit 1440d2bfd1a0284fb78cb966659b1bbc694a9721[m
+Merge: 77a3f2f ae1d6f0
+Author: Alvaro Alfonso Franco <cbi2173013228@izt.uam.mx>
+Date:   Sun Nov 2 14:25:12 2025 -0600
+
+    Merge remote-tracking branch 'origin/main'
+
+[33mcommit ae1d6f0658b75ea5eb535d026c9f6375621ea037[m
+Merge: a6e37a0 2852ee5
+Author: Sadbiel <sadbiel.vidal@gmail.com>
+Date:   Sun Nov 2 11:14:15 2025 -0600
+
+    Modificacion de la base de datos con tabla citas, la tabla no ocupa insert ocupa el metodo insert_cita(id-paciente, date aaaa-mm-dd, time hh:mm);
+
+[33mcommit 77a3f2f420690c2704474c4598530d862674b97e[m
+Author: Alvaro Alfonso Franco <cbi2173013228@izt.uam.mx>
+Date:   Sun Nov 2 10:32:26 2025 -0600
+
+    Comit Inicial- Cambios del final del Sprint
+
+[33mcommit 2852ee5d9df42ab446237aaa0840851da49ee341[m
+Author: Victor <snucul5000@gmail.com>
+Date:   Sat Nov 1 19:51:37 2025 -0600
+
+    Agregue la ventana de pago
+
+[33mcommit dd470efb62e2a6fcf168d01c50502e924f0390cc[m
+Merge: c8cc267 bf24e2d
+Author: Victor <snucul5000@gmail.com>
+Date:   Sat Nov 1 19:49:43 2025 -0600
+
+    Merge branch 'main' of https://github.com/FranciscoGJa/Los-buggea2
+
+[33mcommit c8cc267302c0147fad7f966b9d9806a2918f5e39[m
+Author: Victor <snucul5000@gmail.com>
+Date:   Sat Nov 1 19:36:53 2025 -0600
+
+    Cree la ventana de pago.
+
+[33mcommit a6e37a0785ae382a142b92336fb677f4eb25008a[m
+Author: Sadbiel <sadbiel.vidal@gmail.com>
+Date:   Sat Nov 1 02:30:41 2025 -0600
+
+    Modificacion de la base de datos con tabla citas, la tabla no ocupa insert ocupa el metodo insert_cita(id-paciente, date aaaa-mm-dd, time hh:mm);
+
+[33mcommit bf24e2d8a33dd8795953999786680a96ec7d61cb[m
+Author: Jessica Gregorio Lara <jessicagl851@gmail.com>
+Date:   Fri Oct 31 17:08:32 2025 -0600
+
+    Proyecto final completo con encuesta y logo
+
+[33mcommit d023124fd19de76d1d14f98990b9ab0c86f3387d[m
+Merge: 3bc2f53 ab74bdc
+Author: Alvaro Alfonso Franco <cbi2173013228@izt.uam.mx>
+Date:   Thu Oct 30 09:10:17 2025 -0600
+
+    Merge branch 'main' of https://github.com/FranciscoGJa/Los-buggea2
+
+[33mcommit 3bc2f53005079057614fffeaaa3039f0016b1aef[m
+Author: Alvaro Alfonso Franco <cbi2173013228@izt.uam.mx>
+Date:   Thu Oct 30 09:05:29 2025 -0600
+
+    Incorporacion de las clases ventanaPerfil y CrearPerfilCitas con sus fxml y controladores
+
+[33mcommit ab74bdc8378993ed4e7011134cc9a04c94f3b3f2[m
+Author: FranciscoGJa <manuelgranados12345678@gmail.com>
+Date:   Tue Oct 28 22:27:50 2025 -0600
+
+    Refactor de diseño visual
+
+[33mcommit 34953207c863e8ca36aa6ad29c73bab3829fb6c1[m
+Author: Moisés Alejandro Paz Zamorano <pazzamoranomoisesalejadro@gmail.com>
+Date:   Sun Oct 26 20:43:48 2025 -0600
+
+    Implementa envío de credenciales por correo y la corrección del login estatico por una verificacion de usuario y contraseña individuales
+
+[33mcommit b5042875a92e1790545daaa956c0d0e7d576dfff[m
+Author: FranciscoGJa <manuelgranados12345678@gmail.com>
+Date:   Mon Oct 13 21:54:24 2025 -0600
+
+    Versión inicial del proyecto

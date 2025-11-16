@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12" 
             xmlns:fx="http://javafx.com/fxml/1"
@@ -33,17 +34,25 @@
                </VBox>
             </HBox>
             
-            <HBox spacing="10.0">
-               <Button text="Buscar" onAction="#buscarPerfiles" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" />
-               <Button text="Limpiar" onAction="#limpiarCampos" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" />
-               <Button text="Nuevo Perfil" onAction="#crearNuevoPerfil" style="-fx-background-color: #3498db; -fx-text-fill: white;" />
+            <!-- BOTONES ACTUALIZADOS -->
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+               <Button text="🔍 Buscar" onAction="#buscarPerfiles" 
+                       style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" />
+               <Button text="🔄 Limpiar" onAction="#limpiarCampos" 
+                       style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" />
+               <Button text="➕ Nuevo Perfil" onAction="#crearNuevoPerfil" 
+                       style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" />
+               <!-- NUEVO BOTÓN PARA HISTORIAL -->
+               <Button text="📋 Ver Historial" onAction="#verHistorialCitas" 
+                       style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" />
+               <Region HBox.hgrow="ALWAYS" />
             </HBox>
          </VBox>
          
-         <VBox spacing="10.0">
+         <VBox spacing="10.0" VBox.vgrow="ALWAYS">
             <Label text="Resultados:" style="-fx-font-size: 16; -fx-font-weight: bold;" />
             
-            <TableView fx:id="tablaResultados" prefHeight="300.0">
+            <TableView fx:id="tablaResultados" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="colNombre" prefWidth="150.0" text="Nombre">
                      <cellValueFactory>
@@ -77,6 +86,12 @@
                   </TableColumn>
                </columns>
             </TableView>
+            
+            <!-- INFORMACIÓN DE SELECCIÓN -->
+            <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-border-color: #dee2e6;">
+               <Label text="💡 Seleccione un perfil y haga clic en 'Ver Historial' para consultar sus citas" 
+                      style="-fx-text-fill: #6c757d; -fx-font-style: italic; -fx-font-size: 12;" />
+            </HBox>
          </VBox>
       </VBox>
    </center>

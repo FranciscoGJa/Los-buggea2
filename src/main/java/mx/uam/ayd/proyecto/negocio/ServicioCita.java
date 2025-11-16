@@ -4,10 +4,17 @@ import mx.uam.ayd.proyecto.datos.CitaRepository;
 import mx.uam.ayd.proyecto.negocio.modelo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+
+/*
+ * Servicio para gestionar las citas y perfiles de citas.
+ * Proporciona métodos para crear citas, perfiles y gestionar su estado.
+ * Utiliza repositorios para acceder a los datos de citas y perfiles.
+ */
 
 @Service
 public class ServicioCita {
@@ -21,6 +28,7 @@ public class ServicioCita {
     /**
      * Crea una nueva cita para un perfil existente
      */
+    @Transactional
     public Cita crearCita(Long perfilCitasId, Integer psicologoId, 
                          LocalDate fechaCita, LocalTime horaCita, 
                          String detallesPaciente) {
@@ -50,15 +58,16 @@ public class ServicioCita {
         cita.setDetallesAdicionalesPaciente(detallesPaciente);
         cita.setEstadoCita(TipoConfirmacionCita.PENDIENTE);
         
-        // Agregar la cita al perfil
-        perfil.agregarCita(cita);
+        // SOLUCIÓN: Guardar directamente sin usar agregarCita para evitar Lazy Loading
+        Cita citaGuardada = citaRepository.save(cita);
         
-        return citaRepository.save(cita);
+        return citaGuardada;
     }
     
     /**
      * Crea un perfil de citas para un paciente existente y agenda una cita
      */
+    @Transactional
     public Cita crearPerfilYCita(Paciente paciente, Psicologo psicologo, 
                                 String direccion, String ocupacion,
                                 LocalDate fechaCita, LocalTime horaCita, 
@@ -75,6 +84,7 @@ public class ServicioCita {
     /**
      * Crea un perfil de citas para un paciente nuevo (sin registro previo) y agenda cita
      */
+    @Transactional
     public Cita crearPerfilCompletoYCita(String nombreCompleto, int edad, String sexo, 
                                        String direccion, String ocupacion, 
                                        String telefono, String email,
@@ -102,6 +112,7 @@ public class ServicioCita {
     /**
      * Obtiene todas las citas de un perfil
      */
+    @Transactional
     public List<Cita> obtenerCitasPorPerfil(Long perfilCitasId) {
         return citaRepository.findByPerfilCitasIdPerfil(perfilCitasId);
     }
@@ -123,6 +134,7 @@ public class ServicioCita {
     /**
      * Cambia el estado de una cita
      */
+    @Transactional
     public Cita cambiarEstadoCita(Integer citaId, TipoConfirmacionCita nuevoEstado, String motivo) {
         Optional<Cita> citaOpt = citaRepository.findById(citaId);
         if (citaOpt.isEmpty()) {
@@ -142,6 +154,7 @@ public class ServicioCita {
     /**
      * Agrega nota post-sesión a una cita concluida
      */
+    @Transactional
     public Cita agregarNotaSesion(Integer citaId, String notaPostSesion) {
         Optional<Cita> citaOpt = citaRepository.findById(citaId);
         if (citaOpt.isEmpty()) {

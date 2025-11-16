@@ -11,14 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import mx.uam.ayd.proyecto.presentacion.CrearPerfilCitas.VentanaCrearPerfilCitas;
+import mx.uam.ayd.proyecto.presentacion.HistorialCitas.VentanaHistorialCitas;
 import mx.uam.ayd.proyecto.negocio.ServicioPerfilCitas;
 import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
 import java.util.List;
 import java.util.Collections;
 
 /*
- * Controla la transición de de datos entre la capa de negocio (ServicioPerfilCitas) y la capa de presentación Ventana perfil
- * Controlador de VentanaPerfil.java 
+ * Controlador para la gestión de perfiles de citas.
+ * Utiliza Spring para la inyección de dependencias y JavaFX para la interfaz gráfica.
+ * Incluye funcionalidades para buscar, crear y ver el historial de citas de perfiles.
+ * Maneja errores de manera robusta para asegurar una buena experiencia de usuario.
+ * Configura la tabla de perfiles de manera segura, evitando errores si alguna columna no está definida en el FXML.
+ * Proporciona mensajes informativos al usuario en caso de errores o resultados vacíos.
  */
 @Component
 public class ControladorPerfil {
@@ -51,6 +56,9 @@ public class ControladorPerfil {
 
     @Autowired
     private ServicioPerfilCitas servicioPerfilCitas;
+    
+    @Autowired
+    private VentanaHistorialCitas ventanaHistorialCitas;
 
     /**
      * Método initialize para configurar la tabla
@@ -58,6 +66,7 @@ public class ControladorPerfil {
     @FXML
     public void initialize() {
         System.out.println("ControladorPerfil inicializado");
+        System.out.println("VentanaHistorialCitas inyectada: " + (ventanaHistorialCitas != null));
         
         // Configurar tabla de manera segura
         configurarTablaSegura();
@@ -135,7 +144,19 @@ public class ControladorPerfil {
         }
         
         try {
-            List<PerfilCitas> resultados = servicioPerfilCitas.buscarPorNombreOTelefono(nombre, telefono);
+            List<PerfilCitas> resultados;
+            
+            if (!nombre.isEmpty() && !telefono.isEmpty()) {
+                // Buscar por ambos criterios
+                resultados = servicioPerfilCitas.buscarPorNombre(nombre);
+                resultados.addAll(servicioPerfilCitas.buscarPorTelefono(telefono));
+                // Eliminar duplicados
+                resultados = resultados.stream().distinct().collect(java.util.stream.Collectors.toList());
+            } else if (!nombre.isEmpty()) {
+                resultados = servicioPerfilCitas.buscarPorNombre(nombre);
+            } else {
+                resultados = servicioPerfilCitas.buscarPorTelefono(telefono);
+            }
             
             // Actualizar la tabla
             if (tablaResultados != null) {
@@ -175,6 +196,30 @@ public class ControladorPerfil {
             
         } catch (Exception e) {
             mostrarAlerta("Error", "No se pudo abrir la ventana de nuevo perfil: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+    * Para ver el historial de citas de un perfil seleccionado
+     */
+    @FXML
+    public void verHistorialCitas() {
+        try {
+            PerfilCitas perfilSeleccionado = tablaResultados.getSelectionModel().getSelectedItem();
+            if (perfilSeleccionado != null) {
+                System.out.println("Abriendo historial para perfil: " + perfilSeleccionado.getNombreCompleto());
+                
+                if (ventanaHistorialCitas != null) {
+                    ventanaHistorialCitas.mostrar(perfilSeleccionado);
+                } else {
+                    mostrarAlerta("Error", "No se pudo acceder al módulo de historial de citas");
+                }
+            } else {
+                mostrarAlerta("Información", "Seleccione un perfil de la tabla para ver su historial de citas");
+            }
+        } catch (Exception e) {
+            mostrarAlerta("Error", "No se pudo abrir el historial: " + e.getMessage());
             e.printStackTrace();
         }
     }

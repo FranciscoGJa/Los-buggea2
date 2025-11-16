@@ -5,23 +5,6 @@ import lombok.Data;
 import java.util.ArrayList; 
 import java.util.List;
 
-/**
- * Entidad que representa a un paciente dentro del sistema.
- *
- * <p>Contiene la información personal del paciente como nombre, teléfono,
- * correo y edad, así como sus relaciones con el psicólogo asignado,
- * su historial clínico, las baterías clínicas que ha respondido
- * y sus citas programadas.</p>
- *
- * <p>Incluye un constructor por defecto que inicializa las listas
- * de baterías clínicas y citas para evitar valores nulos.</p>
- *
- * <p>Esta entidad está mapeada a una tabla en la base de datos
- * mediante anotaciones de JPA.</p>
- *
- * @author Tech Solutions
- * @version 1.0
- */
 @Entity
 @Data
 public class Paciente {
@@ -39,21 +22,33 @@ public class Paciente {
     @JoinColumn(name = "psicologo_id")
     private Psicologo psicologo;
 
-    @OneToOne(mappedBy = "paciente", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "paciente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private HistorialClinico historialClinico;
 
-    @OneToMany(mappedBy = "paciente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "paciente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<BateriaClinica> bateriasClinicas;
 
-    @OneToMany(mappedBy = "paciente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Cita> citas;
+    // RELACIÓN COMENTADA TEMPORALMENTE - Se usará PerfilCitas en su lugar
+    // @OneToMany(mappedBy = "paciente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    // private List<Cita> citas;
+
+    @OneToMany(mappedBy = "paciente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PerfilCitas> perfilesCitas;
 
     /**
      * Constructor por defecto que inicializa las listas
-     * de baterías clínicas y citas como listas vacías.
      */
     public Paciente(){
         this.bateriasClinicas = new ArrayList<>();
-        this.citas = new ArrayList<>();
+        // this.citas = new ArrayList<>();
+        this.perfilesCitas = new ArrayList<>();
+    }
+
+    /**
+     * Método para agregar un perfil de citas al paciente
+     */
+    public void agregarPerfilCitas(PerfilCitas perfilCitas) {
+        this.perfilesCitas.add(perfilCitas);
+        perfilCitas.setPaciente(this);
     }
 }

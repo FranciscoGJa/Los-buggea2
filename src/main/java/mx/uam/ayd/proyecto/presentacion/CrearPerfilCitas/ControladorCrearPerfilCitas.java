@@ -12,7 +12,9 @@ import mx.uam.ayd.proyecto.negocio.ServicioPerfilCitas;
 import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
 
 /*
- * Controlador de VentanaCrearPerfilCItas 
+ * Controlador de VentanaCrearPerfilCitas 
+ * Permite crear un nuevo perfil de citas para un paciente
+ * sin asignar un psicólogo inicialmente.
  */
 
 @Component
@@ -55,13 +57,13 @@ public class ControladorCrearPerfilCitas {
     private ServicioPerfilCitas servicioPerfilCitas;
 
     public ControladorCrearPerfilCitas() {
-        System.out.println("✓ ControladorCrearPerfilCitas instanciado");
+        System.out.println("ControladorCrearPerfilCitas instanciado");
     }
 
     @FXML
     public void initialize() {
-        System.out.println("✓ Initialize() llamado en ControladorCrearPerfilCitas");
-        System.out.println("✓ Servicio inyectado: " + (servicioPerfilCitas != null));
+        System.out.println("Initialize() llamado en ControladorCrearPerfilCitas");
+        System.out.println("Servicio inyectado: " + (servicioPerfilCitas != null));
         
         // CREAR EL TOGGLEGROUP PROGRAMÁTICAMENTE
         grupoSexo = new ToggleGroup();
@@ -88,12 +90,12 @@ public class ControladorCrearPerfilCitas {
     }
 
     /**
-     * Método para guardar el nuevo perfil
+     * Método para guardar el nuevo perfil - PSICÓLOGO OPCIONAL
      */
     @FXML
     public void guardarPerfil() {
         try {
-            System.out.println("✓ Intentando guardar perfil...");
+            System.out.println("Intentando guardar perfil...");
         
             // Validar campos obligatorios
             if (!validarCampos()) {
@@ -126,20 +128,22 @@ public class ControladorCrearPerfilCitas {
             // Obtener el sexo seleccionado
             String sexo = obtenerSexoSeleccionado();
         
-            System.out.println("✓ Datos a guardar - Nombre: " + nombreCompleto + ", Edad: " + edad + ", Sexo: " + sexo);
+            System.out.println("Datos a guardar - Nombre: " + nombreCompleto + ", Edad: " + edad + ", Sexo: " + sexo);
+            System.out.println("Creando perfil SIN psicólogo...");
         
-            // USAR EL SERVICIO PARA GUARDAR EN BASE DE DATOS
-            PerfilCitas perfilGuardado = servicioPerfilCitas.crearPerfilCitas(
+            // USAR EL NUEVO MÉTODO SIN PSICÓLOGO
+            PerfilCitas perfilGuardado = servicioPerfilCitas.crearPerfilCitasSinPsicologo(
                 nombreCompleto, edad, sexo, direccion, ocupacion, 
                 telefono.isEmpty() ? null : telefono, 
                 email.isEmpty() ? null : email
             );
         
             // Mostrar mensaje de éxito
-            mostrarAlerta("✅ Historial creado", 
+            mostrarAlerta("Historial creado", 
                 "Perfil de citas creado correctamente\n" +
                 "Nombre: " + perfilGuardado.getNombreCompleto() + "\n" +
-                "ID: " + perfilGuardado.getIdPerfil());
+                "ID: " + perfilGuardado.getIdPerfil() + "\n\n" +
+                "Nota: El psicólogo puede ser asignado posteriormente.");
         
             // CERRAR LA VENTANA AUTOMÁTICAMENTE después de guardar
             cancelar();

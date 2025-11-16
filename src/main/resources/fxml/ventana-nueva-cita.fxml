@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" 
+      spacing="15" style="-fx-padding: 20;">
+   
+   <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+   
+   <!-- Header -->
+   <Label text="Agendar Nueva Cita" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;">
+      <padding><Insets bottom="10"/></padding>
+   </Label>
+   
+   <!-- Selector de Psicólogo -->
+   <VBox spacing="10" style="-fx-background-color: #ecf0f1; -fx-padding: 15; -fx-border-radius: 5; -fx-background-radius: 5;">
+      <Label text="Seleccione Psicólogo:" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+      
+      <VBox spacing="5">
+         <Label text="Psicólogo *" style="-fx-font-weight: bold;"/>
+         <ComboBox fx:id="comboPsicologos" prefWidth="300"/>
+         <Label fx:id="lblPsicologoSeleccionado" text="Psicólogo: No seleccionado" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+      </VBox>
+   </VBox>
+   
+   <!-- Selector de Fecha y Hora -->
+   <VBox spacing="10" style="-fx-background-color: #ecf0f1; -fx-padding: 15; -fx-border-radius: 5; -fx-background-radius: 5;">
+      <Label text="Seleccione Fecha y Hora:" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+      
+      <HBox spacing="15" alignment="CENTER_LEFT">
+         <VBox spacing="5">
+            <Label text="Fecha *:" style="-fx-font-weight: bold;"/>
+            <DatePicker fx:id="datePickerFecha" prefWidth="150"/>
+         </VBox>
+         
+         <VBox spacing="5">
+            <Label text="Hora Disponible *:" style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="comboHorarios" prefWidth="120"/>
+         </VBox>
+      </HBox>
+      
+      <!-- Selección Actual -->
+      <HBox spacing="20" style="-fx-background-color: #d5dbdb; -fx-padding: 10; -fx-border-radius: 3; -fx-background-radius: 3;">
+         <Label fx:id="lblFechaSeleccionada" text="Fecha: No seleccionada" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+         <Label fx:id="lblHoraSeleccionada" text="Hora: No seleccionada" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+      </HBox>
+   </VBox>
+   
+   <!-- Motivo de Consulta -->
+   <VBox spacing="5">
+      <Label text="Motivo de la Consulta *" style="-fx-font-weight: bold;"/>
+      <TextArea fx:id="txtMotivoConsulta" prefRowCount="3" promptText="Describa el motivo principal de la consulta (maximo 500 caracteres)"/>
+   </VBox>
+   
+   <!-- Detalles Adicionales -->
+   <VBox spacing="5">
+      <Label text="Detalles Adicionales (Opcional)" style="-fx-font-weight: bold;"/>
+      <TextArea fx:id="txtDetallesAdicionales" prefRowCount="2" promptText="Informacion adicional que considere importante (maximo 500 caracteres)"/>
+   </VBox>
+   
+   <!-- Botones -->
+   <HBox spacing="15" alignment="CENTER_RIGHT">
+      <Region HBox.hgrow="ALWAYS"/>
+      <Button fx:id="btnCancelar" text="Cancelar" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" onAction="#cancelar"/>
+      <Button fx:id="btnCrearCita" text="Crear Cita" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" onAction="#crearCita"/>
+   </HBox>
+   
+   <!-- Notas -->
+   <VBox spacing="5" style="-fx-background-color: #fff3cd; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;">
+      <Label text="Información:" style="-fx-font-weight: bold; -fx-text-fill: #856404;"/>
+      <Label text="• Los campos marcados con * son obligatorios" style="-fx-text-fill: #856404; -fx-font-size: 12;"/>
+      <Label text="• Primero seleccione un psicólogo, luego la fecha y hora" style="-fx-text-fill: #856404; -fx-font-size: 12;"/>
+      <Label text="• Solo se muestran horarios disponibles del psicólogo seleccionado" style="-fx-text-fill: #856404; -fx-font-size: 12;"/>
+      <Label text="• No se permiten fechas pasadas" style="-fx-text-fill: #856404; -fx-font-size: 12;"/>
+   </VBox>
+</VBox>

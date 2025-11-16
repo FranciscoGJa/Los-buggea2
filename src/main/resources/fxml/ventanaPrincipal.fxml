@@ -43,7 +43,7 @@
                     <Button mnemonicParsing="false" onAction="#handlePagoEfectivo" text="Pagar en efectivo" maxWidth="Infinity"/>
                     <Button mnemonicParsing="false"
                             onAction="#handleEncuesta"
-                            text="Responder Encuesta 📋"
+                            text="Responder Encuesta"
                             maxWidth="Infinity"
                             style="-fx-background-color: linear-gradient(to bottom, #8a9cf8, #6c7df2);
                                    -fx-text-fill: white;

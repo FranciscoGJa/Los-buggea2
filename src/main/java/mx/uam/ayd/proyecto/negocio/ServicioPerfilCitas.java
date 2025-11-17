@@ -4,8 +4,15 @@ import mx.uam.ayd.proyecto.negocio.modelo.*;
 import mx.uam.ayd.proyecto.datos.RepositoryPerfilCitas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
+
+/*
+ * Servicio para gestionar los perfiles de citas.
+ * Proporciona métodos para crear, actualizar, eliminar y buscar perfiles de citas.
+ * Utiliza un repositorio para acceder a los datos de los perfiles.
+ */ 
 
 @Service
 public class ServicioPerfilCitas {
@@ -14,8 +21,9 @@ public class ServicioPerfilCitas {
     private RepositoryPerfilCitas repositoryPerfilCitas;
     
     /**
-     * Crea un nuevo perfil de citas para paciente nuevo
+     * Crea un nuevo perfil de citas para paciente nuevo - PSICÓLOGO OPCIONAL
      */
+    @Transactional
     public PerfilCitas crearPerfilCitas(String nombreCompleto, int edad, String sexo, 
                                        String direccion, String ocupacion, 
                                        String telefono, String email, Psicologo psicologo) {
@@ -47,23 +55,65 @@ public class ServicioPerfilCitas {
             throw new IllegalArgumentException("La ocupación es obligatoria");
         }
         
-        if (psicologo == null) {
-            throw new IllegalArgumentException("El psicólogo es obligatorio");
-        }
+        // PSICÓLOGO ES OPCIONAL - NO SE VALIDA
         
         // Crear y guardar el nuevo perfil
         PerfilCitas perfil = new PerfilCitas(
             nombreCompleto.trim(), edad, sexo.trim(), direccion.trim(), 
             ocupacion.trim(), telefono != null ? telefono.trim() : null, 
-            email != null ? email.trim() : null, psicologo
-        );
+            email != null ? email.trim() : null, psicologo); // Psicólogo puede ser null
         
         return repositoryPerfilCitas.save(perfil);
     }
     
     /**
-     * Crea un perfil de citas desde un paciente existente
+     * NUEVO MÉTODO: Crea un perfil de citas SIN psicólogo
      */
+    @Transactional
+    public PerfilCitas crearPerfilCitasSinPsicologo(String nombreCompleto, int edad, String sexo, 
+                                                   String direccion, String ocupacion, 
+                                                   String telefono, String email) {
+        
+        // Validar que no exista un perfil con el mismo nombre
+        if (repositoryPerfilCitas.existsByNombreCompleto(nombreCompleto)) {
+            throw new IllegalArgumentException("Ya existe un perfil con el nombre: " + nombreCompleto);
+        }
+        
+        // Validar edad
+        if (edad < 1 || edad > 120) {
+            throw new IllegalArgumentException("La edad debe estar entre 1 y 120 años");
+        }
+        
+        // Validar campos obligatorios
+        if (nombreCompleto == null || nombreCompleto.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre completo es obligatorio");
+        }
+        
+        if (sexo == null || sexo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El sexo es obligatorio");
+        }
+        
+        if (direccion == null || direccion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La dirección es obligatoria");
+        }
+        
+        if (ocupacion == null || ocupacion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La ocupación es obligatoria");
+        }
+        
+        // Crear y guardar el nuevo perfil SIN psicólogo
+        PerfilCitas perfil = new PerfilCitas(
+            nombreCompleto.trim(), edad, sexo.trim(), direccion.trim(), 
+            ocupacion.trim(), telefono != null ? telefono.trim() : null, 
+            email != null ? email.trim() : null); // Usa constructor sin psicólogo
+        
+        return repositoryPerfilCitas.save(perfil);
+    }
+    
+    /**
+     * Crea un perfil de citas desde un paciente existente - PSICÓLOGO OPCIONAL
+     */
+    @Transactional
     public PerfilCitas crearPerfilDesdePaciente(Paciente paciente, Psicologo psicologo, 
                                                String direccion, String ocupacion) {
         
@@ -79,8 +129,22 @@ public class ServicioPerfilCitas {
     /**
      * Obtiene todos los perfiles de citas
      */
+    @Transactional
     public List<PerfilCitas> obtenerTodosLosPerfiles() {
         return repositoryPerfilCitas.findAllByOrderByFechaCreacionDesc();
+    }
+    
+    /**
+     * Obtiene un perfil por su ID - CORREGIDO PARA LAZY LOADING
+     */
+    @Transactional
+    public Optional<PerfilCitas> obtenerPerfilPorId(Long id) {
+        Optional<PerfilCitas> perfilOpt = repositoryPerfilCitas.findById(id);
+        // Inicializar colecciones lazy si es necesario
+        perfilOpt.ifPresent(perfil -> {
+            perfil.getCitas().size(); // Fuerza la inicialización de la colección
+        });
+        return perfilOpt;
     }
     
     /**
@@ -118,22 +182,17 @@ public class ServicioPerfilCitas {
     }
     
     /**
-     * Obtiene un perfil por su ID
-     */
-    public Optional<PerfilCitas> obtenerPerfilPorId(Long id) {
-        return repositoryPerfilCitas.findById(id);
-    }
-    
-    /**
      * Obtiene un perfil por nombre exacto
      */
+    @Transactional
     public Optional<PerfilCitas> obtenerPerfilPorNombreExacto(String nombreCompleto) {
         return repositoryPerfilCitas.findByNombreCompleto(nombreCompleto);
     }
     
     /**
-     * Actualiza un perfil existente
+     * Actualiza un perfil existente - PSICÓLOGO OPCIONAL
      */
+    @Transactional
     public PerfilCitas actualizarPerfil(Long id, String nombreCompleto, int edad, String sexo, 
                                        String direccion, String ocupacion, 
                                        String telefono, String email, Psicologo psicologo) {
@@ -158,7 +217,7 @@ public class ServicioPerfilCitas {
         perfil.setOcupacion(ocupacion.trim());
         perfil.setTelefono(telefono != null ? telefono.trim() : null);
         perfil.setEmail(email != null ? email.trim() : null);
-        perfil.setPsicologo(psicologo);
+        perfil.setPsicologo(psicologo); // Puede ser null
         
         return repositoryPerfilCitas.save(perfil);
     }
@@ -166,6 +225,7 @@ public class ServicioPerfilCitas {
     /**
      * Asigna un psicólogo a un perfil
      */
+    @Transactional
     public PerfilCitas asignarPsicologo(Long perfilId, Psicologo psicologo) {
         Optional<PerfilCitas> perfilOpt = repositoryPerfilCitas.findById(perfilId);
         if (perfilOpt.isEmpty()) {
@@ -181,6 +241,7 @@ public class ServicioPerfilCitas {
     /**
      * Elimina un perfil por su ID
      */
+    @Transactional
     public boolean eliminarPerfil(Long id) {
         if (repositoryPerfilCitas.existsById(id)) {
             repositoryPerfilCitas.deleteById(id);

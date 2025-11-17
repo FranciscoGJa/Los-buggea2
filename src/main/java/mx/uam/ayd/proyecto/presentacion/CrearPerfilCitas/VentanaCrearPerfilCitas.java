@@ -11,10 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
+
 /*
- * Ventana que permite crear un nuevo perfil de citas 
- * Se deben rellenar todos los campos siendo algunos obligatorios
- * Se cierra al terminar el registro y permite limpiar los campos 
+ * Ventana para crear el perfil de citas de un paciente.
+ * Permite al usuario ingresar y guardar la información necesaria.
+ * Utiliza JavaFX para la interfaz gráfica y Spring para la gestión de dependencias.
  */
 @Component
 public class VentanaCrearPerfilCitas {
@@ -54,7 +55,7 @@ public class VentanaCrearPerfilCitas {
                 return;
             }
 
-            System.out.println("✓ Cargando FXML de crear perfil desde: " + fxmlPath);
+            System.out.println("Cargando FXML de crear perfil desde: " + fxmlPath);
             
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
             
@@ -62,12 +63,12 @@ public class VentanaCrearPerfilCitas {
             controlador = applicationContext.getBean(ControladorCrearPerfilCitas.class);
             loader.setController(controlador);
             
-            System.out.println("✓ Controlador establecido: " + controlador.getClass().getSimpleName());
+            System.out.println("Controlador establecido: " + controlador.getClass().getSimpleName());
             
-            Scene scene = new Scene(loader.load(), 800, 700);
+            Scene scene = new Scene(loader.load(), 900, 700);
             stage.setScene(scene);
             
-            System.out.println("✓ FXML de crear perfil cargado exitosamente");
+            System.out.println("FXML de crear perfil cargado exitosamente");
 
             // Configurar comportamiento de cierre
             stage.setOnCloseRequest(event -> {
@@ -78,7 +79,7 @@ public class VentanaCrearPerfilCitas {
             initialized = true;
             
         } catch (Exception e) {
-            System.err.println("❌ ERROR CRÍTICO al cargar la interfaz de crear perfil:");
+            System.err.println("ERROR CRÍTICO al cargar la interfaz de crear perfil:");
             e.printStackTrace();
             mostrarInterfazEmergencia("Error al cargar la interfaz: " + e.getMessage());
         }
@@ -108,7 +109,7 @@ public class VentanaCrearPerfilCitas {
      * Muestra la ventana de crear perfil de citas - SIN PARÁMETROS
      */
     public void muestra() {
-        System.out.println("=== SOLICITANDO MOSTRAR VENTANA CREAR PERFIL ===");
+        System.out.println("SOLICITANDO MOSTRAR VENTANA CREAR PERFIL");
         
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(() -> this.muestra());
@@ -120,9 +121,9 @@ public class VentanaCrearPerfilCitas {
         if (stage != null) {
             stage.show();
             stage.toFront();
-            System.out.println("✓ Ventana de crear perfil mostrada exitosamente");
+            System.out.println("Ventana de crear perfil mostrada exitosamente");
         } else {
-            System.err.println("✗ No se pudo crear la ventana de crear perfil");
+            System.err.println("No se pudo crear la ventana de crear perfil");
             mostrarAlerta("Error", "No se pudo inicializar la ventana de crear perfil");
         }
     }

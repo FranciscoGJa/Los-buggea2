@@ -15,7 +15,9 @@ import java.util.List;
 import mx.uam.ayd.proyecto.presentacion.BreadcrumbController;
 // 💜 Import necesario para abrir la ventana de encuesta
 import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
-import mx.uam.ayd.proyecto.presentacion.Pago.VentanaPago;
+//abre ventana de pago
+//import mx.uam.ayd.proyecto.presentacion.Pago.VentanaPago;
+import mx.uam.ayd.proyecto.presentacion.Pago.VentanaPagoEfectivo;
 
 /**
  * Ventana principal de menú de la aplicación.
@@ -182,11 +184,18 @@ public void muestra() {
         ventana.mostrarEncuesta();
     }
 
-    @FXML
-    private void handlePagar() {
+    //@FXML
+    /*private void handlePagar() {
         //abre la ventana de pago
         VentanaPago ventanaPago = new VentanaPago();
         ventanaPago.mostrar();
+    }*/
+
+    @FXML
+    private void handlePagoEfectivo() {
+        //abre la ventana de pago en efectivo
+        VentanaPagoEfectivo ventanaPagoEfectivo = new VentanaPagoEfectivo();
+        ventanaPagoEfectivo.mostrar();
     }
     
     /**

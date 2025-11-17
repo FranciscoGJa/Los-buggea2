@@ -5,6 +5,11 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/*
+ * Modelo que representa una cita entre un paciente y un psicólogo.
+ * Contiene detalles sobre la fecha, hora, estado de confirmación y notas adicionales.
+ */
+
 @Entity
 @Data
 public class Cita {

@@ -4,7 +4,11 @@ import mx.uam.ayd.proyecto.negocio.modelo.Cita;
 import mx.uam.ayd.proyecto.negocio.modelo.Paciente;
 import mx.uam.ayd.proyecto.negocio.modelo.TipoConfirmacionCita;
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -27,4 +31,21 @@ public interface CitaRepository extends CrudRepository<Cita, Integer> {
     
     // Método para buscar citas por paciente y psicólogo
     List<Cita> findByPacienteAndPsicologo(Paciente paciente, Psicologo psicologo);
+    /**
+     * Busca citas por fecha cargando TODAS las relaciones necesarias
+     */
+    @Query("SELECT c FROM Cita c " +
+           "LEFT JOIN FETCH c.perfilCitas " +
+           "LEFT JOIN FETCH c.psicologo " +
+           "WHERE c.fechaCita = :fecha")
+    List<Cita> findByFechaCitaWithRelations(@Param("fecha") LocalDate fecha);
+    
+    /**
+     * Busca una cita por ID cargando TODAS las relaciones
+     */
+    @Query("SELECT c FROM Cita c " +
+           "LEFT JOIN FETCH c.perfilCitas " +
+           "LEFT JOIN FETCH c.psicologo " +
+           "WHERE c.id = :id")
+    Cita findByIdWithRelations(@Param("id") int id);
 }

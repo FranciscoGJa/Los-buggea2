@@ -1,5 +1,6 @@
  package mx.uam.ayd.proyecto.presentacion.principal;
 import mx.uam.ayd.proyecto.datos.PsicologoRepository;
+import mx.uam.ayd.proyecto.negocio.ServicioRecordatorios;
 //import mx.uam.ayd.proyecto.negocio.ServicioPsicologo;
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import mx.uam.ayd.proyecto.presentacion.menu.ControlMenu;
@@ -39,7 +40,9 @@ public class ControlPrincipalCentro {
 
     private final VentanaPrincipalCentro ventanaLogin;
     private final ControlMenu controlMenu;
-    
+    @Autowired
+    private ServicioRecordatorios servicioRecordatorios;
+
     @Autowired
     private PsicologoRepository servicioPsicologo;
     /**
@@ -68,6 +71,7 @@ public class ControlPrincipalCentro {
      */
     public void inicia() {
         ventanaLogin.muestra();
+        probarRecordatorioManual();
     }
     
     /**
@@ -114,5 +118,25 @@ public class ControlPrincipalCentro {
     private void mostrarSistemaPrincipal() {
         ventanaLogin.cerrarLogin();
         controlMenu.inicia();
+    }
+
+    private void probarRecordatorioManual() {
+        System.out.println("🧪 INICIANDO PRUEBA DE RECORDATORIOS");
+    
+        // Primero mostrar las citas de hoy (solo lectura)
+        System.out.println("\n📋 LISTANDO CITAS DE HOY:");
+        servicioRecordatorios.mostrarCitasHoy();
+    
+        // Luego preguntar si enviar recordatorios
+        System.out.println("\n📨 ¿Quieres enviar recordatorios para estas citas?");
+        System.out.println("(Esto enviará correos reales)");
+    
+        // Para prueba automática, puedes comentar/descomentar:
+    
+        // ✅ DESCOMENTAR PARA ENVIAR CORREOS REALES
+        servicioRecordatorios.probarRecordatoriosHoy();
+    
+        // ✅ O COMENTAR LA LÍNEA ANTERIOR Y USAR ESTA PARA SOLO VER INFO
+        //System.out.println("⚠️  Envío de correos desactivado temporalmente");
     }
 }

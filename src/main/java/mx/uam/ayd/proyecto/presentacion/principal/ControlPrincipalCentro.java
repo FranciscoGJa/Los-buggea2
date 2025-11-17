@@ -1,9 +1,12 @@
- package mx.uam.ayd.proyecto.presentacion.principal;
+package mx.uam.ayd.proyecto.presentacion.principal;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import jakarta.annotation.PostConstruct;
 import mx.uam.ayd.proyecto.datos.PsicologoRepository;
-//import mx.uam.ayd.proyecto.negocio.ServicioPsicologo;
+import mx.uam.ayd.proyecto.negocio.ServicioPsicologo;
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import mx.uam.ayd.proyecto.presentacion.menu.ControlMenu;
-
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,14 +37,17 @@ import org.springframework.stereotype.Component;
  * 
  * @author 
  */
+
 @Component
 public class ControlPrincipalCentro {
 
     private final VentanaPrincipalCentro ventanaLogin;
     private final ControlMenu controlMenu;
-    
+
     @Autowired
     private PsicologoRepository servicioPsicologo;
+
+    private Psicologo psicologoLogueado; // <-- guardamos el  ID del git psicólogo activo
     /**
      * Constructor con inyección de dependencias.
      *
@@ -53,8 +59,7 @@ public class ControlPrincipalCentro {
         this.ventanaLogin = ventanaLogin;
         this.controlMenu = controlMenu;
     }
-    
-    /**
+ /**
      * Inicializa la conexión entre este controlador y la ventana de login.
      * Este método se ejecuta automáticamente después de que el bean es construido.
      */
@@ -62,57 +67,64 @@ public class ControlPrincipalCentro {
     public void init() {
         ventanaLogin.setControlPrincipalCentro(this);
     }
-    
-    /**
+
+ /**
      * Inicia el flujo de la ventana de login
      */
-    public void inicia() {
+        public void inicia() {
         ventanaLogin.muestra();
     }
-    
-    /**
+/**
      * Autentica las credenciales del usuario
      * 
      * @param usuario nombre de usuario
      * @param contrasena contraseña
      */
     public void autenticar(String usuario, String contrasena) {
-        // Validación de campos vacíos
+         // Validación de campos vacíos
         if (usuario == null || usuario.trim().isEmpty()) {
             ventanaLogin.mostrarError("Por favor ingrese un usuario");
             return;
         }
-        
+
         if (contrasena == null || contrasena.trim().isEmpty()) {
             ventanaLogin.mostrarError("Por favor ingrese una contraseña");
             return;
         }
-        
-        // Autenticación para el centro psicológico
-        try{
-            Psicologo psicologo=servicioPsicologo.findByUsuario(usuario);
-            if(psicologo==null){
+    // Autenticación para el centro psicológico
+        try {
+            Psicologo psicologo = servicioPsicologo.findByUsuario(usuario);
+            if (psicologo == null) {
                 ventanaLogin.mostrarError("Usuario no encontrado");
                 return;
             }
-            if(psicologo.getContrasena().equals(contrasena)){
+            if (psicologo.getContrasena().equals(contrasena)) {
+                psicologoLogueado = psicologo; // <-- guardamos el logueado
                 ventanaLogin.cerrarLogin();
                 mostrarSistemaPrincipal();
-            }else{
+            } else {
                 ventanaLogin.mostrarError("Contraseña incorrecta");
             }
-        }catch(Exception e){
-            ventanaLogin.mostrarError("Error al autenticar: "+e.getMessage());
+        } catch (Exception e) {
+            ventanaLogin.mostrarError("Error al autenticar: " + e.getMessage());
         }
     }
-    
-    /**
+     /**
      * Muestra el sistema principal después de un login exitoso.
      * Este método cierra la ventana de login y delega la ejecución 
      * del menú principal al {@link ControlMenu}.
      */
+
     private void mostrarSistemaPrincipal() {
-        ventanaLogin.cerrarLogin();
         controlMenu.inicia();
+    }
+
+    // <-- Método para que otros controles obtengan el ID del psicólogo logueado
+    public int obtenerIdPsicologoLogueado() {
+        if (psicologoLogueado != null) {
+            return psicologoLogueado.getId(); // <-- tu método en la entidad Psicologo
+        } else {
+            throw new IllegalStateException("No hay psicólogo logueado.");
+        }
     }
 }

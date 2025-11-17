@@ -57,3 +57,13 @@ alter table if exists psicologo add constraint UK_5b4xbl0hnmws63ywr524fa51t uniq
 	at com.sun.javafx.application.LauncherImpl.launchApplication1(LauncherImpl.java:817)
 	at com.sun.javafx.application.LauncherImpl.lambda$launchApplication$2(LauncherImpl.java:196)
 	at java.base/java.lang.Thread.run(Thread.java:1474)
+2025-11-16 18:51:40.668366-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "MATERIALES" no encontrada
+Table "MATERIALES" not found; SQL statement:
+ALTER TABLE materiales
+ADD IMAGEN VARCHAR(255) [42102-224]
+2025-11-16 19:03:45.228380-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "MATERIALES" no encontrada
+Table "MATERIALES" not found; SQL statement:
+INSERT INTO materiales (NOMBRE, TIPO, ESTADO, ID_PSICOLOGO, IMAGEN)
+VALUES ('Bocina', 'Audio Visual', 'Disponible', NULL, 'images/Bocina.png') [42102-224]

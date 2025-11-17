@@ -62,6 +62,8 @@
                     </Label>
                     <Button mnemonicParsing="false" onAction="#handleAgregarPsicologo" text="Agregar psicólogo" maxWidth="Infinity"/>
                     <Button mnemonicParsing="false" onAction="#handleListarPsicologo" text="Listar psicólogos" maxWidth="Infinity"/>
+                    <Button mnemonicParsing="false" onAction="#handleMaterialDidactico" text="Material Didáctico" maxWidth="Infinity"/>
+
 
                     <Separator prefWidth="200.0">
                       <VBox.margin>

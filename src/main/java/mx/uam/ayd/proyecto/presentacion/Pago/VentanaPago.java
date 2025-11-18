@@ -31,26 +31,26 @@ public class VentanaPago {
     private boolean initialized = false;
     
 
-    @FXML private TextField txtCardNumber;
+    @FXML private TextField txtCardNumber;// Número de tarjeta
     @FXML private TextField txtCardHolder;// Nombre del titular
-    @FXML private TextField txtExpiryDate;
-    @FXML private PasswordField txtCVV;
-    @FXML private TextField CVVvisible;
-    @FXML private Button btnToggleCVV;
-    @FXML private TextField txtMonto;
-    @FXML private ChoiceBox<String> cbMetodo;
-    @FXML private Button btnPagar;
-    @FXML private Label lblMensaje;
-    private boolean mostrando = false;
-    @FXML private Label lblInfo;
-    @FXML private ComboBox<String> cbMes;
-    @FXML private ComboBox<Integer> cbAno;
+    @FXML private TextField txtExpiryDate;// Fecha de expiración
+    @FXML private PasswordField txtCVV;// CVV oculto
+    @FXML private TextField CVVvisible;// CVV visible
+    @FXML private Button btnToggleCVV;// Botón para mostrar/ocultar CVV
+    @FXML private TextField txtMonto;// Monto a pagar
+    @FXML private ChoiceBox<String> cbMetodo;// Método de pago
+    @FXML private Button btnPagar;// Botón para realizar el pago
+    @FXML private Label lblMensaje;// Mensaje de estado
+    private boolean mostrando = false;// Estado de visibilidad del CVV
+    @FXML private Label lblInfo;// Etiqueta para mostrar información al usuario
+    @FXML private ComboBox<String> cbMes;// ComboBox para seleccionar el mes
+    @FXML private ComboBox<Integer> cbAno;// ComboBox para seleccionar el año
 
     @FXML
     private void onPago() {
         lblMensaje.setText("Simulación de pago completada.");
     }
-
+    //handle
     private final int ANIOS_ADELANTE = 10;
 
     @FXML
@@ -85,7 +85,9 @@ public class VentanaPago {
             }
         };
     }
+    //Configura los ComboBoxes de mes y año para la fecha de expiración
     private void configurarComboBoxesFecha() {
+        // Verificación nula por seguridad
          if (cbMes == null || cbAno == null) {
             System.err.println("⚠️ cbMes o cbAno no están conectados al FXML.");
             return;

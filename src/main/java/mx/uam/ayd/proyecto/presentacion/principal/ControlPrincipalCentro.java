@@ -1,31 +1,38 @@
 package mx.uam.ayd.proyecto.presentacion.principal;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
 import mx.uam.ayd.proyecto.datos.PsicologoRepository;
-import mx.uam.ayd.proyecto.negocio.ServicioRecordatorios;
+import mx.uam.ayd.proyecto.negocio.ServicioRecordatorios; 
+import mx.uam.ayd.proyecto.negocio.ServicioPsicologo;
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import mx.uam.ayd.proyecto.presentacion.menu.ControlMenu;
 import mx.uam.ayd.proyecto.presentacion.menuPsicologo.ControlMenuPsicologo; 
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
 
 /**
  * Controlador principal del flujo de inicio de sesión (login) 
  * del sistema del Centro Psicológico.
  * * @author 
  */
+
 @Component
 public class ControlPrincipalCentro {
 
     private final VentanaPrincipalCentro ventanaLogin;
     private final ControlMenu controlMenu;
+    
     @Autowired
-    private ServicioRecordatorios servicioRecordatorios;
+    private ServicioRecordatorios servicioRecordatorios; 
 
     @Autowired
     private PsicologoRepository servicioPsicologo;
 
     @Autowired
-    private ControlMenuPsicologo controlMenuPsicologo;
+    private ControlMenuPsicologo controlMenuPsicologo; 
+
+    private Psicologo psicologoLogueado; 
     
     /**
      * Constructor con inyección de dependencias.
@@ -38,7 +45,7 @@ public class ControlPrincipalCentro {
         this.ventanaLogin = ventanaLogin;
         this.controlMenu = controlMenu;
     }
-    
+
     /**
      * Inicializa la conexión entre este controlador y la ventana de login.
      */
@@ -46,15 +53,15 @@ public class ControlPrincipalCentro {
     public void init() {
         ventanaLogin.setControlPrincipalCentro(this);
     }
-    
+
     /**
      * Inicia el flujo de la ventana de login
      */
     public void inicia() {
         ventanaLogin.muestra();
-        probarRecordatorioManual();
+        probarRecordatorioManual(); 
     }
-    
+
     /**
      * Autentica las credenciales del usuario
      * * @param usuario nombre de usuario
@@ -66,52 +73,60 @@ public class ControlPrincipalCentro {
             ventanaLogin.mostrarError("Por favor ingrese un usuario");
             return;
         }
-        
+
         if (contrasena == null || contrasena.trim().isEmpty()) {
             ventanaLogin.mostrarError("Por favor ingrese una contraseña");
             return;
         }
         
         // Autenticación para el centro psicológico
-        try{
+        try {
             Psicologo psicologo = servicioPsicologo.findByUsuario(usuario);
-            if(psicologo == null){
+            if (psicologo == null) {
                 ventanaLogin.mostrarError("Usuario no encontrado");
                 return;
             }
 
-            if(psicologo.getContrasena().equals(contrasena)){
+            if (psicologo.getContrasena().equals(contrasena)) {
+                psicologoLogueado = psicologo; 
                 ventanaLogin.cerrarLogin();
                 
-                // --- INICIO DE MODIFICACIÓN ---
                 // Diferenciación de roles
                 if (psicologo.getUsuario().equals("Admin")) {
                     // Si es Admin, muestra el menú principal completo
-                    controlMenu.inicia();
+                    mostrarSistemaPrincipal(); // Reutiliza el método existente para el Admin
                 } else {
                     // Si es cualquier otro psicólogo, muestra el menú restringido
                     controlMenuPsicologo.inicia(psicologo); 
                 }
-                // --- FIN DE MODIFICACIÓN (HU-21) ---
 
-            }else{
+            } else {
                 ventanaLogin.mostrarError("Contraseña incorrecta");
             }
-        }catch(Exception e){
-            ventanaLogin.mostrarError("Error al autenticar: "+e.getMessage());
+        } catch (Exception e) {
+            ventanaLogin.mostrarError("Error al autenticar: " + e.getMessage());
         }
     }
-    
+
     /**
      * Muestra el sistema principal después de un login exitoso.
      * Este método cierra la ventana de login y delega la ejecución 
      * del menú principal al {@link ControlMenu}.
      */
     private void mostrarSistemaPrincipal() {
-        ventanaLogin.cerrarLogin();
         controlMenu.inicia();
     }
 
+    // Método para que otros controles obtengan el ID del psicólogo logueado 
+    public int obtenerIdPsicologoLogueado() {
+        if (psicologoLogueado != null) {
+            // Asumiendo que el modelo Psicologo tiene un método getId()
+            return psicologoLogueado.getId(); 
+        } else {
+            throw new IllegalStateException("No hay psicólogo logueado.");
+        }
+    }
+    
     private void probarRecordatorioManual() {
         System.out.println(" INICIANDO PRUEBA DE RECORDATORIOS");
     
@@ -124,11 +139,10 @@ public class ControlPrincipalCentro {
         System.out.println("(Esto enviará correos reales)");
     
         // Para prueba automática, puedes comentar/descomentar:
-    
-        //  DESCOMENTAR PARA ENVIAR CORREOS REALES
+        //  DESCOMENTAR PARA ENVIAR CORREOS REALES
         servicioRecordatorios.probarRecordatoriosHoy();
     
-        //  O COMENTAR LA LÍNEA ANTERIOR Y USAR ESTA PARA SOLO VER INFO
-        //System.out.println("  Envío de correos desactivado temporalmente");
+        //  O COMENTAR LA LÍNEA ANTERIOR Y USAR ESTA PARA SOLO VER INFO
+        //System.out.println("  Envío de correos desactivado temporalmente");
     }
 }

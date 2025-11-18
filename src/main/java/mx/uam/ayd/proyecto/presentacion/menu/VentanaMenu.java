@@ -230,6 +230,13 @@ public void muestra() {
             control.consultarPerfilCitas();
         }
     }
+    @FXML
+private void handleMaterialDidactico() {
+    if (control != null) {
+        control.mostrarMaterialDidactico();
+    }
+}
+
     
     /**
      * Acción del botón "Salir".

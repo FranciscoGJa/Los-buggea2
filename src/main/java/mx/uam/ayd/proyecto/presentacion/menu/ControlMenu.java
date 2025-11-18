@@ -2,15 +2,24 @@ package mx.uam.ayd.proyecto.presentacion.menu;
 
 import jakarta.annotation.PostConstruct;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import mx.uam.ayd.proyecto.presentacion.listarpacientes.ControlListarPacientes;
+import mx.uam.ayd.proyecto.presentacion.material.ControlMaterialDidactico;
+import mx.uam.ayd.proyecto.presentacion.principal.ControlPrincipalCentro;
 import mx.uam.ayd.proyecto.presentacion.agregarPsicologo.ControlAgregarPsicologo;
 import mx.uam.ayd.proyecto.presentacion.listarPsicologo.ControlListarPsicologo;
 import mx.uam.ayd.proyecto.presentacion.agregarPaciente.ControlAgregarPaciente;
@@ -31,6 +40,12 @@ public class ControlMenu {
     private final ControlListarPsicologo controlListarPsicologo;
     private final ControlPagar controlPagar;
     private final VentanaPelfil ventanaPelfil;
+    @Autowired
+    @Lazy
+    private ControlPrincipalCentro controlPrincipalCentro;
+    @Autowired
+    private ApplicationContext context; // Contexto de Spring
+
     
     @FXML
     private StackPane contentArea;
@@ -129,7 +144,30 @@ public void listarPsicologo() {
     public void consultarPerfilCitas() {
         ventanaPelfil.muestra();
     }
-    
+
+ public void mostrarMaterialDidactico() {
+        try {
+            // Crea el FXMLLoader
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-GestionRecursos.fxml"));
+
+            // Usa Spring para crear el controlador y que se inyecten los beans
+            loader.setControllerFactory(context::getBean);
+
+            // Carga la UI
+            Parent root = loader.load();
+
+            // Crea y muestra la ventana
+            Stage stage = new Stage();
+            stage.setTitle("Gestión de Material Didáctico");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Aquí puedes mostrar un diálogo de error si quieres
+        }
+    }
+
     /**
      * Finaliza la ejecución de la aplicación.
      */

@@ -1,17 +1,20 @@
-// PerfilCitas.java
 package mx.uam.ayd.proyecto.negocio.modelo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Modelo que representa el perfil de citas de un paciente.
+ * Contiene información personal y una lista de citas asociadas.
+ * Puede estar vinculado a un paciente registrado o ser un perfil independiente.
+ * También puede tener un psicólogo asignado, pero esto es opcional.
+ */
+
 @Entity
+@Data
 public class PerfilCitas {
     
     @Id
@@ -40,7 +43,17 @@ public class PerfilCitas {
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
     
-    @OneToMany(mappedBy = "perfilCitas")
+    // Relación con Paciente (opcional - para pacientes ya registrados)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "paciente_id")
+    private Paciente paciente;
+    
+    // Relación con Psicólogo asignado (OPCIONAL - nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "psicologo_id", nullable = true)  // Cambiado a nullable = true
+    private Psicologo psicologo;
+    
+    @OneToMany(mappedBy = "perfilCitas", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cita> citas = new ArrayList<>();
     
     // Constructor vacío
@@ -48,95 +61,69 @@ public class PerfilCitas {
         this.fechaCreacion = LocalDateTime.now();
     }
     
-    // Constructor con parámetros
-    public PerfilCitas(String nombreCompleto, int edad, String sexo, String direccion, String ocupacion) {
+    // Constructor para paciente existente
+    public PerfilCitas(Paciente paciente, String direccion, String ocupacion) {
+        this();
+        this.paciente = paciente;
+        this.nombreCompleto = paciente.getNombre();
+        this.edad = paciente.getEdad();
+        this.sexo = "Por definir";
+        this.direccion = direccion;
+        this.ocupacion = ocupacion;
+        this.telefono = paciente.getTelefono();
+        this.email = paciente.getCorreo();
+        
+        // Agregar este perfil al paciente
+        if (paciente != null) {
+            paciente.agregarPerfilCitas(this);
+        }
+    }
+
+    // Constructor para paciente existente (con psicólogo opcional)
+    public PerfilCitas(Paciente paciente, Psicologo psicologo, String direccion, String ocupacion) {
+        this();
+        this.paciente = paciente;
+        this.psicologo = psicologo;  // Puede ser null
+        this.nombreCompleto = paciente.getNombre();
+        this.edad = paciente.getEdad();
+        this.sexo = "Por definir";
+        this.direccion = direccion;
+        this.ocupacion = ocupacion;
+        this.telefono = paciente.getTelefono();
+        this.email = paciente.getCorreo();
+    
+        // Agregar este perfil al paciente
+        if (paciente != null) {
+         paciente.agregarPerfilCitas(this);
+        }
+    }
+    
+    // Constructor para paciente nuevo (sin registro previo) - CON psicólogo OPCIONAL
+    public PerfilCitas(String nombreCompleto, int edad, String sexo, String direccion, 
+                      String ocupacion, String telefono, String email, Psicologo psicologo) {
         this();
         this.nombreCompleto = nombreCompleto;
         this.edad = edad;
         this.sexo = sexo;
         this.direccion = direccion;
         this.ocupacion = ocupacion;
-    }
-    
-    // Getters y Setters
-    public Long getIdPerfil() {
-        return idPerfil;
-    }
-    
-    public void setIdPerfil(Long idPerfil) {
-        this.idPerfil = idPerfil;
-    }
-    
-    public String getNombreCompleto() {
-        return nombreCompleto;
-    }
-    
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
-    }
-    
-    public int getEdad() {
-        return edad;
-    }
-    
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
-    
-    public String getSexo() {
-        return sexo;
-    }
-    
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
-    }
-    
-    public String getDireccion() {
-        return direccion;
-    }
-    
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-    
-    public String getOcupacion() {
-        return ocupacion;
-    }
-    
-    public void setOcupacion(String ocupacion) {
-        this.ocupacion = ocupacion;
-    }
-    
-    public String getTelefono() {
-        return telefono;
-    }
-    
-    public void setTelefono(String telefono) {
         this.telefono = telefono;
-    }
-    
-    public String getEmail() {
-        return email;
-    }
-    
-    public void setEmail(String email) {
         this.email = email;
+        this.psicologo = psicologo; // Puede ser null
     }
     
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
-    }
-    
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-    
-    public List<Cita> getCitas() {
-        return citas;
-    }
-    
-    public void setCitas(List<Cita> citas) {
-        this.citas = citas;
+    // NUEVO CONSTRUCTOR: Para paciente nuevo SIN psicólogo
+    public PerfilCitas(String nombreCompleto, int edad, String sexo, String direccion, 
+                      String ocupacion, String telefono, String email) {
+        this();
+        this.nombreCompleto = nombreCompleto;
+        this.edad = edad;
+        this.sexo = sexo;
+        this.direccion = direccion;
+        this.ocupacion = ocupacion;
+        this.telefono = telefono;
+        this.email = email;
+        // psicologo se deja como null
     }
     
     public void agregarCita(Cita cita) {
@@ -144,29 +131,8 @@ public class PerfilCitas {
         cita.setPerfilCitas(this);
     }
     
-    @Override
-    public String toString() {
-        return "PerfilCitas{" +
-                "idPerfil=" + idPerfil +
-                ", nombreCompleto='" + nombreCompleto + '\'' +
-                ", edad=" + edad +
-                ", sexo='" + sexo + '\'' +
-                ", direccion='" + direccion + '\'' +
-                ", ocupacion='" + ocupacion + '\'' +
-                ", fechaCreacion=" + fechaCreacion +
-                '}';
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PerfilCitas)) return false;
-        PerfilCitas that = (PerfilCitas) o;
-        return idPerfil != null && idPerfil.equals(that.idPerfil);
-    }
-    
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
+    public void removerCita(Cita cita) {
+        this.citas.remove(cita);
+        cita.setPerfilCitas(null);
     }
 }

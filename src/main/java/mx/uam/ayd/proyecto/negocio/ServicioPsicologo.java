@@ -198,6 +198,8 @@ public class ServicioPsicologo {
      * @param paciente el paciente para el cual se recomienda la especialidad.
      * @return una lista de psicólogos acorde a la regla de edad.
      */
+
+    
     public List<Psicologo> obtenerPsicologosPorEdadPaciente(Paciente paciente) {
     if (paciente.getEdad() < 18) {
         // Solo psicólogos infantiles

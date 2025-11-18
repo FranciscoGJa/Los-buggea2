@@ -3,54 +3,49 @@ package mx.uam.ayd.proyecto.datos;
 import mx.uam.ayd.proyecto.negocio.modelo.Cita;
 import mx.uam.ayd.proyecto.negocio.modelo.Paciente;
 import mx.uam.ayd.proyecto.negocio.modelo.TipoConfirmacionCita;
-import org.springframework.data.repository.CrudRepository;
-import java.util.List;
-import java.util.Date;
+import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 
-/**
- * Repositorio para gestionar operaciones de persistencia sobre la entidad {@link Cita}.
- *
- * <p>Proporciona métodos para consultar citas asociadas a pacientes,
- * filtrar por estado de confirmación o por fecha, y realizar combinaciones de criterios.</p>
- *
- * <p>Extiende {@link org.springframework.data.repository.CrudRepository CrudRepository},
- * heredando las operaciones CRUD básicas.</p>
- *
- * @author Tech Solutions
- * @version 1.0
- */
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
 public interface CitaRepository extends CrudRepository<Cita, Integer> {
 
-    /**
-     * Recupera todas las citas asociadas a un paciente.
-     *
-     * @param paciente el paciente del cual se quieren obtener las citas; no debe ser {@code null}.
-     * @return una lista de citas del paciente; si no tiene citas registradas, la lista estará vacía.
-     */
+    // Métodos existentes (mantener compatibilidad)
     List<Cita> findByPaciente(Paciente paciente);
-
-    /**
-     * Busca citas por estado.
-     *
-     * @param estadoCita el estado de la cita; no debe ser {@code null}.
-     * @return una lista de citas con el estado especificado; si no hay coincidencias, la lista estará vacía.
-     */
     List<Cita> findByEstadoCita(TipoConfirmacionCita estadoCita);
-
-    /**
-     * Busca citas por fecha exacta.
-     *
-     * @param fechaCita la fecha de la cita; no debe ser {@code null}.
-     * @return una lista de citas en la fecha especificada; si no hay coincidencias, la lista estará vacía.
-     */
-    List<Cita> findByFechaCita(Date fechaCita);
-
-    /**
-     * Busca citas por paciente y estado.
-     *
-     * @param paciente el paciente; no debe ser {@code null}.
-     * @param estadoCita el estado de la cita; no debe ser {@code null}.
-     * @return una lista de citas del paciente con el estado especificado; si no hay coincidencias, la lista estará vacía.
-     */
+    List<Cita> findByFechaCita(LocalDate fechaCita);
     List<Cita> findByPacienteAndEstadoCita(Paciente paciente, TipoConfirmacionCita estadoCita);
+    
+    // Nuevos métodos para el sistema integrado con PerfilCitas
+    List<Cita> findByPerfilCitasIdPerfil(Long perfilCitasId);
+    List<Cita> findByPsicologoId(Integer psicologoId);
+    List<Cita> findByPsicologoIdAndFechaCita(Integer psicologoId, LocalDate fechaCita);
+    List<Cita> findByPsicologoIdAndFechaCitaAndHoraCita(Integer psicologoId, LocalDate fechaCita, LocalTime horaCita);
+    List<Cita> findByPerfilCitasIdPerfilAndEstadoCita(Long perfilCitasId, TipoConfirmacionCita estadoCita);
+    List<Cita> findByPsicologoAndEstadoCita(Psicologo psicologo, TipoConfirmacionCita estadoCita);
+    
+    // Método para buscar citas por paciente y psicólogo
+    List<Cita> findByPacienteAndPsicologo(Paciente paciente, Psicologo psicologo);
+    /**
+     * Busca citas por fecha cargando TODAS las relaciones necesarias
+     */
+    @Query("SELECT c FROM Cita c " +
+           "LEFT JOIN FETCH c.perfilCitas " +
+           "LEFT JOIN FETCH c.psicologo " +
+           "WHERE c.fechaCita = :fecha")
+    List<Cita> findByFechaCitaWithRelations(@Param("fecha") LocalDate fecha);
+    
+    /**
+     * Busca una cita por ID cargando TODAS las relaciones
+     */
+    @Query("SELECT c FROM Cita c " +
+           "LEFT JOIN FETCH c.perfilCitas " +
+           "LEFT JOIN FETCH c.psicologo " +
+           "WHERE c.id = :id")
+    Cita findByIdWithRelations(@Param("id") int id);
 }

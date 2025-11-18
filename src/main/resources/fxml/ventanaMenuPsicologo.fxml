@@ -7,7 +7,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.layout.FlowPane?>
 
-
 <VBox prefHeight="700.0" prefWidth="1100.0" minHeight="700.0" minWidth="950.0"
       xmlns="http://javafx.com/javafx/24.0.1"
       xmlns:fx="http://javafx.com/fxml/1">
@@ -21,7 +20,6 @@
                    AnchorPane.rightAnchor="0.0"
                    AnchorPane.topAnchor="0.0">
 
-          <!-- PANEL IZQUIERDO -->
           <items>
             <AnchorPane minWidth="200.0" maxWidth="280.0">
               <children>
@@ -37,34 +35,15 @@
                         <Insets bottom="5.0" top="5.0" />
                       </VBox.margin>
                     </Label>
+                    
                     <Button mnemonicParsing="false" onAction="#handleAgregarPaciente" text="Agregar paciente" maxWidth="Infinity"/>
                     <Button mnemonicParsing="false" onAction="#handleListarPacientes" text="Listar pacientes" maxWidth="Infinity"/>
-                    <!--<Button mnemonicParsing="false" onAction="#handlePagar" text="Pagar" maxWidth="Infinity"/>-->
-                    <Button mnemonicParsing="false" onAction="#handlePagoEfectivo" text="Pagar en efectivo" maxWidth="Infinity"/>
+                    
                     <Button mnemonicParsing="false"
                             onAction="#handleEncuesta"
-                            text="Responder Encuesta"
+                            text="Responder Encuesta 📋"
                             maxWidth="Infinity"
-                            style="-fx-background-color: linear-gradient(to bottom, #8a9cf8, #6c7df2);
-                                   -fx-text-fill: white;
-                                   -fx-font-weight: bold;
-                                   -fx-background-radius: 10;" />
-
-                    <Separator prefWidth="200.0">
-                      <VBox.margin>
-                        <Insets bottom="10.0" top="15.0" />
-                      </VBox.margin>
-                    </Separator>
-
-                    <Label text="Psicólogos" style="-fx-font-weight: bold; -fx-font-size: 14px;">
-                      <VBox.margin>
-                        <Insets bottom="5.0" />
-                      </VBox.margin>
-                    </Label>
-                    <Button mnemonicParsing="false" onAction="#handleAgregarPsicologo" text="Agregar psicólogo" maxWidth="Infinity"/>
-                    <Button mnemonicParsing="false" onAction="#handleListarPsicologo" text="Listar psicólogos" maxWidth="Infinity"/>
-                    <Button mnemonicParsing="false" onAction="#handleMaterialDidactico" text="Material Didáctico" maxWidth="Infinity"/>
-
+                            style="-fx-background-color: linear-gradient(to bottom, #8a9cf8, #6c7df2); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" />
 
                     <Separator prefWidth="200.0">
                       <VBox.margin>
@@ -77,6 +56,7 @@
                         <Insets bottom="5.0" />
                       </VBox.margin>
                     </Label>
+                    
                     <Button mnemonicParsing="false" onAction="#handlePerfilCitas" text="Consultar Perfiles" maxWidth="Infinity"/>
 
                     <Region VBox.vgrow="ALWAYS" />
@@ -93,13 +73,12 @@
               </children>
             </AnchorPane>
 
-            <!-- PANEL DERECHO -->
             <AnchorPane minWidth="400.0">
               <children>
                 <BorderPane AnchorPane.bottomAnchor="30.0"
-                            AnchorPane.leftAnchor="30.0"
-                            AnchorPane.rightAnchor="30.0"
-                            AnchorPane.topAnchor="30.0">
+                             AnchorPane.leftAnchor="30.0"
+                             AnchorPane.rightAnchor="30.0"
+                             AnchorPane.topAnchor="30.0">
 
                   <top>
                     <VBox>
@@ -112,7 +91,6 @@
                           </BorderPane.margin>
                         </Label>
 
-                        <!-- Breadcrumb -->
                         <FlowPane fx:id="breadcrumbContainer"
                                   hgap="5" vgap="3"
                                   style="-fx-padding:5;"

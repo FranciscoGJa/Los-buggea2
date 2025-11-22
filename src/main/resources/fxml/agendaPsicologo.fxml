@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="900" prefHeight="600"
+            style="-fx-background-color:#f7f9fb;">
+
+    <top>
+        <HBox alignment="CENTER"
+              style="-fx-background-color:#4b63b0; -fx-padding:15;">
+            <Label text="🧠 Agenda del Psicólogo"
+                   style="-fx-text-fill:white; -fx-font-size:24px; -fx-font-weight:bold;" />
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" alignment="CENTER" padding="20">
+
+            <TableView fx:id="tablaAgenda" prefWidth="800" prefHeight="400">
+                <columns>
+                    <TableColumn fx:id="colFecha" text="Fecha" prefWidth="150"/>
+                    <TableColumn fx:id="colHora" text="Hora" prefWidth="120"/>
+                    <TableColumn fx:id="colPaciente" text="Paciente" prefWidth="250"/>
+                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="150"/>
+                </columns>
+            </TableView>
+
+            <Button text="🔄 Actualizar Agenda"
+                    fx:id="btnActualizar"
+                    style="-fx-background-color:#4b63b0; -fx-text-fill:white; -fx-font-size:14px; -fx-padding:8 18;"
+                    onAction="#handleActualizar"/>
+        </VBox>
+    </center>
+
+</BorderPane>

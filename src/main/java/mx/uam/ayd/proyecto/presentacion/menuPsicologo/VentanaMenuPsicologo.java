@@ -131,6 +131,14 @@ public class VentanaMenuPsicologo {
             control.consultarPerfilCitas();
         }
     }
+
+    @FXML
+    private void handleAgendaPsicologo() {
+        if (control != null) {
+            control.abrirAgendaPsicologo();
+        }
+    }
+
     
     @FXML
     private void handleSalir() {

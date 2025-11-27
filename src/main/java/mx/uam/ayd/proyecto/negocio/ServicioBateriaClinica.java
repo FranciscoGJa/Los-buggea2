@@ -43,8 +43,8 @@ public class ServicioBateriaClinica {
     @Autowired
     public ServicioBateriaClinica(BateriaClinicaRepository bateriaClinicaRepository,
                                     PacienteRepository pacienteRepository) {
-                                        this.bateriaClinicaRepository=bateriaClinicaRepository;
-                                        this.pacienteRepository=pacienteRepository;
+        this.bateriaClinicaRepository=bateriaClinicaRepository;
+        this.pacienteRepository=pacienteRepository;
     }
 
     /**
@@ -75,7 +75,7 @@ public class ServicioBateriaClinica {
         // Revisamos si no hay una bateria existente
         BateriaClinica bateria = bateriaClinicaRepository.findByPacienteAndTipoDeBateria(paciente, tipo).orElseGet(BateriaClinica::new);
 
-        if (bateria.getId() == 0){
+        if (bateria.getId() == null){
             bateria.setPaciente(paciente);
             bateria.setTipoDeBateria(tipo);
         }
@@ -104,6 +104,7 @@ public class ServicioBateriaClinica {
      * @return la batería clínica actualizada y persistida.
      * @throws IllegalArgumentException si la batería es {@code null}.
      */
+    @Transactional
     public BateriaClinica guardarComentarios(BateriaClinica bateria, String comentarios) {
         if (bateria == null) {
             throw new IllegalArgumentException("La batería no puede ser nula.");
@@ -112,6 +113,17 @@ public class ServicioBateriaClinica {
         return bateriaClinicaRepository.save(bateria);
     }
     
+    /**
+     * Actualiza una batería clínica existente con nuevas respuestas y recalcula su calificación.
+     * * @param bateria La entidad batería con los datos actualizados.
+     * @return La batería persistida.
+     */
+    @Transactional
+    public BateriaClinica actualizarBateria(BateriaClinica bateria) {
+        if (bateria == null) throw new IllegalArgumentException("La batería no puede ser nula");
+        return bateriaClinicaRepository.save(bateria);
+    }
+
     /**
      * Obtiene una descripción en texto con los detalles de una batería clínica.
      *

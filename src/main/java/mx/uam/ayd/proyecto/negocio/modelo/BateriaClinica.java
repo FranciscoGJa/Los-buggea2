@@ -23,7 +23,7 @@ public class BateriaClinica {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private Integer respuesta1;
     private Integer respuesta2;

@@ -13,6 +13,10 @@ import java.io.IOException;
 import java.util.List;
 import mx.uam.ayd.proyecto.presentacion.BreadcrumbController;
 import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+
+
 
 /**
  * Ventana (Vista) para el menú del Psicólogo.
@@ -79,13 +83,30 @@ public class VentanaMenuPsicologo {
     }
 
     public void muestra() {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(this::muestra);
-            return;
-        }
-        initializeUI();
+    try {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/fxml/ventanaMenuPsicologo.fxml")
+        );
+        loader.setController(this);
+
+        Parent root = loader.load();
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(
+                getClass().getResource("/css/style.css").toExternalForm()
+        );
+
+        stage = new Stage();
+        stage.setTitle("Centro Psicológico - Menú Psicólogo");
+        stage.setScene(scene);
         stage.show();
+
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
     }
+   
+
 
     // Actualiza la ruta del breadcrumb
     public void actualizaBreadcrumb(List<String> ruta) {
@@ -135,10 +156,9 @@ public class VentanaMenuPsicologo {
     @FXML
     private void handleAgendaPsicologo() {
         if (control != null) {
-            control.abrirAgendaPsicologo();
+        control.abrirAgendaPsicologo();
         }
     }
-
     
     @FXML
     private void handleSalir() {
@@ -146,4 +166,15 @@ public class VentanaMenuPsicologo {
             control.salir();
         }
     }
+
+    public void cargarVista(String rutaFXML) {
+        try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFXML));
+        Parent vista = loader.load();
+        contentArea.getChildren().setAll(vista);
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+    }
+
 }

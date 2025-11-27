@@ -8,6 +8,7 @@ import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import mx.uam.ayd.proyecto.presentacion.listarpacientes.ControlListarPacientes;
 import mx.uam.ayd.proyecto.presentacion.agregarPaciente.ControlAgregarPaciente;
 import mx.uam.ayd.proyecto.presentacion.PerfilCitas.VentanaPelfil;
+import mx.uam.ayd.proyecto.presentacion.agendaPsicologo.VentanaAgendaPsicologo;
 
 import java.util.List;
 
@@ -25,6 +26,9 @@ public class ControlMenuPsicologo {
 
     @Autowired
     private VentanaPelfil ventanaPelfil;
+
+    @Autowired
+    private VentanaAgendaPsicologo ventanaAgendaPsicologo;
 
     private Psicologo psicologoLogueado;
 
@@ -55,11 +59,15 @@ public class ControlMenuPsicologo {
         ventanaPelfil.muestra();
     }
 
-    //  Implementación sencilla de la Agenda (sin errores)
     public void abrirAgendaPsicologo() {
-        ventana.actualizaBreadcrumb(List.of("Inicio", "Agenda del Psicólogo"));
-        System.out.println(" Agenda del Psicólogo abierta");
+        ventanaAgendaPsicologo.setControlMenuPsicologo(this);
+        ventanaAgendaPsicologo.muestra();
     }
+
+    public Psicologo getPsicologo() {
+    return psicologoLogueado;
+    }
+
 
     public void salir() {
         System.exit(0);

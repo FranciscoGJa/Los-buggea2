@@ -59,7 +59,7 @@ public class ControlPrincipalCentro {
      */
     public void inicia() {
         ventanaLogin.muestra();
-        probarRecordatorioManual(); 
+        //probarRecordatorioManual(); 
     }
 
     /**

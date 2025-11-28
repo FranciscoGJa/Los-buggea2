@@ -176,6 +176,6 @@ public class ServicioRecordatorios {
             e.printStackTrace();
         }
     }).start();
-}
+    }
 
 }

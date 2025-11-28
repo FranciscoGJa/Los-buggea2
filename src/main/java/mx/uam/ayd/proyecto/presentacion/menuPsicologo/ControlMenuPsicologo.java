@@ -8,6 +8,7 @@ import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import mx.uam.ayd.proyecto.presentacion.listarpacientes.ControlListarPacientes;
 import mx.uam.ayd.proyecto.presentacion.agregarPaciente.ControlAgregarPaciente;
 import mx.uam.ayd.proyecto.presentacion.PerfilCitas.VentanaPelfil;
+import mx.uam.ayd.proyecto.presentacion.Horario.ControlHorario;
 import java.util.List;
 
 /**
@@ -29,7 +30,8 @@ public class ControlMenuPsicologo {
 
     @Autowired
     private VentanaPelfil ventanaPelfil; // Para "Consultar Perfiles de Citas"
-
+    @Autowired
+    private ControlHorario ventanaHorario;
     private Psicologo psicologoLogueado;
 
     @PostConstruct
@@ -63,6 +65,10 @@ public class ControlMenuPsicologo {
 
     public void consultarPerfilCitas() {
         ventanaPelfil.muestra();
+    }
+
+    public void horario(){
+        ventanaHorario.iniciar();
     }
 
     // --- Salir ---

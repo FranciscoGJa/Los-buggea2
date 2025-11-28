@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import mx.uam.ayd.proyecto.presentacion.BreadcrumbController;
 import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
+import mx.uam.ayd.proyecto.presentacion.Horario.VentanaHorario;
 
 /**
  * Ventana (Vista) para el menú del Psicólogo.
@@ -132,6 +133,13 @@ public class VentanaMenuPsicologo {
         }
     }
     
+    @FXML
+    private void handleHorario(){
+        if(control != null){
+            control.horario();
+        }
+    }
+
     @FXML
     private void handleSalir() {
         if (control != null) {

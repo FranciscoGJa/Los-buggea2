@@ -128,19 +128,20 @@ public class ControlPrincipalCentro {
     }
     
     private void probarRecordatorioManual() {
-        System.out.println(" INICIANDO PRUEBA DE RECORDATORIOS");
+        //System.out.println(" INICIANDO PRUEBA DE RECORDATORIOS");
     
         // Primero mostrar las citas de hoy (solo lectura)
-        System.out.println("\n LISTANDO CITAS DE HOY:");
+        //System.out.println("\n LISTANDO CITAS DE HOY:");
         servicioRecordatorios.mostrarCitasHoy();
     
         // Luego preguntar si enviar recordatorios
-        System.out.println("\n ¿Quieres enviar recordatorios para estas citas?");
-        System.out.println("(Esto enviará correos reales)");
+        //System.out.println("\n ¿Quieres enviar recordatorios para estas citas?");
+        //System.out.println("(Esto enviará correos reales)");
     
         // Para prueba automática, puedes comentar/descomentar:
         //  DESCOMENTAR PARA ENVIAR CORREOS REALES
-        servicioRecordatorios.probarRecordatoriosHoy();
+        //servicioRecordatorios.probarRecordatoriosHoy();
+        servicioRecordatorios.iniciarRecordatoriosAsync();
     
         //  O COMENTAR LA LÍNEA ANTERIOR Y USAR ESTA PARA SOLO VER INFO
         //System.out.println("  Envío de correos desactivado temporalmente");

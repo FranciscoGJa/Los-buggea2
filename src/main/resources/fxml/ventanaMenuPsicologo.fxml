@@ -67,6 +67,22 @@
                       </VBox.margin>
                     </Separator>
 
+                    <Label text="Mis datos" style="-fx-font-weight: bold; -fx-font-size: 14px;">
+                      <VBox.margin>
+                        <Insets bottom="5.0" />
+                      </VBox.margin>
+                    </Label>
+                    
+                    <Button mnemonicParsing="false" onAction="#handleHorario" text="Horario" maxWidth="Infinity"/>
+
+                    <Region VBox.vgrow="ALWAYS" />
+
+                    <Separator prefWidth="200.0">
+                      <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                      </VBox.margin>
+                    </Separator>
+
                     <Button mnemonicParsing="false" onAction="#handleSalir" text="Salir" maxWidth="Infinity"/>
                   </children>
                 </VBox>

@@ -7,7 +7,6 @@ import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +24,6 @@ public class ServicioHistorialCitas {
     @Autowired
     private CitaRepository citaRepository;
     
-    @Autowired
-    private ServicioCita servicioCita;
     
     /**
      * Obtiene el historial completo de citas de un perfil
@@ -81,4 +78,19 @@ public class ServicioHistorialCitas {
         return citas.stream()
             .max((c1, c2) -> c1.getFechaCita().compareTo(c2.getFechaCita()));
     }
+
+    /**
+ * Obtiene una cita con todas sus relaciones cargadas usando JOIN FETCH
+ */
+@Transactional
+public Optional<Cita> obtenerCitaConRelaciones(Integer citaId) {
+    try {
+        Cita cita = citaRepository.findByIdWithRelations(citaId);
+        return Optional.ofNullable(cita);
+    } catch (Exception e) {
+        System.err.println("Error al cargar cita con relaciones: " + e.getMessage());
+        e.printStackTrace();
+        return Optional.empty();
+    }
+}
 }

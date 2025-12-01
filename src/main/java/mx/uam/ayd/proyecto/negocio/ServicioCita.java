@@ -169,4 +169,69 @@ public class ServicioCita {
         cita.setNotaPostSesion(notaPostSesion);
         return citaRepository.save(cita);
     }
+
+    /**
+ * Reagenda una cita existente creando una nueva cita y cancelando la anterior
+ */
+@Transactional
+public Cita reagendarCita(Integer citaId, LocalDate nuevaFecha, LocalTime nuevaHora, String motivo) {
+    Optional<Cita> citaOpt = citaRepository.findById(citaId);
+    if (citaOpt.isEmpty()) {
+        throw new IllegalArgumentException("Cita no encontrada");
+    }
+    
+    Cita citaOriginal = citaOpt.get();
+    
+    // Verificar que la nueva fecha no sea en el pasado
+    if (nuevaFecha.isBefore(LocalDate.now())) {
+        throw new IllegalArgumentException("No se pueden reagendar citas en fechas pasadas");
+    }
+    
+    // Verificar disponibilidad del psicólogo
+    if (existeCitaEnFechaYHora(citaOriginal.getPsicologo().getId(), nuevaFecha, nuevaHora)) {
+        throw new IllegalArgumentException("El psicólogo ya tiene una cita en esa fecha y hora");
+    }
+    
+    // Crear nueva cita reagendada
+    Cita citaReagendada = new Cita();
+    citaReagendada.setPerfilCitas(citaOriginal.getPerfilCitas());
+    citaReagendada.setPsicologo(citaOriginal.getPsicologo());
+    citaReagendada.setPaciente(citaOriginal.getPaciente());
+    citaReagendada.setFechaCita(nuevaFecha);
+    citaReagendada.setHoraCita(nuevaHora);
+    citaReagendada.setEstadoCita(TipoConfirmacionCita.PENDIENTE);
+    citaReagendada.setDetallesAdicionalesPaciente(
+        "CITA REAGENDADA - Original: " + citaOriginal.getFechaCita() + " " + 
+        citaOriginal.getHoraCita() + ". Motivo: " + motivo);
+    
+    // Cancelar cita original
+    citaOriginal.setEstadoCita(TipoConfirmacionCita.CANCELADA);
+    citaOriginal.setMotivoCancelacion("Reagendada para: " + nuevaFecha + " " + nuevaHora);
+    
+    // Guardar ambos cambios
+    citaRepository.save(citaOriginal);
+    Cita citaGuardada = citaRepository.save(citaReagendada);
+    
+    return citaGuardada;
+}
+
+/**
+ * Método auxiliar para el controlador de reagendar
+ */
+@Transactional
+public void agregarCitaReagendada(Cita citaReagendada, Integer citaOriginalId) {
+    Optional<Cita> citaOriginalOpt = citaRepository.findById(citaOriginalId);
+    if (citaOriginalOpt.isPresent()) {
+        Cita citaOriginal = citaOriginalOpt.get();
+        
+        // Cancelar cita original
+        citaOriginal.setEstadoCita(TipoConfirmacionCita.CANCELADA);
+        citaOriginal.setMotivoCancelacion("Reagendada para: " + citaReagendada.getFechaCita() + " " + 
+                                        citaReagendada.getHoraCita());
+        citaRepository.save(citaOriginal);
+    }
+    
+    // Guardar nueva cita
+    citaRepository.save(citaReagendada);
+}
 }

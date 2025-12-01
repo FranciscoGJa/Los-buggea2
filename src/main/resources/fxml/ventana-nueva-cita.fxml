@@ -3,77 +3,72 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" 
-      spacing="15" style="-fx-padding: 20;">
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="mx.uam.ayd.proyecto.presentacion.CrearCita.ControladorNuevaCita"
+      stylesheets="@css/style.css"
+      spacing="12" style="-fx-padding: 15;"> <!-- Reducido spacing y padding -->
    
-   <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+   <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
    
-   <!-- Header -->
-   <Label text="Agendar Nueva Cita" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;">
-      <padding><Insets bottom="10"/></padding>
+   <Label text="Agendar Nueva Cita" styleClass="main-title">
+      <padding><Insets bottom="8"/></padding> <!-- Reducido -->
    </Label>
    
-   <!-- Selector de Psicólogo -->
-   <VBox spacing="10" style="-fx-background-color: #ecf0f1; -fx-padding: 15; -fx-border-radius: 5; -fx-background-radius: 5;">
-      <Label text="Seleccione Psicólogo:" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+   <VBox spacing="8" styleClass="info-card"> <!-- Reducido spacing -->
+      <Label text="Seleccione Psicólogo:" styleClass="section-title" />
       
-      <VBox spacing="5">
-         <Label text="Psicólogo *" style="-fx-font-weight: bold;"/>
-         <ComboBox fx:id="comboPsicologos" prefWidth="300"/>
-         <Label fx:id="lblPsicologoSeleccionado" text="Psicólogo: No seleccionado" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+      <VBox spacing="3"> <!-- Reducido -->
+         <Label text="Psicólogo *" styleClass="field-label" />
+         <ComboBox fx:id="comboPsicologos" prefWidth="300" />
+         <Label fx:id="lblPsicologoSeleccionado" text="Psicólogo: No seleccionado" styleClass="selection-info" />
       </VBox>
    </VBox>
    
-   <!-- Selector de Fecha y Hora -->
-   <VBox spacing="10" style="-fx-background-color: #ecf0f1; -fx-padding: 15; -fx-border-radius: 5; -fx-background-radius: 5;">
-      <Label text="Seleccione Fecha y Hora:" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+   <VBox spacing="8" styleClass="info-card"> <!-- Reducido spacing -->
+      <Label text="Seleccione Fecha y Hora:" styleClass="section-title" />
       
-      <HBox spacing="15" alignment="CENTER_LEFT">
-         <VBox spacing="5">
-            <Label text="Fecha *:" style="-fx-font-weight: bold;"/>
-            <DatePicker fx:id="datePickerFecha" prefWidth="150"/>
+      <HBox spacing="12" alignment="CENTER_LEFT"> <!-- Reducido spacing -->
+         <VBox spacing="3"> <!-- Reducido -->
+            <Label text="Fecha *:" styleClass="field-label" />
+            <DatePicker fx:id="datePickerFecha" prefWidth="150" />
          </VBox>
          
-         <VBox spacing="5">
-            <Label text="Hora Disponible *:" style="-fx-font-weight: bold;"/>
-            <ComboBox fx:id="comboHorarios" prefWidth="120"/>
+         <VBox spacing="3"> <!-- Reducido -->
+            <Label text="Hora Disponible *:" styleClass="field-label" />
+            <ComboBox fx:id="comboHorarios" prefWidth="120" />
          </VBox>
       </HBox>
       
-      <!-- Selección Actual -->
-      <HBox spacing="20" style="-fx-background-color: #d5dbdb; -fx-padding: 10; -fx-border-radius: 3; -fx-background-radius: 3;">
-         <Label fx:id="lblFechaSeleccionada" text="Fecha: No seleccionada" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-         <Label fx:id="lblHoraSeleccionada" text="Hora: No seleccionada" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+      <HBox spacing="15" styleClass="selection-box"> <!-- Reducido spacing -->
+         <Label fx:id="lblFechaSeleccionada" text="Fecha: No seleccionada" styleClass="selection-info" />
+         <Label fx:id="lblHoraSeleccionada" text="Hora: No seleccionada" styleClass="selection-info" />
       </HBox>
    </VBox>
    
-   <!-- Motivo de Consulta -->
-   <VBox spacing="5">
-      <Label text="Motivo de la Consulta *" style="-fx-font-weight: bold;"/>
-      <TextArea fx:id="txtMotivoConsulta" prefRowCount="3" promptText="Describa el motivo principal de la consulta (maximo 500 caracteres)"/>
+   <VBox spacing="3"> <!-- Reducido -->
+      <Label text="Motivo de la Consulta *" styleClass="field-label" />
+      <TextArea fx:id="txtMotivoConsulta" prefRowCount="3" prefHeight="80" 
+                promptText="Describa el motivo principal de la consulta (maximo 500 caracteres)" />
    </VBox>
    
-   <!-- Detalles Adicionales -->
-   <VBox spacing="5">
-      <Label text="Detalles Adicionales (Opcional)" style="-fx-font-weight: bold;"/>
-      <TextArea fx:id="txtDetallesAdicionales" prefRowCount="2" promptText="Informacion adicional que considere importante (maximo 500 caracteres)"/>
+   <VBox spacing="3"> <!-- Reducido -->
+      <Label text="Detalles Adicionales (Opcional)" styleClass="field-label" />
+      <TextArea fx:id="txtDetallesAdicionales" prefRowCount="2" prefHeight="60"
+                promptText="Informacion adicional que considere importante (maximo 500 caracteres)" />
    </VBox>
    
-   <!-- Botones -->
-   <HBox spacing="15" alignment="CENTER_RIGHT">
-      <Region HBox.hgrow="ALWAYS"/>
-      <Button fx:id="btnCancelar" text="Cancelar" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" onAction="#cancelar"/>
-      <Button fx:id="btnCrearCita" text="Crear Cita" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" onAction="#crearCita"/>
+   <HBox spacing="12" alignment="CENTER_RIGHT"> <!-- Reducido spacing -->
+      <Region HBox.hgrow="ALWAYS" />
+      <Button fx:id="btnCancelar" text="Cancelar" styleClass="secondary-button" onAction="#cancelar" />
+      <Button fx:id="btnCrearCita" text="Crear Cita" styleClass="success-button" onAction="#crearCita" />
    </HBox>
    
-   <!-- Notas -->
-   <VBox spacing="5" style="-fx-background-color: #fff3cd; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;">
-      <Label text="Información:" style="-fx-font-weight: bold; -fx-text-fill: #856404;"/>
-      <Label text="• Los campos marcados con * son obligatorios" style="-fx-text-fill: #856404; -fx-font-size: 12;"/>
-      <Label text="• Primero seleccione un psicólogo, luego la fecha y hora" style="-fx-text-fill: #856404; -fx-font-size: 12;"/>
-      <Label text="• Solo se muestran horarios disponibles del psicólogo seleccionado" style="-fx-text-fill: #856404; -fx-font-size: 12;"/>
-      <Label text="• No se permiten fechas pasadas" style="-fx-text-fill: #856404; -fx-font-size: 12;"/>
+   <VBox spacing="3" styleClass="warning-box"> <!-- Reducido spacing -->
+      <Label text="Información:" styleClass="warning-title" />
+      <Label text="• Los campos marcados con * son obligatorios" styleClass="warning-text" />
+      <Label text="• Primero seleccione un psicólogo, luego la fecha y hora" styleClass="warning-text" />
+      <Label text="• Solo se muestran horarios disponibles del psicólogo seleccionado" styleClass="warning-text" />
+      <Label text="• No se permiten fechas pasadas" styleClass="warning-text" />
    </VBox>
 </VBox>

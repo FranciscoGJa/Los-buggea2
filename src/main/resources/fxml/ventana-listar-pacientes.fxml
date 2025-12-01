@@ -175,11 +175,16 @@
    </center>
 
    <bottom>
-      <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER">
          <padding>
             <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
          </padding>
          <children>
+            <!-- NUEVO BOTÓN AGREGADO -->
+            <Button fx:id="btnGenerarPdf" mnemonicParsing="false" onAction="#generarPdfHistorial" 
+                    prefWidth="180.0" text="📄 Generar PDF Historial" 
+                    style="-fx-background-color: #1976d2; -fx-text-fill: white; -fx-font-weight: bold;"
+                    disable="true" />
             <Button mnemonicParsing="false" onAction="#handleCerrar" prefWidth="100.0" text="Cerrar" />
          </children>
       </HBox>

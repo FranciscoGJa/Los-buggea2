@@ -59,7 +59,7 @@ public class ControlPrincipalCentro {
      */
     public void inicia() {
         ventanaLogin.muestra();
-        probarRecordatorioManual(); 
+        //probarRecordatorioManual(); 
     }
 
     /**
@@ -127,7 +127,7 @@ public class ControlPrincipalCentro {
         }
     }
     
-    private void probarRecordatorioManual() {
+    /*private void probarRecordatorioManual() {
         System.out.println(" INICIANDO PRUEBA DE RECORDATORIOS");
     
         // Primero mostrar las citas de hoy (solo lectura)
@@ -140,9 +140,9 @@ public class ControlPrincipalCentro {
     
         // Para prueba automática, puedes comentar/descomentar:
         //  DESCOMENTAR PARA ENVIAR CORREOS REALES
-        servicioRecordatorios.probarRecordatoriosHoy();
+        //servicioRecordatorios.probarRecordatoriosHoy();
     
         //  O COMENTAR LA LÍNEA ANTERIOR Y USAR ESTA PARA SOLO VER INFO
         //System.out.println("  Envío de correos desactivado temporalmente");
-    }
+    }*/
 }

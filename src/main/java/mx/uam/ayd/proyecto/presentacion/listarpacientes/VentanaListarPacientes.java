@@ -21,6 +21,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import mx.uam.ayd.proyecto.negocio.modelo.BateriaClinica;
 import mx.uam.ayd.proyecto.negocio.modelo.HistorialClinico;
@@ -64,6 +66,9 @@ public class VentanaListarPacientes {
     @FXML private Label lblHistorialDescripcion;
     @FXML private Label lblHistorialConsentimiento;
     
+    @FXML private Button btnGenerarPdf;
+    @FXML private MenuButton menuOpcionesPaciente;
+
     // Variables de estado y control
     private Parent root; 
     private ControlListarPacientes control; 
@@ -89,52 +94,104 @@ public class VentanaListarPacientes {
         return root;
     }
 
-    /*Muestra la ventana de listado de pacientes. */
-    public void muestra(ControlListarPacientes control, List<Paciente> pacientes) {
-        this.control = control;
+    /* Muestra la ventana de listado de pacientes. */
+public void muestra(ControlListarPacientes control, List<Paciente> pacientes) {
+    this.control = control;
 
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> muestra(control, pacientes));
-            return;
+    if (!Platform.isFxApplicationThread()) {
+        Platform.runLater(() -> muestra(control, pacientes));
+        return;
+    }
+
+    // Configura columnas
+    columnaNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+    columnaCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
+    columnaTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
+
+    // Carga los pacientes en la tabla
+    tablaPacientes.setItems(FXCollections.observableArrayList(pacientes));
+
+    // Listener para selección de batería
+    listaBaterias.getSelectionModel().selectedIndexProperty().addListener((obs, oldIndex, newIndex) -> {
+        // Usamos el índice para recuperar el objeto BateriaClinica real de la lista bateriasDelPaciente
+        if (newIndex.intValue() >= 0 && bateriasDelPaciente != null && newIndex.intValue() < bateriasDelPaciente.size()) {
+            BateriaClinica seleccionada = bateriasDelPaciente.get(newIndex.intValue());
+            control.seleccionarBateria(seleccionada);
+            
+            // Habilitar controles
+            btnAbrirDetalles.setDisable(false);
+            btnGuardarComentarios.setDisable(false);
+            comentariosTextArea.setDisable(false);
+        } else {
+            // Si no hay selección, deshabilitar y limpiar
+            control.seleccionarBateria(null); // Esto limpiará mostrarDetallesBateria o limpiar
+            btnAbrirDetalles.setDisable(true);
+            btnGuardarComentarios.setDisable(true);
+            comentariosTextArea.setDisable(true);
+            comentariosTextArea.clear();
+            puntajeObtenidoLabel.setText("-");
         }
+    });
 
-        // Configura columnas
-        columnaNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        columnaCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
-        columnaTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
-
-        // Carga los pacientes en la tabla
-        tablaPacientes.setItems(FXCollections.observableArrayList(pacientes));
-
-        // Listener para selección de batería
-        listaBaterias.getSelectionModel().selectedIndexProperty().addListener((obs, oldIndex, newIndex) -> {
-            // Usamos el índice para recuperar el objeto BateriaClinica real de la lista bateriasDelPaciente
-            if (newIndex.intValue() >= 0 && bateriasDelPaciente != null && newIndex.intValue() < bateriasDelPaciente.size()) {
-                BateriaClinica seleccionada = bateriasDelPaciente.get(newIndex.intValue());
-                control.seleccionarBateria(seleccionada);
-                
-                // Habilitar controles
-                btnAbrirDetalles.setDisable(false);
-                btnGuardarComentarios.setDisable(false);
-                comentariosTextArea.setDisable(false);
-            } else {
-                // Si no hay selección, deshabilitar y limpiar
-                control.seleccionarBateria(null); // Esto limpiará mostrarDetallesBateria o limpiar
-                btnAbrirDetalles.setDisable(true);
-                btnGuardarComentarios.setDisable(true);
-                comentariosTextArea.setDisable(true);
-                comentariosTextArea.clear();
-                puntajeObtenidoLabel.setText("-");
-            }
-        });
-
-        // Selección de paciente
+    // Selección de paciente
+    tablaPacientes.getSelectionModel().selectedItemProperty().addListener(
+        (obs, oldValue, newValue) -> control.seleccionarPaciente(newValue)
+    );
+    
+    // NUEVO: Configurar botón PDF (agregar esto)
+    if (btnGenerarPdf != null) {
+        // Listener para habilitar/deshabilitar según selección
         tablaPacientes.getSelectionModel().selectedItemProperty().addListener(
-            (obs, oldValue, newValue) -> control.seleccionarPaciente(newValue)
+            (obs, oldValue, newValue) -> {
+                btnGenerarPdf.setDisable(newValue == null);
+            }
         );
+    }
+    
+    configurarOpcionesPdf();
+    
+    // Estado inicial
+    limpiarDetallesDeBateria();
+    if (btnGenerarPdf != null) {
+        btnGenerarPdf.setDisable(true); // Inicialmente deshabilitado
+    }
+}
+
+    /**
+     * Configurar las opciones de PDF
+     */
+    private void configurarOpcionesPdf() {
+        // Opción 1: Botón simple
+        if (btnGenerarPdf != null) {
+            btnGenerarPdf.setOnAction(e -> generarPdfHistorial());
+        }
         
-        // Estado inicial
-        limpiarDetallesDeBateria();
+        // Opción 2: Menú contextual (más elegante)
+        if (menuOpcionesPaciente != null) {
+            MenuItem itemPdf = new MenuItem("Generar PDF de Historial");
+            itemPdf.setOnAction(e -> generarPdfHistorial());
+            menuOpcionesPaciente.getItems().add(itemPdf);
+        }
+        
+        // Listener para habilitar/deshabilitar botón según selección
+        tablaPacientes.getSelectionModel().selectedItemProperty().addListener(
+            (obs, oldValue, newValue) -> actualizarEstadoBotonPdf()
+        );
+    }
+
+    /**
+     * Actualizar estado del botón PDF
+     */
+    private void actualizarEstadoBotonPdf() {
+        boolean hayPacienteSeleccionado = tablaPacientes.getSelectionModel().getSelectedItem() != null;
+        
+        if (btnGenerarPdf != null) {
+            btnGenerarPdf.setDisable(!hayPacienteSeleccionado);
+        }
+        
+        if (menuOpcionesPaciente != null) {
+            menuOpcionesPaciente.setDisable(!hayPacienteSeleccionado);
+        }
     }
 
     /*  Muestra los detalles de un historial clínico en la sección correspondiente. */
@@ -210,6 +267,9 @@ public class VentanaListarPacientes {
         Platform.runLater(() -> new Alert(AlertType.ERROR, mensaje).showAndWait());
     }
 
+
+    
+
     /* Boton guardar cambios*/
     @FXML 
     private void handleGuardarComentarios() { 
@@ -218,11 +278,6 @@ public class VentanaListarPacientes {
         }
     }
 
-    /* Boton cerrar*/
-    @FXML 
-    private void handleCerrar() { 
-        control.cerrar(); 
-    }
 
     /* Boton abrir detalles*/
     @FXML 
@@ -231,4 +286,25 @@ public class VentanaListarPacientes {
             control.abrirDetallesBateria(bateriaSeleccionada); 
         } 
     }
+
+    /**
+     * Manejar la generación de PDF
+     */
+    @FXML
+private void generarPdfHistorial() {
+    System.out.println("MÉTODO generarPdfHistorial LLAMADO"); // Para depuración
+    Paciente pacienteSeleccionado = tablaPacientes.getSelectionModel().getSelectedItem();
+    if (control != null && pacienteSeleccionado != null) {
+        System.out.println("Llamando a control.generarPdfHistorial()");
+        control.generarPdfHistorial(pacienteSeleccionado);
+    } else {
+        System.out.println("ERROR: control=" + control + ", paciente=" + pacienteSeleccionado);
+    }
+}
+
+@FXML 
+private void handleCerrar() { 
+    System.out.println("MÉTODO handleCerrar LLAMADO"); // Para depuración
+    control.cerrar(); 
+}
 }

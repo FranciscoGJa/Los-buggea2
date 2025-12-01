@@ -8,7 +8,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 import mx.uam.ayd.proyecto.datos.PsicologoRepository;
 import mx.uam.ayd.proyecto.presentacion.principal.ControlPrincipalCentro;
 
@@ -44,6 +47,11 @@ public class ProyectoApplication {
         Application.launch(JavaFXApplication.class, args);
     }
     
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
     /**
      * Clase interna para manejar la inicialización de JavaFX
      */

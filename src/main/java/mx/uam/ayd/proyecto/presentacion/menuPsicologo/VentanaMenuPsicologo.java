@@ -139,6 +139,13 @@ public class VentanaMenuPsicologo {
             control.ejerciciosRespiracion();
         }
     }
+
+    @FXML
+private void handleMaterialDidactico() {
+    if (control != null) {
+        control.mostrarMaterialDidactico();
+    }
+}
     
     @FXML
     private void handleSalir() {

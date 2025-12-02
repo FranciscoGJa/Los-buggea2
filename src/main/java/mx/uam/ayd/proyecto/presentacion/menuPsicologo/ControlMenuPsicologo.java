@@ -1,13 +1,21 @@
 package mx.uam.ayd.proyecto.presentacion.menuPsicologo;
 
 import jakarta.annotation.PostConstruct;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import mx.uam.ayd.proyecto.presentacion.listarpacientes.ControlListarPacientes;
 import mx.uam.ayd.proyecto.presentacion.agregarPaciente.ControlAgregarPaciente;
 import mx.uam.ayd.proyecto.presentacion.PerfilCitas.VentanaPelfil;
+
+import java.io.IOException;
 import java.util.List;
 import mx.uam.ayd.proyecto.presentacion.VentanaPDF;
 
@@ -34,6 +42,9 @@ public class ControlMenuPsicologo {
     private VentanaPelfil ventanaPelfil; // Para "Consultar Perfiles de Citas"
 
     private Psicologo psicologoLogueado;
+
+     @Autowired
+    private ApplicationContext context; // Contexto de Spring
 
     @PostConstruct
     public void init() {
@@ -72,6 +83,37 @@ public class ControlMenuPsicologo {
         ventanaPDF.muestra();
         
     }
+    public void mostrarMaterialDidactico() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-GestionRecursos.fxml"));
+            loader.setControllerFactory(context::getBean);
+
+            // Carga la UI como un Node para insertarlo en el contentArea de la misma ventana
+            Parent root = loader.load();
+
+            // Si el controlador necesita contexto (ej. id del psicólogo), se lo pasamos
+            Object controller = loader.getController();
+            try {
+                // ControlMaterialDidactico tiene setIdPsicologo(int)
+                if (controller != null && psicologoLogueado != null) {
+                    controller.getClass().getMethod("setIdPsicologo", int.class).invoke(controller, psicologoLogueado.getId());
+                }
+            } catch (NoSuchMethodException nsme) {
+                // El controlador no requiere el id, ignorar
+            }
+
+            // Actualizar breadcrumb y cargar la vista en el panel central
+            ventana.actualizaBreadcrumb(List.of("Inicio", "Material Didáctico", "Gestión"));
+            ventana.cargarVista(root);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            // Captura reflectiva u otros errores al invocar setIdPsicologo
+            e.printStackTrace();
+        }
+    }
+
 
     // --- Salir ---
     public void salir() {

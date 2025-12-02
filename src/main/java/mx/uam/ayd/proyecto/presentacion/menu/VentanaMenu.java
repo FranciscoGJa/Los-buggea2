@@ -18,6 +18,7 @@ import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
 //abre ventana de pago
 //import mx.uam.ayd.proyecto.presentacion.Pago.VentanaPago;
 import mx.uam.ayd.proyecto.presentacion.Pago.VentanaPagoEfectivo;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Ventana principal de menú de la aplicación.
@@ -50,6 +51,8 @@ public class VentanaMenu {
     private Stage stage;
     private ControlMenu control;
     private boolean initialized = false;
+    @Autowired
+    private VentanaPagoEfectivo ventanaPagoEfectivo;
     @FXML
     private FlowPane breadcrumbContainer;
     private BreadcrumbController breadcrumbController;// Controlador del breadcrumb
@@ -132,10 +135,25 @@ public void muestra() {
     public void actualizaBreadcrumb(List<String> ruta) {
         breadcrumbController.setPath(ruta, this::handleBreadcrumbClick);
     }
-    //Aquí puedes decidir la acción al hacer click en un item del breadcrumb
+    //Vamos a regresar a la ruta seleccionada del breadcrumb
     private void handleBreadcrumbClick(String item) {
-        
-        System.out.println("Clic en breadcrumb: " + item);
+        // Si se hace click en 'Inicio', cargamos la vista principal (principal.fxml)
+        if ("Inicio".equalsIgnoreCase(item)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal.fxml"));
+                Node vistaPrincipal = loader.load();
+                if (contentArea != null) {
+                    contentArea.getChildren().setAll(vistaPrincipal);
+                }
+
+                // Actualizar breadcrumb a la ruta inicial
+                actualizaBreadcrumb(java.util.List.of("Inicio"));
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Fallback: limpiar el contentArea
+                if (contentArea != null) contentArea.getChildren().clear();
+            }
+        }
     }
     // Carga una nueva vista en el área de contenido central
     public void cargarVista(Node vista) {
@@ -193,9 +211,16 @@ public void muestra() {
 
     @FXML
     private void handlePagoEfectivo() {
-        //abre la ventana de pago en efectivo
-        VentanaPagoEfectivo ventanaPagoEfectivo = new VentanaPagoEfectivo();
-        ventanaPagoEfectivo.mostrar();
+        // Mostrar la vista de pago embebida en el contentArea y actualizar breadcrumb
+        try {
+            javafx.scene.Parent vista = ventanaPagoEfectivo.getVista();
+            this.actualizaBreadcrumb(java.util.List.of("Inicio", "Pago", "Efectivo"));
+            this.cargarVista(vista);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Fallback: mostrar en ventana independiente
+            ventanaPagoEfectivo.mostrar();
+        }
     }
     
     /**

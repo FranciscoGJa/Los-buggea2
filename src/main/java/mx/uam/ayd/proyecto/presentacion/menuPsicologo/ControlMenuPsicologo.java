@@ -76,12 +76,26 @@ public class ControlMenuPsicologo {
     }
 
     public void consultarPerfilCitas() {
-        ventanaPelfil.muestra();
+        try {
+            javafx.scene.Parent vista = ventanaPelfil.getVista();
+            ventana.actualizaBreadcrumb(java.util.List.of("Inicio", "Perfiles", "Consultar"));
+            ventana.cargarVista(vista);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ventanaPelfil.muestra(); // fallback a la forma anterior
+        }
     }
 
      public void ejerciciosRespiracion() {
-        ventanaPDF.muestra();
-        
+        try {
+            Parent vista = ventanaPDF.getVista();
+            ventana.actualizaBreadcrumb(List.of("Inicio", "Ejercicios", "Respiración"));
+            ventana.cargarVista(vista);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Fallback: mostrar en ventana independiente
+            ventanaPDF.muestra();
+        }
     }
     public void mostrarMaterialDidactico() {
         try {

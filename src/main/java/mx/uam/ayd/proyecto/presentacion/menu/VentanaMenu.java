@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 import mx.uam.ayd.proyecto.presentacion.BreadcrumbController;
-// 💜 Import necesario para abrir la ventana de encuesta
+//  Import necesario para abrir la ventana de encuesta
 import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
 //abre ventana de pago
 //import mx.uam.ayd.proyecto.presentacion.Pago.VentanaPago;
@@ -230,14 +230,7 @@ public void muestra() {
             control.consultarPerfilCitas();
         }
     }
-    @FXML
-private void handleMaterialDidactico() {
-    if (control != null) {
-        control.mostrarMaterialDidactico();
-    }
-}
-
-    
+ 
     /**
      * Acción del botón "Salir".
      * Llama al controlador para cerrar la aplicación.

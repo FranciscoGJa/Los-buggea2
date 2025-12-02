@@ -44,32 +44,43 @@ public class VentanaPDF implements Initializable {
      * Método para mostrar la ventana (requerido por Spring)
      */
     public void muestra() {
+        // Mantener compatibilidad: si alguien llama a muestra(), seguimos mostrando
+        // en una ventana nueva como fallback. Recomendado usar getVista() desde el
+        // controlador principal para insertar la vista en el contentArea.
         try {
             if (stage == null) {
-                // Cargar el FXML y crear la ventana
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaRespiracion.fxml"));
                 loader.setController(this);
                 Parent root = loader.load();
-                
+
                 stage = new Stage();
                 stage.setTitle("Ejercicios de Respiración - Técnicas de Relajación");
                 stage.setScene(new Scene(root));
                 stage.setMinWidth(1000);
                 stage.setMinHeight(700);
-                
-                // Configurar cierre de ventana
-                stage.setOnCloseRequest(event -> {
-                    stage = null;
-                });
+
+                stage.setOnCloseRequest(event -> stage = null);
             }
-            
+
             stage.show();
-            stage.toFront(); // Traer al frente si ya está abierta
-            
+            stage.toFront();
+
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo cargar la ventana de ejercicios de respiración");
         }
+    }
+
+    /**
+     * Devuelve la vista (`Parent`) para insertar en el `contentArea` de la ventana principal.
+     * Usa este método desde `ControlMenuPsicologo` para mostrar la UI sin crear un nuevo Stage.
+     */
+    public Parent getVista() throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaRespiracion.fxml"));
+        // Reutilizamos esta instancia como controlador (Spring inyecta beans en esta clase)
+        loader.setController(this);
+        Parent root = loader.load();
+        return root;
     }
 
     private void configurarComponentes() {

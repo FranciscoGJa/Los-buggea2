@@ -29,7 +29,6 @@ public class VentanaPagoEfectivo {
     @FXML private Button btnAbrirCaja;
     @FXML private Button btnCerrarCaja;
     @FXML private Button btnConfirmar;
-    @FXML private Button btnCerrar;
 
     private boolean cajaAbierta = false;
     private boolean cajaCerrada = false;
@@ -40,7 +39,6 @@ public class VentanaPagoEfectivo {
         lblMonto.setText(String.format("$%.2f", MONTO_A_PAGAR));
         lblCambio.setText("");
         lblMensaje.setText("");
-        btnCerrar.setVisible(false);
         btnCerrarCaja.setDisable(true);
         btnConfirmar.setDisable(true);
         txtEfectivo();
@@ -118,14 +116,9 @@ public class VentanaPagoEfectivo {
     private void confirmarPago() {
         lblMensaje.setText(" Pago completado con éxito.");
         btnConfirmar.setDisable(true);
-        btnCerrar.setVisible(true);
     }
 
-    //cerrar ventana con 
-    @FXML
-    private void cerrarVentana() {
-        stage.close();
-    }
+    
     //Método para inicializar la interfaz gráfica de usuario de java con el FXML
     private void initializeUI() {
         if (initialized) return;
@@ -178,5 +171,16 @@ public class VentanaPagoEfectivo {
         } else {
             System.err.println("No se pudo mostrar la ventana: stage es null.");
         }
+    }
+
+    /**
+     * Devuelve la vista (`Parent`) para insertar en el `contentArea` de la ventana principal.
+     * No crea un Stage.
+     */
+    public Parent getVista() throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaPagoEfectivo.fxml"));
+        loader.setController(this);
+        Parent root = loader.load();
+        return root;
     }
 }

@@ -45,6 +45,8 @@
                             maxWidth="Infinity"
                             style="-fx-background-color: linear-gradient(to bottom, #8a9cf8, #6c7df2); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" />
 
+                     <Button mnemonicParsing="false" onAction="#handleEjerciciosRespiracion" text="Ejercicios de respiración" maxWidth="Infinity"/>
+
                     <Separator prefWidth="200.0">
                       <VBox.margin>
                         <Insets bottom="10.0" top="15.0" />

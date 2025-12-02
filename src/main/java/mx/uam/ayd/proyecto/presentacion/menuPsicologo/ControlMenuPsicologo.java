@@ -9,6 +9,7 @@ import mx.uam.ayd.proyecto.presentacion.listarpacientes.ControlListarPacientes;
 import mx.uam.ayd.proyecto.presentacion.agregarPaciente.ControlAgregarPaciente;
 import mx.uam.ayd.proyecto.presentacion.PerfilCitas.VentanaPelfil;
 import java.util.List;
+import mx.uam.ayd.proyecto.presentacion.VentanaPDF;
 
 /**
  * Controlador para el menú específico del Psicólogo
@@ -19,7 +20,9 @@ public class ControlMenuPsicologo {
 
     @Autowired
     private VentanaMenuPsicologo ventana;
-
+    
+    @Autowired
+    private VentanaPDF ventanaPDF; // Nueva ventana para ejercicios de respiración
     // --- Dependencias permitidas---
     @Autowired
     private ControlListarPacientes controlListarPacientes;
@@ -63,6 +66,11 @@ public class ControlMenuPsicologo {
 
     public void consultarPerfilCitas() {
         ventanaPelfil.muestra();
+    }
+
+     public void ejerciciosRespiracion() {
+        ventanaPDF.muestra();
+        
     }
 
     // --- Salir ---

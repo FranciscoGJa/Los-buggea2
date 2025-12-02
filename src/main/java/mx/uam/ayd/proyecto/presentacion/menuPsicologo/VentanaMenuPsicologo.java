@@ -14,6 +14,7 @@ import java.util.List;
 import mx.uam.ayd.proyecto.presentacion.BreadcrumbController;
 import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
 
+
 /**
  * Ventana (Vista) para el menú del Psicólogo.
  * Carga el FXML /fxml/ventanaMenuPsicologo.fxml
@@ -133,9 +134,18 @@ public class VentanaMenuPsicologo {
     }
     
     @FXML
+    private void handleEjerciciosRespiracion() {
+        if (control != null) {
+            control.ejerciciosRespiracion();
+        }
+    }
+    
+    @FXML
     private void handleSalir() {
         if (control != null) {
             control.salir();
         }
     }
+    
+
 }

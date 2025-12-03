@@ -48,4 +48,12 @@ public interface CitaRepository extends CrudRepository<Cita, Integer> {
            "LEFT JOIN FETCH c.psicologo " +
            "WHERE c.id = :id")
     Cita findByIdWithRelations(@Param("id") int id);
+
+     @Query("""
+       SELECT c FROM Cita c
+       LEFT JOIN FETCH c.psicologo
+       LEFT JOIN FETCH c.perfilCitas
+       WHERE c.perfilCitas.idPerfil = :perfilId
+       """)
+List<Cita> cargarCitasConRelaciones(@Param("perfilId") Long perfilId);  
 }

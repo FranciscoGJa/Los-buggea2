@@ -55,10 +55,10 @@ public class CorreoService {
                 
             mensaje.setText(texto);
             mailSender.send(mensaje);
-            System.out.println("✅ Recordatorio enviado a: " + correoPaciente);
+            //System.out.println(" Recordatorio enviado a: " + correoPaciente);
             
         } catch(Exception e) {
-            System.err.println("❌ Error enviando recordatorio: " + e.getMessage());
+            //System.err.println(" Error enviando recordatorio: " + e.getMessage());
         }
     }
 }

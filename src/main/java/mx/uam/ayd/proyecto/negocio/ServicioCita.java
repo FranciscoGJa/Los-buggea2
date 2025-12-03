@@ -169,4 +169,18 @@ public class ServicioCita {
         cita.setNotaPostSesion(notaPostSesion);
         return citaRepository.save(cita);
     }
+
+     @Transactional
+    public List<Cita> obtenerCitasDelDia(LocalDate fecha) {
+        /*List<Cita> citas = citaRepository.findByFechaCita(fecha);
+
+        // Inicializar perfilCitas antes de cerrar sesión (evita LazyInitializationException)
+        for (Cita c : citas) {
+        //if (c.getPerfilCitas() != null) {
+            c.getPerfilCitas().getNombreCompleto();
+        //}
+        }*/
+
+        return citaRepository.findByFechaCitaWithRelations(fecha);
+    }
 }

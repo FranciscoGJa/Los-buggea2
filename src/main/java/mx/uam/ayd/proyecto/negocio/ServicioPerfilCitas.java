@@ -142,7 +142,7 @@ public class ServicioPerfilCitas {
         Optional<PerfilCitas> perfilOpt = repositoryPerfilCitas.findById(id);
         // Inicializar colecciones lazy si es necesario
         perfilOpt.ifPresent(perfil -> {
-            perfil.getCitas().size(); // Fuerza la inicialización de la colección
+            //perfil.getCitas().size(); // Fuerza la inicialización de la colección
         });
         return perfilOpt;
     }

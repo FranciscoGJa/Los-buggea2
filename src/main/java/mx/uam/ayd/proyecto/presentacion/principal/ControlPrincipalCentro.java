@@ -4,41 +4,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 import mx.uam.ayd.proyecto.datos.PsicologoRepository;
-import mx.uam.ayd.proyecto.negocio.ServicioRecordatorios; 
-import mx.uam.ayd.proyecto.negocio.ServicioPsicologo;
+import mx.uam.ayd.proyecto.negocio.ServicioRecordatorios;
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import mx.uam.ayd.proyecto.presentacion.menu.ControlMenu;
-import mx.uam.ayd.proyecto.presentacion.menuPsicologo.ControlMenuPsicologo; 
-
+import mx.uam.ayd.proyecto.presentacion.menuPsicologo.ControlMenuPsicologo;
 
 /**
- * Controlador principal del flujo de inicio de sesión (login) 
- * del sistema del Centro Psicológico.
- * * @author 
+ * Controlador principal del flujo de inicio de sesión (login) del sistema del Centro Psicológico.
  */
-
 @Component
 public class ControlPrincipalCentro {
 
     private final VentanaPrincipalCentro ventanaLogin;
     private final ControlMenu controlMenu;
-    
+
     @Autowired
-    private ServicioRecordatorios servicioRecordatorios; 
+    private ServicioRecordatorios servicioRecordatorios;
 
     @Autowired
     private PsicologoRepository servicioPsicologo;
 
     @Autowired
-    private ControlMenuPsicologo controlMenuPsicologo; 
+    private ControlMenuPsicologo controlMenuPsicologo;
 
-    private Psicologo psicologoLogueado; 
-    
+    private Psicologo psicologoLogueado;
+
     /**
      * Constructor con inyección de dependencias.
-     *
-     * @param ventanaLogin instancia de {@link VentanaPrincipalCentro}
-     * @param controlMenu instancia de {@link ControlMenu}
+     * @param ventanaLogin instancia de VentanaPrincipalCentro
+     * @param controlMenu instancia de ControlMenu
      */
     @Autowired
     public ControlPrincipalCentro(VentanaPrincipalCentro ventanaLogin, ControlMenu controlMenu) {
@@ -55,16 +49,17 @@ public class ControlPrincipalCentro {
     }
 
     /**
-     * Inicia el flujo de la ventana de login
+     * Inicia el flujo de la ventana de login.
      */
     public void inicia() {
         ventanaLogin.muestra();
-        probarRecordatorioManual(); 
+        // Si quieres probar el envío de recordatorios, descomenta la siguiente línea:
+        // probarRecordatorioManual();
     }
 
     /**
-     * Autentica las credenciales del usuario
-     * * @param usuario nombre de usuario
+     * Autentica las credenciales del usuario.
+     * @param usuario nombre de usuario
      * @param contrasena contraseña
      */
     public void autenticar(String usuario, String contrasena) {
@@ -78,8 +73,7 @@ public class ControlPrincipalCentro {
             ventanaLogin.mostrarError("Por favor ingrese una contraseña");
             return;
         }
-        
-        // Autenticación para el centro psicológico
+
         try {
             Psicologo psicologo = servicioPsicologo.findByUsuario(usuario);
             if (psicologo == null) {
@@ -88,16 +82,16 @@ public class ControlPrincipalCentro {
             }
 
             if (psicologo.getContrasena().equals(contrasena)) {
-                psicologoLogueado = psicologo; 
+                psicologoLogueado = psicologo;
                 ventanaLogin.cerrarLogin();
-                
+
                 // Diferenciación de roles
-                if (psicologo.getUsuario().equals("Admin")) {
+                if ("Admin".equals(psicologo.getUsuario())) {
                     // Si es Admin, muestra el menú principal completo
-                    mostrarSistemaPrincipal(); // Reutiliza el método existente para el Admin
+                    mostrarSistemaPrincipal();
                 } else {
                     // Si es cualquier otro psicólogo, muestra el menú restringido
-                    controlMenuPsicologo.inicia(psicologo); 
+                    controlMenuPsicologo.inicia(psicologo);
                 }
 
             } else {
@@ -110,39 +104,32 @@ public class ControlPrincipalCentro {
 
     /**
      * Muestra el sistema principal después de un login exitoso.
-     * Este método cierra la ventana de login y delega la ejecución 
-     * del menú principal al {@link ControlMenu}.
+     * Delega la ejecución del menú principal al ControlMenu.
      */
     private void mostrarSistemaPrincipal() {
         controlMenu.inicia();
     }
 
-    // Método para que otros controles obtengan el ID del psicólogo logueado 
+    /**
+     * Devuelve el ID del psicólogo actualmente autenticado.
+     * @return el ID del psicólogo logueado
+     */
     public int obtenerIdPsicologoLogueado() {
         if (psicologoLogueado != null) {
-            // Asumiendo que el modelo Psicologo tiene un método getId()
-            return psicologoLogueado.getId(); 
+            return psicologoLogueado.getId();
         } else {
             throw new IllegalStateException("No hay psicólogo logueado.");
         }
     }
-    
+
+    /**
+     * Método para pruebas manuales de recordatorios.
+     * Muestra las citas de hoy y envía recordatorios de manera asíncrona.
+     */
     private void probarRecordatorioManual() {
-        System.out.println(" INICIANDO PRUEBA DE RECORDATORIOS");
-    
-        // Primero mostrar las citas de hoy (solo lectura)
-        System.out.println("\n LISTANDO CITAS DE HOY:");
+        // Mostrar las citas de hoy (solo lectura)
         servicioRecordatorios.mostrarCitasHoy();
-    
-        // Luego preguntar si enviar recordatorios
-        System.out.println("\n ¿Quieres enviar recordatorios para estas citas?");
-        System.out.println("(Esto enviará correos reales)");
-    
-        // Para prueba automática, puedes comentar/descomentar:
-        //  DESCOMENTAR PARA ENVIAR CORREOS REALES
-        servicioRecordatorios.probarRecordatoriosHoy();
-    
-        //  O COMENTAR LA LÍNEA ANTERIOR Y USAR ESTA PARA SOLO VER INFO
-        //System.out.println("  Envío de correos desactivado temporalmente");
+        // Enviar los recordatorios en segundo plano
+        servicioRecordatorios.iniciarRecordatoriosAsync();
     }
 }

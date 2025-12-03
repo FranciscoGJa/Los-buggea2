@@ -41,9 +41,12 @@
                     
                     <Button mnemonicParsing="false"
                             onAction="#handleEncuesta"
-                            text="Responder Encuesta 📋"
+                            text="Responder Encuesta "
                             maxWidth="Infinity"
                             style="-fx-background-color: linear-gradient(to bottom, #8a9cf8, #6c7df2); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" />
+
+                     <Button mnemonicParsing="false" onAction="#handleEjerciciosRespiracion" text="Ejercicios de respiración" maxWidth="Infinity"/>
+                     <Button mnemonicParsing="false" onAction="#handleMaterialDidactico" text="Material Didáctico" maxWidth="Infinity"/>
 
                     <Separator prefWidth="200.0">
                       <VBox.margin>
@@ -58,6 +61,22 @@
                     </Label>
                     
                     <Button mnemonicParsing="false" onAction="#handlePerfilCitas" text="Consultar Perfiles" maxWidth="Infinity"/>
+
+                    <Region VBox.vgrow="ALWAYS" />
+
+                    <Separator prefWidth="200.0">
+                      <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                      </VBox.margin>
+                    </Separator>
+
+                    <Label text="Mis datos" style="-fx-font-weight: bold; -fx-font-size: 14px;">
+                      <VBox.margin>
+                        <Insets bottom="5.0" />
+                      </VBox.margin>
+                    </Label>
+                    
+                    <Button mnemonicParsing="false" onAction="#handleHorario" text="Horario" maxWidth="Infinity"/>
 
                     <Region VBox.vgrow="ALWAYS" />
 

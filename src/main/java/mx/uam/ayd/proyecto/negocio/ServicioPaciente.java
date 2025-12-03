@@ -2,6 +2,7 @@ package mx.uam.ayd.proyecto.negocio;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional; 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +95,18 @@ public class ServicioPaciente {
     public void asignarPsicologo(Paciente paciente, Psicologo psicologo) {
         paciente.setPsicologo(psicologo);
         pacienteRepository.save(paciente);
+    }
+
+    /**
+     * Recupera un paciente por su ID cargando todas sus relaciones (Baterías e Historial).
+     * Este método es fundamental para evitar la LazyInitializationException en la vista de detalles.
+     * * @param id el identificador del paciente.
+     * @return el paciente con toda su información cargada o null si no existe.
+     */
+    @Transactional
+    public Paciente obtenerPacienteConDetalles(Long id) {
+        Optional<Paciente> pacienteOpt = pacienteRepository.findByIdWithRelations(id);
+        return pacienteOpt.orElse(null);
     }
 
 }

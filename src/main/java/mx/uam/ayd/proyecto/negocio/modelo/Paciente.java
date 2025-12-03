@@ -51,4 +51,15 @@ public class Paciente {
         this.perfilesCitas.add(perfilCitas);
         perfilCitas.setPaciente(this);
     }
+    @Override
+    public String toString() {
+        return "Paciente{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", correo='" + correo + '\'' +
+                ", edad=" + edad +
+                // NO incluir psicologo, historialClinico, etc. para evitar ciclos
+                '}';
+    }
 }

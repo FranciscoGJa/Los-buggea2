@@ -5,53 +5,64 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" 
+<VBox xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="mx.uam.ayd.proyecto.presentacion.HistorialCitas.ControladorHistorialCitas"
       stylesheets="@css/style.css"
-      spacing="12" style="-fx-padding: 15;"> <!-- Reducido spacing y padding -->
-   
-   <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
-   
+      spacing="12"
+      style="-fx-padding: 15;">
+
+   <padding>
+      <Insets top="15" right="15" bottom="15" left="15"/>
+   </padding>
+
+   <!-- Título -->
    <Label text="Historial de Citas" styleClass="main-title">
-      <padding><Insets bottom="8"/></padding> <!-- Reducido -->
+      <padding>
+         <Insets bottom="8"/>
+      </padding>
    </Label>
-   
-   <VBox spacing="6" styleClass="info-card"> <!-- Reducido spacing -->
-      <Label fx:id="lblNombrePaciente" text="Nombre del Paciente" styleClass="patient-name" />
-      <HBox spacing="15"> <!-- Reducido spacing -->
-         <Label fx:id="lblEdadSexo" text="Edad • Sexo" styleClass="patient-info" />
-         <Label fx:id="lblContacto" text="Contacto" styleClass="patient-info" />
+
+   <!-- Información del paciente -->
+   <VBox spacing="6" styleClass="info-card">
+      <Label fx:id="lblNombrePaciente" text="Nombre del Paciente" styleClass="patient-name"/>
+      <HBox spacing="15">
+         <Label fx:id="lblEdadSexo" text="Edad • Sexo" styleClass="patient-info"/>
+         <Label fx:id="lblContacto" text="Contacto" styleClass="patient-info"/>
       </HBox>
    </VBox>
-   
-   <HBox spacing="8" alignment="CENTER_LEFT"> <!-- Reducido spacing -->
-      <Button fx:id="btnNuevaCita" text="Nueva Cita" onAction="#nuevaCita" styleClass="success-button" />
-      <Button fx:id="btnReagendar" text="Reagendar" onAction="#reagendarCita" styleClass="warning-button" />
-      <Button fx:id="btnVerDetalles" text="Ver Detalles" onAction="#verDetallesCita" styleClass="primary-button" />
+
+   <!-- Botones principales -->
+   <HBox spacing="8" alignment="CENTER_LEFT">
+      <Button fx:id="btnNuevaCita" text="Nueva Cita" onAction="#nuevaCita" styleClass="success-button"/>
+      <Button fx:id="btnReagendar" text="Reagendar" onAction="#reagendarCita" styleClass="warning-button"/>
+      <Button fx:id="btnVerDetalles" text="Ver Detalles" onAction="#verDetallesCita" styleClass="primary-button"/>
       <Region HBox.hgrow="ALWAYS"/>
-      <Button fx:id="btnCerrar" text="Cerrar" onAction="#cerrar" styleClass="danger-button" />
+      <Button fx:id="btnCerrar" text="Cerrar" onAction="#cerrar" styleClass="danger-button"/>
    </HBox>
-   
-   <Label text="Citas Registradas:" styleClass="section-title" />
-   
+
+   <!-- Encabezado tabla -->
+   <Label text="Citas Registradas:" styleClass="section-title"/>
+
+   <!-- Tabla de citas -->
    <TableView fx:id="tablaCitas" VBox.vgrow="ALWAYS" prefHeight="350">
       <columns>
-         <TableColumn fx:id="colFecha" text="Fecha" prefWidth="100"> <!-- Reducido ancho -->
+         <TableColumn fx:id="colFecha" text="Fecha" prefWidth="100">
             <cellValueFactory>
                <PropertyValueFactory property="fechaCita"/>
             </cellValueFactory>
          </TableColumn>
-         <TableColumn fx:id="colHora" text="Hora" prefWidth="70"> <!-- Reducido ancho -->
+         <TableColumn fx:id="colHora" text="Hora" prefWidth="70">
             <cellValueFactory>
                <PropertyValueFactory property="horaCita"/>
             </cellValueFactory>
          </TableColumn>
-         <TableColumn fx:id="colEstado" text="Estado" prefWidth="90"> <!-- Reducido ancho -->
+         <TableColumn fx:id="colEstado" text="Estado" prefWidth="90">
             <cellValueFactory>
                <PropertyValueFactory property="estadoCita"/>
             </cellValueFactory>
          </TableColumn>
-         <TableColumn fx:id="colMotivo" text="Motivo/Detalles" prefWidth="250"> <!-- Reducido ancho -->
+         <TableColumn fx:id="colMotivo" text="Motivo/Detalles" prefWidth="250">
             <cellValueFactory>
                <PropertyValueFactory property="detallesAdicionalesPaciente"/>
             </cellValueFactory>
@@ -61,8 +72,11 @@
          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
       </columnResizePolicy>
    </TableView>
-   
-   <HBox spacing="8" alignment="CENTER" styleClass="info-box"> <!-- Reducido spacing -->
-      <Label text="Seleccione una cita para ver detalles, reagendar o cree una nueva cita" styleClass="info-text" />
+
+   <!-- Información adicional -->
+   <HBox spacing="8" alignment="CENTER" styleClass="info-box">
+      <Label text="Seleccione una cita para ver detalles, reagendar o cree una nueva cita"
+             styleClass="info-text"/>
    </HBox>
+
 </VBox>

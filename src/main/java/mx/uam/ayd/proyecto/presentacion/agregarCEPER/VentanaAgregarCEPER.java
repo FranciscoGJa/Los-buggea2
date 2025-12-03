@@ -1,6 +1,8 @@
 package mx.uam.ayd.proyecto.presentacion.agregarCEPER;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -10,30 +12,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
+import mx.uam.ayd.proyecto.negocio.modelo.BateriaClinica;
 
 /**
- * Ventana para capturar la batería CEPER
- * (Inventario Exploratorio de Personalidad CEPER).
- *
- * <p>Responsabilidades:
- * <ul>
- *   <li>Cargar y mostrar la interfaz JavaFX para el cuestionario CEPER.</li>
- *   <li>Recolectar y validar las respuestas del usuario.</li>
- *   <li>Delegar el guardado al controlador {@link ControlAgregarCEPER}.</li>
- *   <li>Mostrar mensajes informativos y de error.</li>
- * </ul>
- * </p>
- *
- * <p>Uso típico:
- * <ol>
- *   <li>Llamar a {@link #setControlAgregarCEPER(ControlAgregarCEPER)} y {@link #setPacienteID(Long)}.</li>
- *   <li>Invocar {@link #muestra()} para abrir la ventana.</li>
- * </ol>
- * </p>
- *
- * @version 1.0
+ * Ventana para capturar la batería CEPER.
  */
 @Component
 public class VentanaAgregarCEPER {
@@ -43,18 +28,10 @@ public class VentanaAgregarCEPER {
 
     private Long pacienteID;
 
-    /**
-     * Asigna el controlador que gestionará el guardado de la batería CEPER.
-     * @param controlAgregarCEPER controlador asociado
-     */
     public void setControlAgregarCEPER(ControlAgregarCEPER controlAgregarCEPER) {
         this.controlAgregarCEPER=controlAgregarCEPER;
     }
 
-    /**
-     * Define el ID del paciente asociado a la captura.
-     * @param pacienteID identificador del paciente
-     */
     public void setPacienteID(Long pacienteID) {
         this.pacienteID = pacienteID;
     }
@@ -65,11 +42,6 @@ public class VentanaAgregarCEPER {
     @FXML private javafx.scene.control.ToggleGroup q4;
     @FXML private javafx.scene.control.ToggleGroup q5;
 
-    /**
-     * Acción del botón Guardar.
-     * <p>Valida que todas las preguntas tengan respuesta, arma la lista y
-     * delega el guardado al controlador.</p>
-     */
     @FXML
     private void onGuard() {
         try {
@@ -86,10 +58,10 @@ public class VentanaAgregarCEPER {
                 return;
             }
 
-            String comentarios = " ";
+            String comentarios = " "; // Comentarios se manejan externamente
             controlAgregarCEPER.guardarCEPER(pacienteID, respuestas, comentarios);
 
-            muestraDialogoConMensaje("¡Batería CEPER guardada!");
+            muestraDialogoConMensaje("¡Batería CEPER guardada/actualizada!");
             stage.close();
 
         } catch (Exception ex) {
@@ -97,11 +69,6 @@ public class VentanaAgregarCEPER {
         }
     }
 
-    /**
-     * Obtiene el valor seleccionado de un grupo de toggles.
-     * @param group grupo de opciones
-     * @return entero definido en el {@code userData} del toggle seleccionado; 0 si no hay selección
-     */
     private Integer getSelectedValue(ToggleGroup group) {
         if (group != null && group.getSelectedToggle() != null &&
             group.getSelectedToggle().getUserData() != null) {
@@ -110,10 +77,6 @@ public class VentanaAgregarCEPER {
         return 0;
     }
 
-    /**
-     * Inicializa la interfaz de usuario cargando el FXML y configurando el {@link Stage}.
-     * <p>Si no se está en el hilo de JavaFX, se reintenta mediante {@link Platform#runLater(Runnable)}.</p>
-     */
     private void initializeUI() {
         if (initialized) return;
         if (!Platform.isFxApplicationThread()) {
@@ -124,7 +87,7 @@ public class VentanaAgregarCEPER {
             stage = new Stage();
             stage.setTitle("Inventario Exploratorio de Personalidad CEPER");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-CEPER.fxml"));
-            loader.setController(this); // Solo si NO hay fx:controller en el FXML
+            loader.setController(this); 
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
             stage.setScene(scene);
@@ -135,57 +98,68 @@ public class VentanaAgregarCEPER {
         }
     }
 
-    /** Constructor por defecto. */
     public VentanaAgregarCEPER(){
-
     }
 
-    /**
-     * Muestra la ventana. Si no está inicializada, la inicializa primero.
-     */
+    /** Muestra ventana limpia (Nuevo registro) */
     public void muestra() {
-        if (!initialized) {
-            initializeUI();
-        }
+        if (!initialized) initializeUI();
+        limpiarSeleccion();
         stage.show();
     }
 
-    /**
-     * Cambia la visibilidad de la ventana garantizando la ejecución en el hilo de JavaFX.
-     * @param visible {@code true} para mostrar; {@code false} para ocultar
-     */
+    /** Muestra ventana con datos (Edición) */
+    public void muestra(BateriaClinica bateria) {
+        if (!initialized) initializeUI();
+        cargarRespuestas(bateria);
+        stage.show();
+    }
+
+    private void cargarRespuestas(BateriaClinica bateria) {
+        List<ToggleGroup> grupos = Arrays.asList(q1, q2, q3, q4, q5);
+        List<Integer> valores = Arrays.asList(
+            bateria.getRespuesta1(), bateria.getRespuesta2(), 
+            bateria.getRespuesta3(), bateria.getRespuesta4(), bateria.getRespuesta5()
+        );
+
+        for (int i = 0; i < grupos.size(); i++) {
+            Integer valor = valores.get(i);
+            ToggleGroup grupo = grupos.get(i);
+            if (valor != null && grupo != null) {
+                for (Toggle t : grupo.getToggles()) {
+                    if (t.getUserData() != null && t.getUserData().toString().equals(String.valueOf(valor))) {
+                        grupo.selectToggle(t);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void limpiarSeleccion() {
+        if(q1!=null) q1.selectToggle(null);
+        if(q2!=null) q2.selectToggle(null);
+        if(q3!=null) q3.selectToggle(null);
+        if(q4!=null) q4.selectToggle(null);
+        if(q5!=null) q5.selectToggle(null);
+    }
+
     public void setVisible(boolean visible) {
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(() -> this.setVisible(visible));
             return;
         }
-
         if (!initialized) {
-            if (visible) {
-                initializeUI();
-            } else {
-                return;
-            }
+            if (visible) initializeUI(); else return;
         }
-
-        if (visible) {
-            stage.show();
-        } else {
-            stage.hide();
-        }
+        if (visible) stage.show(); else stage.hide();
     }
 
-    /**
-     * Muestra un diálogo de información con el mensaje indicado.
-     * <p>Si no se está en el hilo de JavaFX, reintenta la acción.</p>
-     * @param mensaje texto a mostrar
-     */
     public void muestraDialogoConMensaje(String mensaje) {
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(() -> this.muestraDialogoConMensaje(mensaje));
             return;
         }
-
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Información");
         alert.setHeaderText(null);

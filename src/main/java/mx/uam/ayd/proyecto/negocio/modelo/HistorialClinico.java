@@ -94,4 +94,17 @@ public class HistorialClinico {
 
         return sb.toString();
     }
+    @Override
+    public String toString() {
+        return "HistorialClinico{" +
+                "id=" + id +
+                ", observaciones='" + observaciones + '\'' +
+                ", fechaElaboracion=" + fechaElaboracion +
+                ", consentimientoAceptado=" + consentimientoAceptado +
+                ", motivo='" + motivo + '\'' +
+                ", consumoDrogas='" + consumoDrogas + '\'' +
+                ", descripcionDrogas='" + descripcionDrogas + '\'' +
+                // NO incluir paciente ni psicologo
+                '}';
+    }
 }

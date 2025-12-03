@@ -56,6 +56,24 @@ public class VentanaHistorialCitas {
             mostrarError("Error inesperado", "Ocurrió un error al abrir el historial: " + e.getMessage());
         }
     }
+
+    /**
+     * Devuelve la vista (`Parent`) del historial de citas para insertarla en el
+     * `contentArea` de la ventana principal. No crea un Stage.
+     */
+    public javafx.scene.Parent getVista(PerfilCitas perfil) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-historial-citas.fxml"));
+        loader.setControllerFactory(applicationContext::getBean);
+        javafx.scene.Parent root = loader.load();
+
+        // Obtener el controlador creado por Spring y pasarle el perfil
+        ControladorHistorialCitas controlador = loader.getController();
+        if (controlador == null) {
+            throw new RuntimeException("No se pudo obtener el controlador del FXML");
+        }
+        controlador.cargarPerfil(perfil);
+        return root;
+    }
     
     private void mostrarError(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

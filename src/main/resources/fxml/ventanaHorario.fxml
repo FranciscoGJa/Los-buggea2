@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" spacing="10">
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+
+    <Label text="Horario (9 AM - 6 PM)" style="-fx-font-size: 20px; -fx-font-weight: bold;" maxWidth="Infinity" alignment="CENTER"/>
+
+    <!-- Contenedor donde se cargan las horas -->
+    <VBox fx:id="contenedorHoras" spacing="8">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+    </VBox>
+    <!-- Botón para cerrar -->
+    <HBox alignment="CENTER">
+        <Button text="Cerrar" onAction="#cerrarVentana" style="-fx-font-size: 14px;"  maxWidth="150" alignment="CENTER"/>
+    </HBox>
+</VBox>

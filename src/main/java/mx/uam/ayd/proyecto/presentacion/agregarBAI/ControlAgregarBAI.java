@@ -30,7 +30,7 @@ public class ControlAgregarBAI {
      *
      * @param ventanaAgregarBAI la ventana encargada de la interfaz de usuario para agregar la batería BAI.
      * @param servicioBateriaClinica el servicio que gestiona la lógica de negocio de baterías clínicas.
-     */
+     */ 
     @Autowired
     public ControlAgregarBAI(
             VentanaAgregarBAI ventanaAgregarBAI,

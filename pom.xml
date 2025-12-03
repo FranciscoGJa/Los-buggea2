@@ -81,7 +81,7 @@
             <artifactId>javafx-base</artifactId>
             <version>${javafx.version}</version>
         </dependency>
-        <!-- 💜 Nueva dependencia para usar WebView y WebEngine -->
+        <!-- Nueva dependencia para usar WebView y WebEngine -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>

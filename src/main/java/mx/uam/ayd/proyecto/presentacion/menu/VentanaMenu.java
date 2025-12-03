@@ -165,10 +165,6 @@ public void muestra() {
 }
 
     
-    // =======================================================
-    // Handlers (métodos vinculados a los botones del menú)
-    // =======================================================
-
     /**
      * Acción del botón "Agregar Paciente".
      * Llama al controlador para iniciar el flujo de agregar paciente.

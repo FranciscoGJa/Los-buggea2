@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
@@ -78,13 +79,31 @@ public class VentanaMenuPsicologo {
         }
     }
 
+    /**
+     * Muestra la ventana del menú.
+     */
     public void muestra() {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(this::muestra);
-            return;
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/ventanaMenuPsicologo.fxml")
+            );
+            loader.setController(this);
+
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(
+                    getClass().getResource("/css/style.css").toExternalForm()
+            );
+
+            stage = new Stage();
+            stage.setTitle("Centro Psicológico - Menú Psicólogo");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        initializeUI();
-        stage.show();
     }
 
     // Actualiza la ruta del breadcrumb
@@ -149,9 +168,6 @@ public class VentanaMenuPsicologo {
         }
     }
 
-    /**
-     * Manejador para abrir el horario.
-     */
     @FXML
     private void handleHorario() {
         if (control != null) {
@@ -159,9 +175,6 @@ public class VentanaMenuPsicologo {
         }
     }
 
-    /**
-     * Manejador para ejercicios de respiración.
-     */
     @FXML
     private void handleEjerciciosRespiracion() {
         if (control != null) {
@@ -169,9 +182,6 @@ public class VentanaMenuPsicologo {
         }
     }
 
-    /**
-     * Manejador para material didáctico.
-     */
     @FXML
     private void handleMaterialDidactico() {
         if (control != null) {
@@ -180,9 +190,29 @@ public class VentanaMenuPsicologo {
     }
 
     @FXML
+    private void handleAgendaPsicologo() {
+        if (control != null) {
+            control.abrirAgendaPsicologo();
+        }
+    }
+
+    @FXML
     private void handleSalir() {
         if (control != null) {
             control.salir();
+        }
+    }
+
+    /**
+     * Carga un FXML arbitrario en el panel central.
+     */
+    public void cargarVista(String rutaFXML) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFXML));
+            Parent vista = loader.load();
+            contentArea.getChildren().setAll(vista);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

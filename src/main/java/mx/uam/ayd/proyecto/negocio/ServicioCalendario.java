@@ -48,9 +48,11 @@ public class ServicioCalendario {
     }
     
     /**
-     * Obtiene todas las citas de un psicólogo para una fecha
-     */
+    * Obtiene todas las citas asignadas a un psicólogo
+    */
     public List<Cita> obtenerCitasPorPsicologoYFecha(Integer psicologoId, LocalDate fecha) {
-        return citaRepository.findByPsicologoIdAndFechaCita(psicologoId, fecha);
+    return citaRepository.findByPsicologoIdAndFechaCita(psicologoId, fecha);
     }
+
+
 }

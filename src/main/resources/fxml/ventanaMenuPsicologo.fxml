@@ -35,10 +35,10 @@
                         <Insets bottom="5.0" top="5.0" />
                       </VBox.margin>
                     </Label>
-                    
+
                     <Button mnemonicParsing="false" onAction="#handleAgregarPaciente" text="Agregar paciente" maxWidth="Infinity"/>
                     <Button mnemonicParsing="false" onAction="#handleListarPacientes" text="Listar pacientes" maxWidth="Infinity"/>
-                    
+
                     <Button mnemonicParsing="false"
                             onAction="#handleEncuesta"
                             text="Responder Encuesta "
@@ -59,9 +59,21 @@
                         <Insets bottom="5.0" />
                       </VBox.margin>
                     </Label>
-                    
-                    <Button mnemonicParsing="false" onAction="#handlePerfilCitas" text="Consultar Perfiles" maxWidth="Infinity"/>
 
+                    <Button mnemonicParsing="false"
+                            onAction="#handlePerfilCitas"
+                            text="Consultar Perfiles"
+                            maxWidth="Infinity"/>
+
+                    <!--  NUEVO BOTÓN AGREGADO AQUÍ -->
+                    <Button mnemonicParsing="false"
+                            onAction="#handleAgendaPsicologo"
+                            text="Agenda del Psicólogo"
+                            maxWidth="Infinity"
+                            style="-fx-background-color: linear-gradient(to bottom, #6c7df2, #4b63b0);
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-background-radius: 10;" />
                     <Region VBox.vgrow="ALWAYS" />
 
                     <Separator prefWidth="200.0">

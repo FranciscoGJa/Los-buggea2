@@ -3,19 +3,20 @@ package mx.uam.ayd.proyecto.presentacion.menuPsicologo;
 import jakarta.annotation.PostConstruct;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import mx.uam.ayd.proyecto.presentacion.listarpacientes.ControlListarPacientes;
 import mx.uam.ayd.proyecto.presentacion.agregarPaciente.ControlAgregarPaciente;
 import mx.uam.ayd.proyecto.presentacion.PerfilCitas.VentanaPelfil;
+import mx.uam.ayd.proyecto.presentacion.agendaPsicologo.VentanaAgendaPsicologo;
 import mx.uam.ayd.proyecto.presentacion.Horario.ControlHorario;
+import mx.uam.ayd.proyecto.presentacion.VentanaPDF;
 
 import java.io.IOException;
 import java.util.List;
-import mx.uam.ayd.proyecto.presentacion.VentanaPDF;
 
 /**
  * Controlador para el menú específico del Psicólogo.
@@ -28,7 +29,7 @@ public class ControlMenuPsicologo {
     private VentanaMenuPsicologo ventana;
 
     @Autowired
-    private VentanaPDF ventanaPDF; // Nueva ventana para ejercicios de respiración
+    private VentanaPDF ventanaPDF; // Ventana para ejercicios de respiración
 
     @Autowired
     private ControlListarPacientes controlListarPacientes;
@@ -38,6 +39,9 @@ public class ControlMenuPsicologo {
 
     @Autowired
     private VentanaPelfil ventanaPelfil; // Para "Consultar Perfiles de Citas"
+
+    @Autowired
+    private VentanaAgendaPsicologo ventanaAgendaPsicologo; // Nueva ventana para la agenda
 
     @Autowired
     private ControlHorario ventanaHorario; // Control para el horario
@@ -141,6 +145,22 @@ public class ControlMenuPsicologo {
             // Captura reflectiva u otros errores al invocar setIdPsicologo
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Abre la agenda del psicólogo.
+     */
+    public void abrirAgendaPsicologo() {
+        ventanaAgendaPsicologo.setControlMenuPsicologo(this);
+        ventanaAgendaPsicologo.muestra();
+    }
+
+    /**
+     * Devuelve el psicólogo actualmente autenticado.
+     * @return el psicólogo logueado
+     */
+    public Psicologo getPsicologo() {
+        return psicologoLogueado;
     }
 
     // --- Salir ---

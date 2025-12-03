@@ -29,20 +29,12 @@ public class ControlPrincipalCentro {
 
     private Psicologo psicologoLogueado;
 
-    /**
-     * Constructor con inyección de dependencias.
-     * @param ventanaLogin instancia de VentanaPrincipalCentro
-     * @param controlMenu instancia de ControlMenu
-     */
     @Autowired
     public ControlPrincipalCentro(VentanaPrincipalCentro ventanaLogin, ControlMenu controlMenu) {
         this.ventanaLogin = ventanaLogin;
         this.controlMenu = controlMenu;
     }
 
-    /**
-     * Inicializa la conexión entre este controlador y la ventana de login.
-     */
     @PostConstruct
     public void init() {
         ventanaLogin.setControlPrincipalCentro(this);
@@ -53,8 +45,7 @@ public class ControlPrincipalCentro {
      */
     public void inicia() {
         ventanaLogin.muestra();
-        // Si quieres probar el envío de recordatorios, descomenta la siguiente línea:
-        // probarRecordatorioManual();
+        // probarRecordatorioManual(); // Descomenta esta línea si deseas probar el envío de recordatorios
     }
 
     /**

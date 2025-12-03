@@ -1,8 +1,12 @@
 package mx.uam.ayd.proyecto.datos;
 
 import mx.uam.ayd.proyecto.negocio.modelo.Paciente;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repositorio para gestionar operaciones de persistencia sobre la entidad {@link Paciente}.
@@ -31,4 +35,16 @@ public interface PacienteRepository extends CrudRepository<Paciente, Long> {
      * @return una lista de pacientes en el rango de edad; si no hay coincidencias, la lista estará vacía.
      */
     List<Paciente> findByEdadBetween(int edad1, int edad2);
+
+    /**
+     * Busca un paciente por ID y carga INMEDIATAMENTE sus relaciones
+     * (Baterías e Historial) para evitar problemas de carga perezosa.
+     * * @param id el identificador del paciente.
+     * @return un Optional con el paciente completo si existe.
+     */
+    @Query("SELECT p FROM Paciente p " +
+           "LEFT JOIN FETCH p.bateriasClinicas " +
+           "LEFT JOIN FETCH p.historialClinico " +
+           "WHERE p.id = :id")
+    Optional<Paciente> findByIdWithRelations(@Param("id") Long id);
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import mx.uam.ayd.proyecto.presentacion.CrearPerfilCitas.VentanaCrearPerfilCitas;
 import mx.uam.ayd.proyecto.presentacion.HistorialCitas.VentanaHistorialCitas;
+import mx.uam.ayd.proyecto.presentacion.menuPsicologo.VentanaMenuPsicologo;
 import mx.uam.ayd.proyecto.negocio.ServicioPerfilCitas;
 import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
 import java.util.List;
@@ -59,6 +60,9 @@ public class ControladorPerfil {
     
     @Autowired
     private VentanaHistorialCitas ventanaHistorialCitas;
+
+    @Autowired
+    private VentanaMenuPsicologo ventanaMenuPsicologo;
 
     /**
      * Método initialize para configurar la tabla
@@ -209,8 +213,18 @@ public class ControladorPerfil {
             PerfilCitas perfilSeleccionado = tablaResultados.getSelectionModel().getSelectedItem();
             if (perfilSeleccionado != null) {
                 System.out.println("Abriendo historial para perfil: " + perfilSeleccionado.getNombreCompleto());
-                
-                if (ventanaHistorialCitas != null) {
+                // Intentar mostrar embebido en la ventana principal y actualizar breadcrumb
+                if (ventanaHistorialCitas != null && ventanaMenuPsicologo != null) {
+                    try {
+                        javafx.scene.Parent vista = ventanaHistorialCitas.getVista(perfilSeleccionado);
+                        ventanaMenuPsicologo.actualizaBreadcrumb(java.util.List.of("Inicio", "Perfiles", "Historial"));
+                        ventanaMenuPsicologo.cargarVista(vista);
+                    } catch (Exception e) {
+                        // Fallback a ventana independiente si algo falla
+                        e.printStackTrace();
+                        ventanaHistorialCitas.mostrar(perfilSeleccionado);
+                    }
+                } else if (ventanaHistorialCitas != null) {
                     ventanaHistorialCitas.mostrar(perfilSeleccionado);
                 } else {
                     mostrarAlerta("Error", "No se pudo acceder al módulo de historial de citas");

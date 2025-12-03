@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
+import javafx.scene.control.Alert;
 
 /*
  * Esta clase representa la ventana para crear una nueva cita.
@@ -32,12 +33,27 @@ public class VentanaNuevaCita {
                 stage = new Stage();
                 stage.setTitle("Nueva Cita - " + perfil.getNombreCompleto());
                 
+                // PATRÓN COMÚN: Cargar FXML con fx:controller y setControllerFactory
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-nueva-cita.fxml"));
-                controlador = applicationContext.getBean(ControladorNuevaCita.class);
-                loader.setController(controlador);
+                
+                // Usar setControllerFactory para que Spring gestione el controlador
+                loader.setControllerFactory(applicationContext::getBean);
                 
                 Scene scene = new Scene(loader.load(), 900, 800);
+                
+                // Aplicar CSS manualmente (siguiendo el patrón de las otras ventanas)
+                String cssPath = getClass().getResource("/css/style.css").toExternalForm();
+                scene.getStylesheets().add(cssPath);
+                System.out.println("CSS aplicado manualmente a ventana nueva cita: " + cssPath);
+                
                 stage.setScene(scene);
+                
+                // Obtener el controlador después de cargar
+                controlador = loader.getController();
+                
+                if (controlador == null) {
+                    throw new RuntimeException("No se pudo obtener el controlador del FXML");
+                }
                 
                 stage.setOnCloseRequest(event -> {
                     event.consume();
@@ -53,6 +69,7 @@ public class VentanaNuevaCita {
             
         } catch (Exception e) {
             e.printStackTrace();
+            mostrarError("Error", "No se pudo cargar la ventana de nueva cita: " + e.getMessage());
         }
     }
     
@@ -60,5 +77,13 @@ public class VentanaNuevaCita {
         if (stage != null) {
             stage.close();
         }
+    }
+    
+    private void mostrarError(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

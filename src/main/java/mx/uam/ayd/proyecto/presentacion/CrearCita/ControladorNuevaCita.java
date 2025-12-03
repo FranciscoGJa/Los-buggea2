@@ -10,7 +10,6 @@ import mx.uam.ayd.proyecto.negocio.ServicioPsicologo;
 import mx.uam.ayd.proyecto.negocio.ServicioPerfilCitas;
 import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
-import mx.uam.ayd.proyecto.negocio.modelo.Cita;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -207,8 +206,8 @@ public class ControladorNuevaCita {
                 servicioPerfilCitas.asignarPsicologo(perfilActual.getIdPerfil(), psicologoSeleccionado);
             }
             
-            // Crear la cita
-            Cita nuevaCita = servicioCita.crearCita(
+                // Crear la cita
+                servicioCita.crearCita(
                 perfilActual.getIdPerfil(),
                 psicologoSeleccionado.getId(),
                 fecha,

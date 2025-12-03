@@ -13,73 +13,73 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12" 
             xmlns:fx="http://javafx.com/fxml/1"
-            prefHeight="600.0" prefWidth="800.0">
+            fx:controller="mx.uam.ayd.proyecto.presentacion.PerfilCitas.ControladorPerfil"
+            stylesheets="@css/style.css"
+            prefHeight="700.0" prefWidth="900.0">
    
    <center>
-      <VBox spacing="20.0" style="-fx-padding: 20;">
-         <Label text="Búsqueda de Perfiles de Citas" style="-fx-font-size: 24; -fx-font-weight: bold;" />
+      <VBox spacing="15.0" style="-fx-padding: 15;"> <!-- Reducido padding de 20 a 15 -->
+         <Label text="Búsqueda de Perfiles de Citas" styleClass="main-title" />
          
-         <VBox spacing="10.0">
-            <Label text="Criterios de Búsqueda:" style="-fx-font-size: 16; -fx-font-weight: bold;" />
+         <VBox spacing="8.0" styleClass="content-card"> <!-- Reducido spacing de 10 a 8 -->
+            <Label text="Criterios de Búsqueda:" styleClass="section-title" />
             
-            <HBox spacing="15.0">
-               <VBox spacing="5.0">
+            <HBox spacing="12.0"> <!-- Reducido de 15 a 12 -->
+               <VBox spacing="3.0"> <!-- Reducido de 5 a 3 -->
                   <Label text="Nombre:" />
                   <TextField fx:id="txtNombre" prefWidth="250.0" />
                </VBox>
                
-               <VBox spacing="5.0">
+               <VBox spacing="3.0"> <!-- Reducido de 5 a 3 -->
                   <Label text="Teléfono:" />
                   <TextField fx:id="txtTelefono" prefWidth="200.0" />
                </VBox>
             </HBox>
             
-            <!-- BOTONES ACTUALIZADOS -->
-            <HBox spacing="10.0" alignment="CENTER_LEFT">
-               <Button text="🔍 Buscar" onAction="#buscarPerfiles" 
-                       style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" />
-               <Button text="🔄 Limpiar" onAction="#limpiarCampos" 
-                       style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" />
-               <Button text="➕ Nuevo Perfil" onAction="#crearNuevoPerfil" 
-                       style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" />
-               <!-- NUEVO BOTÓN PARA HISTORIAL -->
-               <Button text="📋 Ver Historial" onAction="#verHistorialCitas" 
-                       style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;" />
+            <HBox spacing="8.0" alignment="CENTER_LEFT"> <!-- Reducido de 10 a 8 -->
+               <Button text="Buscar" onAction="#buscarPerfiles" 
+                       styleClass="success-button" />
+               <Button text="Limpiar" onAction="#limpiarCampos" 
+                       styleClass="secondary-button" />
+               <Button text="Nuevo Perfil" onAction="#crearNuevoPerfil" 
+                       styleClass="primary-button" />
+               <Button text="Ver Historial" onAction="#verHistorialCitas" 
+                       styleClass="accent-button" />
                <Region HBox.hgrow="ALWAYS" />
             </HBox>
          </VBox>
          
-         <VBox spacing="10.0" VBox.vgrow="ALWAYS">
-            <Label text="Resultados:" style="-fx-font-size: 16; -fx-font-weight: bold;" />
+         <VBox spacing="8.0" VBox.vgrow="ALWAYS" styleClass="content-card"> <!-- Reducido spacing -->
+            <Label text="Resultados:" styleClass="section-title" />
             
-            <TableView fx:id="tablaResultados" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tablaResultados" VBox.vgrow="ALWAYS" prefHeight="300">
                <columns>
                   <TableColumn fx:id="colNombre" prefWidth="150.0" text="Nombre">
                      <cellValueFactory>
                         <PropertyValueFactory property="nombreCompleto" />
                      </cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="colEdad" prefWidth="80.0" text="Edad">
+                  <TableColumn fx:id="colEdad" prefWidth="70.0" text="Edad"> <!-- Reducido ancho -->
                      <cellValueFactory>
                         <PropertyValueFactory property="edad" />
                      </cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="colSexo" prefWidth="100.0" text="Sexo">
+                  <TableColumn fx:id="colSexo" prefWidth="80.0" text="Sexo"> <!-- Reducido ancho -->
                      <cellValueFactory>
                         <PropertyValueFactory property="sexo" />
                      </cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="colDireccion" prefWidth="200.0" text="Dirección">
+                  <TableColumn fx:id="colDireccion" prefWidth="180.0" text="Dirección"> <!-- Reducido ancho -->
                      <cellValueFactory>
                         <PropertyValueFactory property="direccion" />
                      </cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="colOcupacion" prefWidth="150.0" text="Ocupación">
+                  <TableColumn fx:id="colOcupacion" prefWidth="130.0" text="Ocupación"> <!-- Reducido ancho -->
                      <cellValueFactory>
                         <PropertyValueFactory property="ocupacion" />
                      </cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="colTelefono" prefWidth="120.0" text="Teléfono">
+                  <TableColumn fx:id="colTelefono" prefWidth="110.0" text="Teléfono"> <!-- Reducido ancho -->
                      <cellValueFactory>
                         <PropertyValueFactory property="telefono" />
                      </cellValueFactory>
@@ -87,10 +87,9 @@
                </columns>
             </TableView>
             
-            <!-- INFORMACIÓN DE SELECCIÓN -->
-            <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-border-color: #dee2e6;">
-               <Label text="💡 Seleccione un perfil y haga clic en 'Ver Historial' para consultar sus citas" 
-                      style="-fx-text-fill: #6c757d; -fx-font-style: italic; -fx-font-size: 12;" />
+            <HBox spacing="8" alignment="CENTER" styleClass="info-box"> <!-- Reducido spacing -->
+               <Label text="Seleccione un perfil y haga clic en 'Ver Historial' para consultar sus citas" 
+                      styleClass="info-text" />
             </HBox>
          </VBox>
       </VBox>

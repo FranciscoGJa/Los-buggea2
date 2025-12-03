@@ -1,5 +1,7 @@
 package mx.uam.ayd.proyecto.presentacion.HistorialCitas;
 
+import java.util.Optional;
+import java.time.LocalDate;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
@@ -13,16 +15,18 @@ import mx.uam.ayd.proyecto.negocio.ServicioHistorialCitas;
 import mx.uam.ayd.proyecto.negocio.ServicioCita;
 import mx.uam.ayd.proyecto.negocio.modelo.Cita;
 import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
+import mx.uam.ayd.proyecto.negocio.modelo.TipoConfirmacionCita;
 import mx.uam.ayd.proyecto.presentacion.CrearCita.VentanaNuevaCita;
+import mx.uam.ayd.proyecto.presentacion.ReagendarCita.VentanaReagendarCita;
 import java.util.List;
 
 /*
  * Controlador de la ventana de historial de citas
  * Muestra el historial de citas de un perfil seleccionado
- * Permite ver detalles de citas y crear nuevas citas
+ * Permite ver detalles de citas, reagendar y crear nuevas citas
  * Carga los datos del perfil y su historial de citas
  * Se inyectan los servicios necesarios para obtener los datos
- * Se manejan eventos de botones para nuevas citas y ver detalles
+ * Se manejan eventos de botones para nuevas citas, reagendar y ver detalles
  * Se cierra la ventana al finalizar
  * Utiliza JavaFX para la interfaz gráfica
  * Se anota como componente de Spring para inyección de dependencias
@@ -40,6 +44,7 @@ public class ControladorHistorialCitas {
     @FXML private TableColumn<Cita, String> colEstado;
     @FXML private TableColumn<Cita, String> colMotivo;
     @FXML private Button btnNuevaCita;
+    @FXML private Button btnReagendar;
     @FXML private Button btnVerDetalles;
     @FXML private Button btnCerrar;
     
@@ -51,6 +56,9 @@ public class ControladorHistorialCitas {
     
     @Autowired
     private VentanaNuevaCita ventanaNuevaCita;
+    
+    @Autowired
+    private VentanaReagendarCita ventanaReagendarCita;
     
     private PerfilCitas perfilActual;
     
@@ -65,6 +73,7 @@ public class ControladorHistorialCitas {
         System.out.println("  - servicioHistorial: " + (servicioHistorial != null));
         System.out.println("  - servicioCita: " + (servicioCita != null));
         System.out.println("  - ventanaNuevaCita: " + (ventanaNuevaCita != null));
+        System.out.println("  - ventanaReagendarCita: " + (ventanaReagendarCita != null));
         
         configurarTabla();
         
@@ -73,6 +82,7 @@ public class ControladorHistorialCitas {
         System.out.println("  - lblNombrePaciente: " + (lblNombrePaciente != null));
         System.out.println("  - tablaCitas: " + (tablaCitas != null));
         System.out.println("  - btnNuevaCita: " + (btnNuevaCita != null));
+        System.out.println("  - btnReagendar: " + (btnReagendar != null));
     }
     
     private void configurarTabla() {
@@ -152,6 +162,61 @@ public class ControladorHistorialCitas {
             }
         } else {
             mostrarAlerta("Error", "No hay perfil seleccionado");
+        }
+    }
+    
+   /**
+ * Abre la ventana para reagendar la cita seleccionada
+ */
+    @FXML
+    public void reagendarCita() {
+        System.out.println("Botón reagendar presionado");
+        if (tablaCitas != null) {
+            Cita citaSeleccionada = tablaCitas.getSelectionModel().getSelectedItem();
+            if (citaSeleccionada != null) {
+                try {
+                    System.out.println("Cita seleccionada ID: " + citaSeleccionada.getId());
+                    
+                    // Obtener la cita con relaciones cargadas desde la base de datos
+                    Optional<Cita> citaConRelaciones = servicioHistorial.obtenerCitaConRelaciones(citaSeleccionada.getId());
+                    
+                    if (citaConRelaciones.isEmpty()) {
+                        mostrarAlerta("Error", "No se pudo cargar la información completa de la cita.");
+                        return;
+                    }
+                    
+                    Cita citaCompleta = citaConRelaciones.get();
+                    System.out.println("Cita cargada con relaciones - Perfil: " + 
+                        (citaCompleta.getPerfilCitas() != null ? citaCompleta.getPerfilCitas().getNombreCompleto() : "null"));
+                    System.out.println("Cita cargada con relaciones - Psicólogo: " + 
+                        (citaCompleta.getPsicologo() != null ? citaCompleta.getPsicologo().getNombre() : "null"));
+                    
+                    // Verificar que la cita no esté en el pasado
+                    if (citaCompleta.getFechaCita().isBefore(LocalDate.now())) {
+                        mostrarAlerta("No se puede reagendar", "No se pueden reagendar citas pasadas.");
+                        return;
+                    }
+                    
+                    // Verificar que la cita no esté cancelada o concluida
+                    if (citaCompleta.getEstadoCita() == TipoConfirmacionCita.CANCELADA || 
+                        citaCompleta.getEstadoCita() == TipoConfirmacionCita.CONCLUIDA) {
+                        mostrarAlerta("No se puede reagendar", 
+                                    "Solo se pueden reagendar citas pendientes o confirmadas.");
+                        return;
+                    }
+                    
+                    ventanaReagendarCita.mostrar(citaCompleta);
+                    // Recargar historial después de reagendar
+                    cargarHistorialCitas();
+                    
+                } catch (Exception e) {
+                    System.err.println("Error al abrir ventana de reagendar: " + e.getMessage());
+                    e.printStackTrace();
+                    mostrarAlerta("Error", "No se pudo abrir la ventana de reagendar: " + e.getMessage());
+                }
+            } else {
+                mostrarAlerta("Información", "Seleccione una cita para reagendar");
+            }
         }
     }
     

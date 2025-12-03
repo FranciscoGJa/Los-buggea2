@@ -16,7 +16,6 @@ import mx.uam.ayd.proyecto.presentacion.menuPsicologo.VentanaMenuPsicologo;
 import mx.uam.ayd.proyecto.negocio.ServicioPerfilCitas;
 import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
 import java.util.List;
-import java.util.Collections;
 
 /*
  * Controlador para la gestión de perfiles de citas.

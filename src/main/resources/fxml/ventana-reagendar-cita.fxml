@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="mx.uam.ayd.proyecto.presentacion.ReagendarCita.ControladorReagendarCita"
+      stylesheets="@css/style.css" 
+      spacing="20" style="-fx-padding: 25;">
+   
+   <children>
+      <Label text="Reagendar Cita" styleClass="main-title">
+         <padding>
+            <Insets bottom="15" />
+         </padding>
+      </Label>
+      
+      <!-- Información de la cita actual -->
+      <VBox spacing="15" styleClass="info-card">
+         <Label text="Información de la Cita Actual" styleClass="section-title" />
+         
+         <GridPane hgap="15" vgap="12">
+            <columnConstraints>
+               <ColumnConstraints prefWidth="120" />
+               <ColumnConstraints prefWidth="300" />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints prefHeight="35" />
+               <RowConstraints prefHeight="35" />
+               <RowConstraints prefHeight="35" />
+            </rowConstraints>
+            
+            <Label text="Paciente:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="field-label" />
+            <Label fx:id="lblPaciente" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="value-text" />
+            
+            <Label text="Psicólogo:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="field-label" />
+            <Label fx:id="lblPsicologo" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="value-text" />
+            
+            <Label text="Cita Original:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="field-label" />
+            <Label fx:id="lblCitaOriginal" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="value-text" />
+         </GridPane>
+      </VBox>
+      
+      <!-- Nueva fecha y hora -->
+      <VBox spacing="15" styleClass="content-card">
+         <Label text="Nueva Fecha y Hora" styleClass="section-title" />
+         
+         <GridPane hgap="15" vgap="12">
+            <columnConstraints>
+               <ColumnConstraints prefWidth="120" />
+               <ColumnConstraints prefWidth="300" />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints prefHeight="35" />
+               <RowConstraints prefHeight="35" />
+            </rowConstraints>
+            
+            <Label text="Nueva Fecha:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="field-label" />
+            <DatePicker fx:id="datePickerNuevaFecha" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="200" />
+            
+            <Label text="Nuevo Horario:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="field-label" />
+            <HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="1" alignment="CENTER_LEFT">
+               <ComboBox fx:id="comboHorarios" prefWidth="150" />
+               <Button fx:id="btnVerificarDisponibilidad" text="Verificar Disponibilidad" 
+                       onAction="#verificarDisponibilidad" styleClass="primary-button" />
+            </HBox>
+         </GridPane>
+      </VBox>
+      
+      <!-- Motivo -->
+      <VBox spacing="8" styleClass="content-card">
+         <Label text="Motivo del Reagendo" styleClass="field-label" />
+         <TextArea fx:id="txtMotivo" prefHeight="100" 
+                   promptText="Ingrese el motivo del reagendo..." 
+                   wrapText="true" />
+      </VBox>
+      
+      <!-- Botones -->
+      <HBox spacing="15" alignment="CENTER_RIGHT">
+         <Button fx:id="btnConfirmarReagendo" text="Confirmar Reagendo" 
+                 onAction="#confirmarReagendo"
+                 styleClass="success-button" 
+                 disable="true"
+                 prefWidth="140" />
+         <Button fx:id="btnCancelar" text="Cancelar" 
+                 onAction="#cancelar"
+                 styleClass="danger-button"
+                 prefWidth="100" />
+      </HBox>
+   </children>
+</VBox>

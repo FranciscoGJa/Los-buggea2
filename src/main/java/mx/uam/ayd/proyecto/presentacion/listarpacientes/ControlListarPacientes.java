@@ -3,14 +3,17 @@ package mx.uam.ayd.proyecto.presentacion.listarpacientes;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+//import org.springframework.web.client.RestTemplate;
 import javafx.scene.Node;
 import mx.uam.ayd.proyecto.negocio.ServicioBateriaClinica;
+import mx.uam.ayd.proyecto.negocio.ServicioHistorialPdf;
 import mx.uam.ayd.proyecto.negocio.ServicioPaciente;
 import mx.uam.ayd.proyecto.negocio.modelo.BateriaClinica;
 import mx.uam.ayd.proyecto.negocio.modelo.HistorialClinico;
 import mx.uam.ayd.proyecto.negocio.modelo.Paciente;
+import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
 
+import org.springframework.transaction.annotation.Transactional;
 // Importaciones de los controladores de baterías
 import mx.uam.ayd.proyecto.presentacion.agregarBAI.ControlAgregarBAI;
 import mx.uam.ayd.proyecto.presentacion.agregarBDI.ControlAgregarBDI;
@@ -43,6 +46,10 @@ public class ControlListarPacientes {
     
     @Autowired
     private ControlAgregarCEPER controlAgregarCEPER;
+
+    @Autowired
+    private ServicioHistorialPdf servicioHistorialPdf; 
+
 
     /**
      * Inicia la vista de listado de pacientes.
@@ -143,7 +150,58 @@ public class ControlListarPacientes {
             ventana.muestraDialogoDeError("No hay una batería seleccionada para guardar comentarios.");
         }
     }
+    public void generarPdfHistorial(Paciente paciente) {
+    if (paciente == null) {
+        ventana.muestraDialogoDeError("Por favor, seleccione un paciente primero.");
+        return;
+    }
     
+    // Crear un hilo separado para no bloquear la UI
+    new Thread(() -> {
+        try {
+            System.out.println("[BACKGROUND] Generando PDF para: " + paciente.getNombre());
+            byte[] pdfBytes = servicioHistorialPdf.generarPdfHistorial(paciente.getId());
+            System.out.println("[BACKGROUND] PDF generado, tamaño: " + pdfBytes.length + " bytes");
+            
+            // Guardar archivo
+            String nombreArchivo = "historial_" + paciente.getNombre().replace(" ", "_") + ".pdf";
+            java.io.File archivo = new java.io.File(nombreArchivo);
+            
+            try (java.io.FileOutputStream fos = new java.io.FileOutputStream(archivo)) {
+                fos.write(pdfBytes);
+            }
+            System.out.println("[BACKGROUND] Archivo guardado: " + archivo.getAbsolutePath());
+            
+            // Volver al hilo de JavaFX
+            javafx.application.Platform.runLater(() -> {
+                abrirArchivo(archivo);
+                ventana.muestraDialogoDeInformacion(
+                    "PDF generado exitosamente: " + archivo.getName());
+            });
+            
+        } catch (Exception e) {
+            System.err.println("[BACKGROUND] ERROR: " + e.getMessage());
+            e.printStackTrace();
+            javafx.application.Platform.runLater(() -> {
+                ventana.muestraDialogoDeError("Error al generar PDF: " + e.getMessage());
+            });
+        }
+    }).start();
+    
+    System.out.println("[UI] Hilo de fondo iniciado para generación de PDF");
+    ventana.muestraDialogoDeInformacion("Generando PDF en segundo plano...");
+}
+
+    private void abrirArchivo(java.io.File archivo) {
+        try {
+            if (java.awt.Desktop.isDesktopSupported()) {
+                java.awt.Desktop.getDesktop().open(archivo);
+            }
+        } catch (Exception e) {
+            System.out.println("No se pudo abrir el archivo automáticamente: " + e.getMessage());
+        }
+    }
+
     /**
      * Cierra la ventana de listado de pacientes.
      */

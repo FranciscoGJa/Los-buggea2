@@ -5,9 +5,10 @@ import mx.uam.ayd.proyecto.negocio.modelo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
+    import java.util.List;
 import java.util.Optional;
 
 /*
@@ -15,41 +16,40 @@ import java.util.Optional;
  * Proporciona métodos para crear citas, perfiles y gestionar su estado.
  * Utiliza repositorios para acceder a los datos de citas y perfiles.
  */
-
 @Service
 public class ServicioCita {
-    
+
     @Autowired
     private CitaRepository citaRepository;
-    
+
     @Autowired
     private ServicioPerfilCitas servicioPerfilCitas;
-    
+
     /**
      * Crea una nueva cita para un perfil existente
      */
     @Transactional
-    public Cita crearCita(Long perfilCitasId, Integer psicologoId, 
-                         LocalDate fechaCita, LocalTime horaCita, 
-                         String detallesPaciente) {
-        
+    public Cita crearCita(Long perfilCitasId, Integer psicologoId,
+                          LocalDate fechaCita, LocalTime horaCita,
+                          String detallesPaciente) {
+
         Optional<PerfilCitas> perfilOpt = servicioPerfilCitas.obtenerPerfilPorId(perfilCitasId);
         if (perfilOpt.isEmpty()) {
             throw new IllegalArgumentException("Perfil de citas no encontrado");
         }
-        
+
         PerfilCitas perfil = perfilOpt.get();
-        
+
         // Verificar que la fecha no sea en el pasado
         if (fechaCita.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("No se pueden agendar citas en fechas pasadas");
         }
-        
+
         // Verificar disponibilidad (implementación básica)
         if (existeCitaEnFechaYHora(psicologoId, fechaCita, horaCita)) {
             throw new IllegalArgumentException("El psicólogo ya tiene una cita en esa fecha y hora");
         }
-        
+
         Cita cita = new Cita();
         cita.setPerfilCitas(perfil);
         cita.setPsicologo(perfil.getPsicologo());
@@ -57,58 +57,56 @@ public class ServicioCita {
         cita.setHoraCita(horaCita);
         cita.setDetallesAdicionalesPaciente(detallesPaciente);
         cita.setEstadoCita(TipoConfirmacionCita.PENDIENTE);
-        
-        // SOLUCIÓN: Guardar directamente sin usar agregarCita para evitar Lazy Loading
-        Cita citaGuardada = citaRepository.save(cita);
-        
-        return citaGuardada;
+
+        // Guardar directamente para evitar Lazy Loading
+        return citaRepository.save(cita);
     }
-    
+
     /**
      * Crea un perfil de citas para un paciente existente y agenda una cita
      */
     @Transactional
-    public Cita crearPerfilYCita(Paciente paciente, Psicologo psicologo, 
-                                String direccion, String ocupacion,
-                                LocalDate fechaCita, LocalTime horaCita, 
-                                String detallesPaciente) {
-        
+    public Cita crearPerfilYCita(Paciente paciente, Psicologo psicologo,
+                                 String direccion, String ocupacion,
+                                 LocalDate fechaCita, LocalTime horaCita,
+                                 String detallesPaciente) {
+
         // Crear perfil de citas para el paciente
         PerfilCitas perfil = servicioPerfilCitas.crearPerfilDesdePaciente(
-            paciente, psicologo, direccion, ocupacion);
-        
+                paciente, psicologo, direccion, ocupacion);
+
         // Crear la cita
         return crearCita(perfil.getIdPerfil(), psicologo.getId(), fechaCita, horaCita, detallesPaciente);
     }
-    
+
     /**
      * Crea un perfil de citas para un paciente nuevo (sin registro previo) y agenda cita
      */
     @Transactional
-    public Cita crearPerfilCompletoYCita(String nombreCompleto, int edad, String sexo, 
-                                       String direccion, String ocupacion, 
-                                       String telefono, String email,
-                                       Psicologo psicologo,
-                                       LocalDate fechaCita, LocalTime horaCita, 
-                                       String detallesPaciente) {
-        
+    public Cita crearPerfilCompletoYCita(String nombreCompleto, int edad, String sexo,
+                                         String direccion, String ocupacion,
+                                         String telefono, String email,
+                                         Psicologo psicologo,
+                                         LocalDate fechaCita, LocalTime horaCita,
+                                         String detallesPaciente) {
+
         // Crear perfil de citas completo
         PerfilCitas perfil = servicioPerfilCitas.crearPerfilCitas(
-            nombreCompleto, edad, sexo, direccion, ocupacion, telefono, email, psicologo);
-        
+                nombreCompleto, edad, sexo, direccion, ocupacion, telefono, email, psicologo);
+
         // Crear la cita
         return crearCita(perfil.getIdPerfil(), psicologo.getId(), fechaCita, horaCita, detallesPaciente);
     }
-    
+
     /**
      * Verifica si existe una cita para un psicólogo en fecha y hora específicas
      */
     private boolean existeCitaEnFechaYHora(Integer psicologoId, LocalDate fecha, LocalTime hora) {
         List<Cita> citas = citaRepository.findByPsicologoIdAndFechaCitaAndHoraCita(
-            psicologoId, fecha, hora);
+                psicologoId, fecha, hora);
         return !citas.isEmpty();
     }
-    
+
     /**
      * Obtiene todas las citas de un perfil
      */
@@ -116,21 +114,21 @@ public class ServicioCita {
     public List<Cita> obtenerCitasPorPerfil(Long perfilCitasId) {
         return citaRepository.findByPerfilCitasIdPerfil(perfilCitasId);
     }
-    
+
     /**
      * Obtiene citas por psicólogo
      */
     public List<Cita> obtenerCitasPorPsicologo(Integer psicologoId) {
         return citaRepository.findByPsicologoId(psicologoId);
     }
-    
+
     /**
      * Obtiene citas por fecha
      */
     public List<Cita> obtenerCitasPorFecha(LocalDate fecha) {
         return citaRepository.findByFechaCita(fecha);
     }
-    
+
     /**
      * Cambia el estado de una cita
      */
@@ -140,17 +138,17 @@ public class ServicioCita {
         if (citaOpt.isEmpty()) {
             throw new IllegalArgumentException("Cita no encontrada");
         }
-        
+
         Cita cita = citaOpt.get();
         cita.setEstadoCita(nuevoEstado);
-        
+
         if (nuevoEstado == TipoConfirmacionCita.CANCELADA && motivo != null) {
             cita.setMotivoCancelacion(motivo);
         }
-        
+
         return citaRepository.save(cita);
     }
-    
+
     /**
      * Agrega nota post-sesión a una cita concluida
      */
@@ -160,13 +158,84 @@ public class ServicioCita {
         if (citaOpt.isEmpty()) {
             throw new IllegalArgumentException("Cita no encontrada");
         }
-        
+
         Cita cita = citaOpt.get();
         if (cita.getEstadoCita() != TipoConfirmacionCita.CONCLUIDA) {
             throw new IllegalArgumentException("Solo se pueden agregar notas a citas concluidas");
         }
-        
+
         cita.setNotaPostSesion(notaPostSesion);
         return citaRepository.save(cita);
+    }
+
+    /**
+     * Obtiene todas las citas del día con relaciones cargadas (para vistas como el horario).
+     */
+    @Transactional
+    public List<Cita> obtenerCitasDelDia(LocalDate fecha) {
+        return citaRepository.findByFechaCitaWithRelations(fecha);
+    }
+
+    /**
+     * Reagenda una cita existente creando una nueva cita y cancelando la anterior.
+     */
+    @Transactional
+    public Cita reagendarCita(Integer citaId, LocalDate nuevaFecha, LocalTime nuevaHora, String motivo) {
+        Optional<Cita> citaOpt = citaRepository.findById(citaId);
+        if (citaOpt.isEmpty()) {
+            throw new IllegalArgumentException("Cita no encontrada");
+        }
+
+        Cita citaOriginal = citaOpt.get();
+
+        // Verificar que la nueva fecha no sea en el pasado
+        if (nuevaFecha.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("No se pueden reagendar citas en fechas pasadas");
+        }
+
+        // Verificar disponibilidad del psicólogo
+        if (existeCitaEnFechaYHora(citaOriginal.getPsicologo().getId(), nuevaFecha, nuevaHora)) {
+            throw new IllegalArgumentException("El psicólogo ya tiene una cita en esa fecha y hora");
+        }
+
+        // Crear nueva cita reagendada
+        Cita citaReagendada = new Cita();
+        citaReagendada.setPerfilCitas(citaOriginal.getPerfilCitas());
+        citaReagendada.setPsicologo(citaOriginal.getPsicologo());
+        citaReagendada.setPaciente(citaOriginal.getPaciente());
+        citaReagendada.setFechaCita(nuevaFecha);
+        citaReagendada.setHoraCita(nuevaHora);
+        citaReagendada.setEstadoCita(TipoConfirmacionCita.PENDIENTE);
+        citaReagendada.setDetallesAdicionalesPaciente(
+                "CITA REAGENDADA - Original: " + citaOriginal.getFechaCita() + " " +
+                        citaOriginal.getHoraCita() + ". Motivo: " + motivo);
+
+        // Cancelar cita original
+        citaOriginal.setEstadoCita(TipoConfirmacionCita.CANCELADA);
+        citaOriginal.setMotivoCancelacion("Reagendada para: " + nuevaFecha + " " + nuevaHora);
+
+        // Guardar ambos cambios
+        citaRepository.save(citaOriginal);
+        return citaRepository.save(citaReagendada);
+    }
+
+    /**
+     * Método auxiliar para el controlador de reagendar: cancela la cita original y guarda la nueva.
+     */
+    @Transactional
+    public void agregarCitaReagendada(Cita citaReagendada, Integer citaOriginalId) {
+        Optional<Cita> citaOriginalOpt = citaRepository.findById(citaOriginalId);
+        if (citaOriginalOpt.isPresent()) {
+            Cita citaOriginal = citaOriginalOpt.get();
+
+            // Cancelar cita original
+            citaOriginal.setEstadoCita(TipoConfirmacionCita.CANCELADA);
+            citaOriginal.setMotivoCancelacion("Reagendada para: " +
+                    citaReagendada.getFechaCita() + " " + citaReagendada.getHoraCita());
+            citaRepository.save(citaOriginal);
+        }
+
+        // Guardar nueva cita
+        citaRepository.save(citaReagendada);
     }
 }

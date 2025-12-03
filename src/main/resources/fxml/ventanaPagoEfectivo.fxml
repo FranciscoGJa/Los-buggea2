@@ -44,10 +44,9 @@
                 <Button fx:id="btnCerrarCaja" text="Cerrar Caja" onAction="#cerrarCaja" disable="true"/>
             </HBox>
 
-            <!-- BOTONES DE CONFIRMACIÓN Y CIERRE -->
+            <!-- BOTONES DE CONFIRMACIÓN -->
             <HBox spacing="15" alignment="CENTER">
                 <Button fx:id="btnConfirmar" text="Confirmar Pago" onAction="#confirmarPago" disable="true"/>
-                <Button fx:id="btnCerrar" text="Cerrar" onAction="#cerrarVentana" visible="false"/>
             </HBox>
 
             <!-- MENSAJE DE ESTADO -->

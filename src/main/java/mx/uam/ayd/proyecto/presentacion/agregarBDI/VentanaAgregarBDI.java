@@ -1,57 +1,32 @@
 package mx.uam.ayd.proyecto.presentacion.agregarBDI;
 
 import java.io.IOException;
-
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.stereotype.Component;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
+import mx.uam.ayd.proyecto.negocio.modelo.BateriaClinica;
 
-/**
- * Ventana para capturar la batería BDI-II (Inventario de Depresión de Beck).
- *
- * <p>Responsabilidades:
- * <ul>
- *   <li>Cargar y mostrar la interfaz JavaFX correspondiente al BDI-II.</li>
- *   <li>Recolectar y validar las respuestas del cuestionario.</li>
- *   <li>Delegar el guardado al controlador {@link ControlAgregarBDI}.</li>
- *   <li>Mostrar mensajes informativos y de error.</li>
- * </ul>
- * </p>
- *
- * <p>Uso típico: establecer el controlador con
- * {@link #setControlAgregarBDI(ControlAgregarBDI)}, asignar el paciente con
- * {@link #setPacienteID(Long)} y llamar a {@link #muestra()}.</p>
- *
- * @version 1.0
- */
 @Component
 public class VentanaAgregarBDI {
 
     private Stage stage;
     private boolean initialized = false; 
     private ControlAgregarBDI controlAgregarBDI;
-
     private Long pacienteID;
 
-    /**
-     * Inyecta el controlador que gestionará el guardado del BDI-II.
-     * @param controlAgregarBDI controlador asociado a esta vista
-     */
     public void setControlAgregarBDI(ControlAgregarBDI controlAgregarBDI) {
         this.controlAgregarBDI = controlAgregarBDI;
     }
     
-    /**
-     * Inicializa la UI: carga el FXML, crea el {@link Stage} y configura la escena.
-     * <p>Si no se está en el hilo de JavaFX, reintenta con {@link Platform#runLater(Runnable)}.</p>
-     */
     private void initializeUI() {
         if (initialized) return;
         if (!Platform.isFxApplicationThread()) {
@@ -62,7 +37,7 @@ public class VentanaAgregarBDI {
             stage = new Stage();
             stage.setTitle("Inventario de Depresion de Beck (BDI-II)");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-BDI.fxml"));
-            loader.setController(this); // Solo si NO hay fx:controller en el FXML
+            loader.setController(this);
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
             stage.setScene(scene);
@@ -73,58 +48,63 @@ public class VentanaAgregarBDI {
         }
     }
 
-    /** Constructor por defecto (no inicializa componentes JavaFX). */
-    public VentanaAgregarBDI() {
-        // No inicializar componentes JavaFX en el constructor
-    }
+    public VentanaAgregarBDI() { }
 
-    /**
-     * Muestra la ventana. Si aún no está inicializada, la inicializa primero.
-     */
     public void muestra() {
-        if (!initialized) {
-            initializeUI();
-        }
+        if (!initialized) initializeUI();
+        limpiarSeleccion();
         stage.show();
     }
 
-    /**
-     * Cambia la visibilidad de la ventana, garantizando el uso del hilo de JavaFX.
-     * <p>Si se solicita mostrar y aún no está inicializada, la inicializa.</p>
-     * @param visible {@code true} para mostrar; {@code false} para ocultar
-     */
+    public void muestra(BateriaClinica bateria) {
+        if (!initialized) initializeUI();
+        cargarRespuestas(bateria);
+        stage.show();
+    }
+
+    private void cargarRespuestas(BateriaClinica bateria) {
+        List<ToggleGroup> grupos = Arrays.asList(q1, q2, q3, q4, q5);
+        List<Integer> valores = Arrays.asList(
+            bateria.getRespuesta1(), bateria.getRespuesta2(), bateria.getRespuesta3(), 
+            bateria.getRespuesta4(), bateria.getRespuesta5()
+        );
+
+        for (int i = 0; i < grupos.size(); i++) {
+            Integer valor = valores.get(i);
+            ToggleGroup grupo = grupos.get(i);
+            if (valor != null && grupo != null) {
+                for (Toggle t : grupo.getToggles()) {
+                    if (t.getUserData() != null && t.getUserData().toString().equals(String.valueOf(valor))) {
+                        grupo.selectToggle(t);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void limpiarSeleccion() {
+        if(q1!=null) q1.selectToggle(null);
+        if(q2!=null) q2.selectToggle(null);
+        if(q3!=null) q3.selectToggle(null);
+        if(q4!=null) q4.selectToggle(null);
+        if(q5!=null) q5.selectToggle(null);
+    }
+
     public void setVisible(boolean visible) {
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(() -> this.setVisible(visible));
             return;
         }
-
-        if (!initialized) {
-            if (visible) {
-                initializeUI();
-            } else {
-                return;
-            }
-        }
-
-        if (visible) {
-            stage.show();
-        } else {
-            stage.hide();
-        }
+        if (!initialized) { if (visible) initializeUI(); else return; }
+        if (visible) stage.show(); else stage.hide();
     }
 
-    /**
-     * Muestra un diálogo informativo con el mensaje indicado.
-     * <p>Si no se ejecuta en el hilo de JavaFX, reprograma la acción.</p>
-     * @param mensaje contenido a mostrar en la alerta
-     */
     public void muestraDialogoConMensaje(String mensaje) {
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(() -> this.muestraDialogoConMensaje(mensaje));
             return;
         }
-
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Información");
         alert.setHeaderText(null);
@@ -132,33 +112,22 @@ public class VentanaAgregarBDI {
         alert.showAndWait();
     }
 
-    /**
-     * Define el identificador del paciente al que se asociará la captura.
-     * @param pacienteID ID del paciente
-     */
     public void setPacienteID(Long pacienteID) {
         this.pacienteID=pacienteID;
     }
 
-    @FXML private javafx.scene.control.ToggleGroup q1;
-    @FXML private javafx.scene.control.ToggleGroup q2;
-    @FXML private javafx.scene.control.ToggleGroup q3;
-    @FXML private javafx.scene.control.ToggleGroup q4;
-    @FXML private javafx.scene.control.ToggleGroup q5;
+    @FXML private ToggleGroup q1;
+    @FXML private ToggleGroup q2;
+    @FXML private ToggleGroup q3;
+    @FXML private ToggleGroup q4;
+    @FXML private ToggleGroup q5;
 
-    /**
-     * Acción del botón Guardar.
-     * <p>Valida respuestas, construye la lista y delega el guardado al controlador.</p>
-     */
     @FXML    
     private void onGuard() {
         try {
-            java.util.List<Integer> respuestas = java.util.Arrays.asList(
-                getSelectedValue(q1),
-                getSelectedValue(q2),
-                getSelectedValue(q3),
-                getSelectedValue(q4),
-                getSelectedValue(q5)
+            List<Integer> respuestas = Arrays.asList(
+                getSelectedValue(q1), getSelectedValue(q2), getSelectedValue(q3), 
+                getSelectedValue(q4), getSelectedValue(q5)
             );
 
             if (respuestas.stream().anyMatch(r -> r == null)) {
@@ -169,20 +138,14 @@ public class VentanaAgregarBDI {
             String comentarios = " ";
             controlAgregarBDI.guardarBDI(pacienteID, respuestas, comentarios);
 
-            muestraDialogoConMensaje("¡Batería BDI guardada!");
+            muestraDialogoConMensaje("¡Batería BDI guardada/actualizada!");
             stage.close();
 
         } catch (Exception ex) {
             new Alert(Alert.AlertType.ERROR, "Error al guardar: " + ex.getMessage()).showAndWait();
         }
-    
     }
 
-    /**
-     * Obtiene el valor seleccionado de un grupo de toggles.
-     * @param group grupo de opciones
-     * @return entero definido en el {@code userData} del toggle seleccionado; 0 si no hay selección
-     */
     private Integer getSelectedValue(ToggleGroup group) {
         if (group != null && group.getSelectedToggle() != null &&
             group.getSelectedToggle().getUserData() != null) {

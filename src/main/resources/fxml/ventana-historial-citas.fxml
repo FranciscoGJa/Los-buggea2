@@ -5,55 +5,64 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" 
+<VBox xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="mx.uam.ayd.proyecto.presentacion.HistorialCitas.ControladorHistorialCitas"
-      spacing="15" style="-fx-padding: 20;">
-   
-   <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-   
-   <!-- Header -->
-   <Label text="Historial de Citas" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;">
-      <padding><Insets bottom="10"/></padding>
+      stylesheets="@css/style.css"
+      spacing="12"
+      style="-fx-padding: 15;">
+
+   <padding>
+      <Insets top="15" right="15" bottom="15" left="15"/>
+   </padding>
+
+   <!-- Título -->
+   <Label text="Historial de Citas" styleClass="main-title">
+      <padding>
+         <Insets bottom="8"/>
+      </padding>
    </Label>
-   
-   <!-- Información del Paciente -->
-   <VBox spacing="8" style="-fx-background-color: #ecf0f1; -fx-padding: 15; -fx-border-radius: 5; -fx-background-radius: 5;">
-      <Label fx:id="lblNombrePaciente" text="Nombre del Paciente" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-      <HBox spacing="20">
-         <Label fx:id="lblEdadSexo" text="Edad • Sexo" style="-fx-text-fill: #7f8c8d;"/>
-         <Label fx:id="lblContacto" text="Contacto" style="-fx-text-fill: #7f8c8d;"/>
+
+   <!-- Información del paciente -->
+   <VBox spacing="6" styleClass="info-card">
+      <Label fx:id="lblNombrePaciente" text="Nombre del Paciente" styleClass="patient-name"/>
+      <HBox spacing="15">
+         <Label fx:id="lblEdadSexo" text="Edad • Sexo" styleClass="patient-info"/>
+         <Label fx:id="lblContacto" text="Contacto" styleClass="patient-info"/>
       </HBox>
    </VBox>
-   
-   <!-- Botones de Acción -->
-   <HBox spacing="10" alignment="CENTER_LEFT">
-      <Button fx:id="btnNuevaCita" text="Nueva Cita" onAction="#nuevaCita" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;"/>
-      <Button fx:id="btnVerDetalles" text="Ver Detalles" onAction="#verDetallesCita" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;"/>
+
+   <!-- Botones principales -->
+   <HBox spacing="8" alignment="CENTER_LEFT">
+      <Button fx:id="btnNuevaCita" text="Nueva Cita" onAction="#nuevaCita" styleClass="success-button"/>
+      <Button fx:id="btnReagendar" text="Reagendar" onAction="#reagendarCita" styleClass="warning-button"/>
+      <Button fx:id="btnVerDetalles" text="Ver Detalles" onAction="#verDetallesCita" styleClass="primary-button"/>
       <Region HBox.hgrow="ALWAYS"/>
-      <Button fx:id="btnCerrar" text="Cerrar" onAction="#cerrar" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;"/>
+      <Button fx:id="btnCerrar" text="Cerrar" onAction="#cerrar" styleClass="danger-button"/>
    </HBox>
-   
-   <!-- Tabla de Citas -->
-   <Label text="Citas Registradas:" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-   
-   <TableView fx:id="tablaCitas" VBox.vgrow="ALWAYS">
+
+   <!-- Encabezado tabla -->
+   <Label text="Citas Registradas:" styleClass="section-title"/>
+
+   <!-- Tabla de citas -->
+   <TableView fx:id="tablaCitas" VBox.vgrow="ALWAYS" prefHeight="350">
       <columns>
-         <TableColumn fx:id="colFecha" text="Fecha" prefWidth="120">
+         <TableColumn fx:id="colFecha" text="Fecha" prefWidth="100">
             <cellValueFactory>
                <PropertyValueFactory property="fechaCita"/>
             </cellValueFactory>
          </TableColumn>
-         <TableColumn fx:id="colHora" text="Hora" prefWidth="80">
+         <TableColumn fx:id="colHora" text="Hora" prefWidth="70">
             <cellValueFactory>
                <PropertyValueFactory property="horaCita"/>
             </cellValueFactory>
          </TableColumn>
-         <TableColumn fx:id="colEstado" text="Estado" prefWidth="100">
+         <TableColumn fx:id="colEstado" text="Estado" prefWidth="90">
             <cellValueFactory>
                <PropertyValueFactory property="estadoCita"/>
             </cellValueFactory>
          </TableColumn>
-         <TableColumn fx:id="colMotivo" text="Motivo/Detalles" prefWidth="300">
+         <TableColumn fx:id="colMotivo" text="Motivo/Detalles" prefWidth="250">
             <cellValueFactory>
                <PropertyValueFactory property="detallesAdicionalesPaciente"/>
             </cellValueFactory>
@@ -63,9 +72,11 @@
          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
       </columnResizePolicy>
    </TableView>
-   
-   <!-- Estado -->
-   <HBox spacing="10" alignment="CENTER">
-      <Label text="Seleccione una cita para ver detalles o cree una nueva cita" style="-fx-text-fill: #7f8c8d; -fx-font-style: italic;"/>
+
+   <!-- Información adicional -->
+   <HBox spacing="8" alignment="CENTER" styleClass="info-box">
+      <Label text="Seleccione una cita para ver detalles, reagendar o cree una nueva cita"
+             styleClass="info-text"/>
    </HBox>
+
 </VBox>

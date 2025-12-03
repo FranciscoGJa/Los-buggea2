@@ -49,18 +49,6 @@ public class ControlMaterialDidactico {
 
    private void cargarTabla() {
     List<Material> lista = materialDAO.obtenerMateriales();
-    System.out.println("Materiales obtenidos: " + lista.size());
-
-    for (Material m : lista) {
-        System.out.println(
-            m.getIdMaterial() + " | " +
-            m.getNombre() + " | " +
-            m.getTipo() + " | " +
-            m.getEstado() + " | " +
-            m.getImagen()
-        );
-    }
-
     tablaMateriales.setItems(FXCollections.observableArrayList(lista));
 }
 
@@ -111,7 +99,7 @@ private void configurarColumnas() {
                 setGraphic(imageView);
 
             } catch (Exception e) {
-                System.out.println("❌ Imagen NO encontrada: " + ruta);
+                System.out.println("Imagen NO encontrada: " + ruta);
                 setGraphic(null);
             }
         }

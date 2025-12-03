@@ -56,6 +56,14 @@ public class Cita {
         this.estadoCita = TipoConfirmacionCita.PENDIENTE;
     }
 
+    public LocalTime getHoraCita(){
+        return horaCita;
+    }
+
+    public void setHoraCita(LocalTime horaCita){
+        this.horaCita = horaCita;
+    }
+
     /**
      * Método para establecer el perfil de citas y sincronizar el paciente
      */

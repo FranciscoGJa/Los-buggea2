@@ -2,6 +2,8 @@ package mx.uam.ayd.proyecto.negocio.modelo;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import java.util.ArrayList; 
 import java.util.List;
 
@@ -20,12 +22,18 @@ public class Paciente {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "psicologo_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Psicologo psicologo;
 
     @OneToOne(mappedBy = "paciente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private HistorialClinico historialClinico;
 
     @OneToMany(mappedBy = "paciente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<BateriaClinica> bateriasClinicas;
 
     // RELACIÓN COMENTADA TEMPORALMENTE - Se usará PerfilCitas en su lugar
@@ -33,6 +41,8 @@ public class Paciente {
     // private List<Cita> citas;
 
     @OneToMany(mappedBy = "paciente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<PerfilCitas> perfilesCitas;
 
     /**

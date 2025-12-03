@@ -2,6 +2,8 @@ package mx.uam.ayd.proyecto.negocio.modelo;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -31,6 +33,8 @@ public class HistorialClinico {
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Paciente paciente;
 
     @ManyToOne(fetch = FetchType.LAZY)

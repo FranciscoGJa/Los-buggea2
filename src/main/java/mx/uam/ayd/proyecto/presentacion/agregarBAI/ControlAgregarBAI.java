@@ -33,10 +33,18 @@ public class ControlAgregarBAI {
     private BateriaClinica bateriaEnEdicion;
 
     /**
+<<<<<<< HEAD
      * Constructor que inyecta las dependencias necesarias.
      * * @param ventanaAgregarBAI La vista gráfica para el BAI.
      * @param servicioBateriaClinica El servicio para operaciones con la base de datos.
      */
+=======
+     * Constructor que inyecta la vista y el servicio de negocio.
+     *
+     * @param ventanaAgregarBAI la ventana encargada de la interfaz de usuario para agregar la batería BAI.
+     * @param servicioBateriaClinica el servicio que gestiona la lógica de negocio de baterías clínicas.
+     */ 
+>>>>>>> HU-19-EjerciciosDeRespiracion
     @Autowired
     public ControlAgregarBAI(
             VentanaAgregarBAI ventanaAgregarBAI,

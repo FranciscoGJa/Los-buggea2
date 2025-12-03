@@ -43,8 +43,6 @@ public class ControlMenu {
     @Autowired
     @Lazy
     private ControlPrincipalCentro controlPrincipalCentro;
-    @Autowired
-    private ApplicationContext context; // Contexto de Spring
 
     
     @FXML
@@ -143,29 +141,6 @@ public void listarPsicologo() {
      */
     public void consultarPerfilCitas() {
         ventanaPelfil.muestra();
-    }
-
- public void mostrarMaterialDidactico() {
-        try {
-            // Crea el FXMLLoader
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-GestionRecursos.fxml"));
-
-            // Usa Spring para crear el controlador y que se inyecten los beans
-            loader.setControllerFactory(context::getBean);
-
-            // Carga la UI
-            Parent root = loader.load();
-
-            // Crea y muestra la ventana
-            Stage stage = new Stage();
-            stage.setTitle("Gestión de Material Didáctico");
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Aquí puedes mostrar un diálogo de error si quieres
-        }
     }
 
     /**

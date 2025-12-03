@@ -14,6 +14,7 @@ import java.util.List;
 import mx.uam.ayd.proyecto.presentacion.BreadcrumbController;
 import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
 
+
 /**
  * Ventana (Vista) para el menú del Psicólogo.
  * Carga el FXML /fxml/ventanaMenuPsicologo.fxml
@@ -90,8 +91,28 @@ public class VentanaMenuPsicologo {
     // Actualiza la ruta del breadcrumb
     public void actualizaBreadcrumb(List<String> ruta) {
         if (breadcrumbController != null) {
-            // Define una acción simple al hacer clic (solo imprime en consola)
-            breadcrumbController.setPath(ruta, item -> System.out.println("Clic en breadcrumb: " + item));
+            // Define una acción al hacer clic en el breadcrumb
+            breadcrumbController.setPath(ruta, this::handleBreadcrumbClick);
+        }
+    }
+
+    // Maneja clicks en el breadcrumb
+    private void handleBreadcrumbClick(String item) {
+        // Si se hace click en 'Inicio', cargamos la vista principal (principal.fxml)
+        if ("Inicio".equalsIgnoreCase(item)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal.fxml"));
+                Node vistaPrincipal = loader.load();
+                if (contentArea != null) {
+                    contentArea.getChildren().setAll(vistaPrincipal);
+                }
+
+                // Actualizar breadcrumb a la ruta inicial
+                actualizaBreadcrumb(java.util.List.of("Inicio"));
+            } catch (IOException e) {
+                e.printStackTrace();
+                if (contentArea != null) contentArea.getChildren().clear();
+            }
         }
     }
 
@@ -133,9 +154,25 @@ public class VentanaMenuPsicologo {
     }
     
     @FXML
+    private void handleEjerciciosRespiracion() {
+        if (control != null) {
+            control.ejerciciosRespiracion();
+        }
+    }
+
+    @FXML
+private void handleMaterialDidactico() {
+    if (control != null) {
+        control.mostrarMaterialDidactico();
+    }
+}
+    
+    @FXML
     private void handleSalir() {
         if (control != null) {
             control.salir();
         }
     }
+    
+
 }

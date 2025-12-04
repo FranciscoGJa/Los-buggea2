@@ -13,7 +13,6 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12" 
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="mx.uam.ayd.proyecto.presentacion.PerfilCitas.ControladorPerfil"
             stylesheets="@css/style.css"
             prefHeight="700.0" prefWidth="900.0">
    

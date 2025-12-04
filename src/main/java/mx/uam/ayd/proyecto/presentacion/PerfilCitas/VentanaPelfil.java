@@ -30,31 +30,35 @@ public class VentanaPelfil {
      * Permite insertar la interfaz dentro del `contentArea` de la ventana principal.
      */
     public Parent getVista() {
-        try {
-            String fxmlPath = "/fxml/ventana-PerfiCitas.fxml";
-            java.net.URL fxmlUrl = getClass().getResource(fxmlPath);
+    try {
+        String fxmlPath = "/fxml/ventana-PerfiCitas.fxml";
+        java.net.URL fxmlUrl = getClass().getResource(fxmlPath);
 
-            if (fxmlUrl == null) {
-                System.err.println("ERROR: No se encontró el archivo FXML en: " + fxmlPath);
-                VBox root = new VBox(new Label("Error al cargar la vista de Perfil de Citas."));
-                return root;
-            }
-
-            FXMLLoader loader = new FXMLLoader(fxmlUrl);
-            controlador = applicationContext.getBean(ControladorPerfil.class);
-            loader.setController(controlador);
-
-            Parent root = loader.load();
-            if (controlador != null) controlador.limpiarCampos();
-            return root;
-
-        } catch (Exception e) {
-            System.err.println("ERROR al cargar la vista de Perfil de Citas: " + e.getMessage());
-            e.printStackTrace();
+        if (fxmlUrl == null) {
+            System.err.println("ERROR: No se encontró el archivo FXML en: " + fxmlPath);
             VBox root = new VBox(new Label("Error al cargar la vista de Perfil de Citas."));
             return root;
         }
+
+        FXMLLoader loader = new FXMLLoader(fxmlUrl);
+
+        // ✔ Controller manejado por Spring
+        loader.setControllerFactory(applicationContext::getBean);
+
+        Parent root = loader.load();
+
+        controlador = loader.getController();
+        if (controlador != null) controlador.limpiarCampos();
+
+        return root;
+
+    } catch (Exception e) {
+        System.err.println("ERROR al cargar la vista de Perfil de Citas: " + e.getMessage());
+        e.printStackTrace();
+        return new VBox(new Label("Error al cargar la vista de Perfil de Citas."));
     }
+}
+
 
     /**
      * Muestra la ventana de perfil de citas en un Stage independiente.

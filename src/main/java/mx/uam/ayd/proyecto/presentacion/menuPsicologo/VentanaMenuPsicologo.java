@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
@@ -15,9 +14,10 @@ import java.util.List;
 import mx.uam.ayd.proyecto.presentacion.BreadcrumbController;
 import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
 
+
 /**
  * Ventana (Vista) para el menú del Psicólogo.
- * Carga el FXML /fxml/ventanaMenuPsicologo.fxml.
+ * Carga el FXML /fxml/ventanaMenuPsicologo.fxml
  */
 @Component
 public class VentanaMenuPsicologo {
@@ -29,7 +29,7 @@ public class VentanaMenuPsicologo {
     @FXML
     private FlowPane breadcrumbContainer;
     private BreadcrumbController breadcrumbController;
-
+    
     @FXML
     private StackPane contentArea; // Panel central para cargar otras vistas
 
@@ -39,27 +39,27 @@ public class VentanaMenuPsicologo {
 
     private void initializeUI() {
         if (initialized) return;
-
+        
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(this::initializeUI);
             return;
         }
-
+        
         try {
             stage = new Stage();
             stage.setTitle("Centro Psicológico - Menú Psicólogo");
-
-            // Cargar el FXML principal
+            
+            // --- APUNTA AL NUEVO FXML ---
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaMenuPsicologo.fxml"));
             loader.setController(this);
-
+            
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
             stage.setScene(scene);
-
+            
             stage.setMinWidth(950);
             stage.setMinHeight(700);
-
+            
             cargarBreadcrumb();
             initialized = true;
         } catch (IOException e) {
@@ -79,42 +79,26 @@ public class VentanaMenuPsicologo {
         }
     }
 
-    /**
-     * Muestra la ventana del menú.
-     */
     public void muestra() {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/ventanaMenuPsicologo.fxml")
-            );
-            loader.setController(this);
-
-            Parent root = loader.load();
-
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(
-                    getClass().getResource("/css/style.css").toExternalForm()
-            );
-
-            stage = new Stage();
-            stage.setTitle("Centro Psicológico - Menú Psicólogo");
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!Platform.isFxApplicationThread()) {
+            Platform.runLater(this::muestra);
+            return;
         }
+        initializeUI();
+        stage.show();
     }
 
     // Actualiza la ruta del breadcrumb
     public void actualizaBreadcrumb(List<String> ruta) {
         if (breadcrumbController != null) {
+            // Define una acción al hacer clic en el breadcrumb
             breadcrumbController.setPath(ruta, this::handleBreadcrumbClick);
         }
     }
 
     // Maneja clicks en el breadcrumb
     private void handleBreadcrumbClick(String item) {
+        // Si se hace click en 'Inicio', cargamos la vista principal (principal.fxml)
         if ("Inicio".equalsIgnoreCase(item)) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/principal.fxml"));
@@ -122,7 +106,9 @@ public class VentanaMenuPsicologo {
                 if (contentArea != null) {
                     contentArea.getChildren().setAll(vistaPrincipal);
                 }
-                actualizaBreadcrumb(List.of("Inicio"));
+
+                // Actualizar breadcrumb a la ruta inicial
+                actualizaBreadcrumb(java.util.List.of("Inicio"));
             } catch (IOException e) {
                 e.printStackTrace();
                 if (contentArea != null) contentArea.getChildren().clear();
@@ -139,15 +125,14 @@ public class VentanaMenuPsicologo {
         }
     }
 
-    // --- Acciones del menú ---
-
+    
     @FXML
     private void handleAgregarPaciente() {
         if (control != null) {
             control.agregarPaciente();
         }
     }
-
+    
     @FXML
     private void handleListarPacientes() {
         if (control != null) {
@@ -167,14 +152,7 @@ public class VentanaMenuPsicologo {
             control.consultarPerfilCitas();
         }
     }
-
-    @FXML
-    private void handleHorario() {
-        if (control != null) {
-            control.horario();
-        }
-    }
-
+    
     @FXML
     private void handleEjerciciosRespiracion() {
         if (control != null) {
@@ -183,9 +161,15 @@ public class VentanaMenuPsicologo {
     }
 
     @FXML
-    private void handleMaterialDidactico() {
+private void handleMaterialDidactico() {
+    if (control != null) {
+        control.mostrarMaterialDidactico();
+    }
+}
+    @FXML
+    private void handleHorario() {
         if (control != null) {
-            control.mostrarMaterialDidactico();
+            control.horario();
         }
     }
 
@@ -196,23 +180,31 @@ public class VentanaMenuPsicologo {
         }
     }
 
+    /**
+     * Carga un FXML por ruta en el panel central.
+     * Uso: cargarVista("/fxml/algunaVista.fxml");
+     */
+    public void cargarVista(String rutaFXML) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFXML));
+            Parent vista = loader.load();
+            if (contentArea != null) {
+                contentArea.getChildren().setAll(vista);
+            } else {
+                System.err.println("Error: contentArea no fue inyectado por FXML.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
     @FXML
     private void handleSalir() {
         if (control != null) {
             control.salir();
         }
     }
+    
 
-    /**
-     * Carga un FXML arbitrario en el panel central.
-     */
-    public void cargarVista(String rutaFXML) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFXML));
-            Parent vista = loader.load();
-            contentArea.getChildren().setAll(vista);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

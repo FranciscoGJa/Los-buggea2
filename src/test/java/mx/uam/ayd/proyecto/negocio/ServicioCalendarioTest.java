@@ -38,9 +38,9 @@ public class ServicioCalendarioTest {
         hora = LocalTime.of(10, 0);
     }
 
-    // -------------------------------------------------------------
+    
     //  TEST 1: verificarDisponibilidad (caso disponible)
-    // -------------------------------------------------------------
+
     @Test
     public void testVerificarDisponibilidad_CuandoNoHayCitas() {
 
@@ -54,9 +54,9 @@ public class ServicioCalendarioTest {
                 .findByPsicologoIdAndFechaCitaAndHoraCita(psicologoId, fecha, hora);
     }
 
-    // -------------------------------------------------------------
+    
     //  TEST 2: verificarDisponibilidad (caso ocupado)
-    // -------------------------------------------------------------
+    
     @Test
     public void testVerificarDisponibilidad_CuandoExisteCita() {
 
@@ -71,9 +71,9 @@ public class ServicioCalendarioTest {
         assertFalse(disponible);
     }
 
-    // -------------------------------------------------------------
+   
     //  TEST 3: obtenerHorariosDisponibles (horarios libres)
-    // -------------------------------------------------------------
+    
     @Test
     public void testObtenerHorariosDisponibles_SinCitas() {
 
@@ -87,9 +87,9 @@ public class ServicioCalendarioTest {
         assertTrue(disponibles.contains(LocalTime.of(18, 0)));
     }
 
-    // -------------------------------------------------------------
+    
     //  TEST 4: obtenerHorariosDisponibles (con horas ocupadas)
-    // -------------------------------------------------------------
+    
     @Test
     public void testObtenerHorariosDisponibles_ConHorasOcupadas() {
 
@@ -107,9 +107,9 @@ public class ServicioCalendarioTest {
         assertEquals(9, disponibles.size());
     }
 
-    // -------------------------------------------------------------
+   
     //  TEST 5: obtenerCitasPorPsicologoYFecha
-    // -------------------------------------------------------------
+    
     @Test
     public void testObtenerCitasPorPsicologoYFecha() {
 
@@ -127,9 +127,9 @@ public class ServicioCalendarioTest {
                 .findByPsicologoIdAndFechaCita(psicologoId, fecha);
     }
 
-    // ------------------------------------------------
+    
     //  TEST 6: Cobertura del constructor (línea 13)
-    //-------------------------------------------------
+    
     @Test
     public void testConstructor() {
         ServicioCalendario servicio = new ServicioCalendario();

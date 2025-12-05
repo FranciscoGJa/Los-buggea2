@@ -1,11 +1,19 @@
 package mx.uam.ayd.proyecto.presentacion;
 
-import javafx.scene.Scene;
+/*import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;*/
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 
 /**
  * Ventana para mostrar la encuesta dentro de la aplicación.
@@ -13,7 +21,7 @@ import javafx.stage.StageStyle;
  */
 public class VentanaEncuesta {
 
-    public void mostrarEncuesta() {
+    /*public void mostrarEncuesta() {
         // Crear una nueva ventana (Stage)
         Stage stage = new Stage();
         stage.setTitle("Encuesta de Satisfacción - Centro Psicológico 🧠");
@@ -46,5 +54,44 @@ public class VentanaEncuesta {
 
         // Mostrar ventana
         stage.show();
+    }*/
+
+         public void mostrarEncuesta() {
+        try {
+            // Crear nueva ventana
+            Stage stage = new Stage();
+            stage.setTitle("Encuesta de Satisfacción - Centro Psicológico 🧠");
+
+            // Icono opcional
+            try {
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/Logo.png")));
+            } catch (Exception e) {
+                System.out.println("⚠️ No se encontró el ícono en /images/logo.png");
+            }
+
+            // Cargar FXML
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/fxml/EncuestaSatisfaccion.fxml")
+            );
+            Parent root = loader.load();
+
+            // Crear escena
+            Scene scene = new Scene(root, 700, 800);
+
+            // Decoración de ventana (igual que antes)
+            stage.initStyle(StageStyle.DECORATED);
+
+            // Evitar que el usuario cambie tamaño
+            stage.setResizable(false);
+
+            // Aplicar escena
+            stage.setScene(scene);
+
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("❌ ERROR: No se pudo abrir la ventana de encuesta.");
+        }
     }
 }

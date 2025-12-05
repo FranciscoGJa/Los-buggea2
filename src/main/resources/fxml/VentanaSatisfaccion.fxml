@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="mx.uam.ayd.proyecto.presentacion.ControladorEstadisticas"
+            prefWidth="900" prefHeight="600">
+
+    <!-- TÍTULO SUPERIOR -->
+    <top>
+        <Label text="Estadísticas del Psicólogo"
+               style="-fx-font-size: 22px; -fx-padding: 10;" />
+    </top>
+
+    <!--LISTADO DE PACIENTES  -->
+    <left>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <Label text="Pacientes Atendidos"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+
+            <TableView fx:id="tablaPacientes" prefWidth="300" prefHeight="500">
+
+                <columns>
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150" />
+                    <TableColumn fx:id="colApellido" text="Apellido" prefWidth="150" />
+                </columns>
+
+            </TableView>
+        </VBox>
+    </left>
+
+    <!--  GRÁFICA DE CALIFICACIONES  -->
+    <center>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <Label text="Calificaciones Recibidas"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+
+            <BarChart fx:id="graficaCalificaciones"
+                      prefWidth="550" prefHeight="500">
+                <xAxis>
+                    <CategoryAxis label="Puntuación" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Número de Evaluaciones" />
+                </yAxis>
+            </BarChart>
+
+        </VBox>
+    </center>
+
+</BorderPane>

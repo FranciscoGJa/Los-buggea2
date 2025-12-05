@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Button?>
+<?import javafx.collections.FXCollections?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" 
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.EncuestaController"
+            prefWidth="600" prefHeight="600">
+
+    <!-- Fondo degradado -->
+    <stylesheets>
+        <URL value="@estilos.css"/>
+    </stylesheets>
+
+    <top>
+        <VBox alignment="CENTER">
+            <Label text="Encuesta de Satisfacción del Paciente" 
+                   style="-fx-font-size: 24px; -fx-font-weight: 600; -fx-text-fill: #2C3E50;" />
+        </VBox>
+    </top>
+
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="15" maxWidth="450" BorderPane.alignment="CENTER">
+            <VBox spacing="10" styleClass="card">
+
+                <Label text="Nombre del Paciente:"/>
+                <TextField fx:id="txtPaciente"/>
+
+                <Label text="Psicólogo que lo atendió:"/>
+                <TextField fx:id="txtPsicologo"/>
+
+                <Label text="Fecha de la Consulta:"/>
+                <TextField fx:id="txtFecha" promptText="dd-mm-aaaa"/>
+
+                <Label text="Puntuación (1-5):"/>
+                <ComboBox fx:id="cbPuntuacion">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="1 - Muy insatisfecho"/>
+                            <String fx:value="2 - Insatisfecho"/>
+                            <String fx:value="3 - Neutral"/>
+                            <String fx:value="4 - Satisfecho"/>
+                            <String fx:value="5 - Muy satisfecho"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+
+                <Label text="Comentarios (opcional):"/>
+                <TextArea fx:id="txtComentarios" prefRowCount="3"/>
+
+                <Button text="Enviar Encuesta"
+                        onAction="#enviarEncuesta"
+                        styleClass="btn-principal"/>
+            </VBox>
+
+            <!-- Mensaje de éxito -->
+            <Label fx:id="lblExito" text="¡Encuesta enviada con éxito!" 
+                   visible="false"
+                   style="-fx-background-color:#d4edda; -fx-text-fill:#155724; 
+                          -fx-padding:10; -fx-background-radius:10;"/>
+        </VBox>
+    </center>
+</BorderPane>

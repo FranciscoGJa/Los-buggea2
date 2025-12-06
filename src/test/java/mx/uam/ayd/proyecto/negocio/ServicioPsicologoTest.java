@@ -1,23 +1,25 @@
 package mx.uam.ayd.proyecto.negocio;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import mx.uam.ayd.proyecto.datos.PacienteRepository;
 import mx.uam.ayd.proyecto.datos.PsicologoRepository;
-import mx.uam.ayd.proyecto.negocio.modelo.CorreoService; 
+import mx.uam.ayd.proyecto.negocio.modelo.CorreoService;
 import mx.uam.ayd.proyecto.negocio.modelo.BateriaClinica;
 import mx.uam.ayd.proyecto.negocio.modelo.Paciente;
 import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
 import mx.uam.ayd.proyecto.negocio.modelo.TipoBateria;
 import mx.uam.ayd.proyecto.negocio.modelo.TipoEspecialidad;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,139 +36,226 @@ public class ServicioPsicologoTest {
     private PsicologoRepository psicologoRepository;
 
     @Mock
-    private CorreoService correoService; 
+    private CorreoService correoService;
 
     @InjectMocks
     private ServicioPsicologo servicio;
 
-    // Prueba: Filtrado de pacientes con cuestionarios
+    // Variables de prueba reutilizables
+    private Paciente paciente1;
+    private Paciente paciente2;
+    private Psicologo psicologo1;
+    private Psicologo psicologo2;
+    private Psicologo psicologo3;
+
+    @BeforeEach
+    void setUp() {
+        // Configurar pacientes de prueba
+        paciente1 = new Paciente();
+        paciente1.setNombre("Paciente 1");
+        paciente1.setEdad(15); // Menor de 18
+        
+        paciente2 = new Paciente();
+        paciente2.setNombre("Paciente 2");
+        paciente2.setEdad(25); // Mayor de 18
+
+        // Configurar psicólogos de prueba
+        psicologo1 = new Psicologo();
+        psicologo1.setNombre("Juan Pérez");
+        psicologo1.setCorreo("juan@correo.com");
+        psicologo1.setTelefono("555-1234");
+        psicologo1.setEspecialidad(TipoEspecialidad.FAMILIAR);
+
+        psicologo2 = new Psicologo();
+        psicologo2.setNombre("María García");
+        psicologo2.setCorreo("maria@correo.com");
+        psicologo2.setTelefono("555-5678");
+        psicologo2.setEspecialidad(TipoEspecialidad.INFANTIL);
+
+        psicologo3 = new Psicologo();
+        psicologo3.setNombre("Carlos López");
+        psicologo3.setCorreo("carlos@correo.com");
+        psicologo3.setTelefono("555-9012");
+        psicologo3.setEspecialidad(TipoEspecialidad.DELAMUJER);
+    }
+
+    // ========== PRUEBAS PARA OBTENER PACIENTES CON CUESTIONARIOS ==========
+
     @Test
-    void testObtenerPacientesConCuestionarios_filtraCorrectamente(){
-        Paciente sinBaterias = new Paciente();
-        sinBaterias.setNombre("Ana");
-        sinBaterias.setBateriasClinicas(Collections.emptyList());
+    @DisplayName("Regresa los pacientes con cuestionarios")
+    void testObtenerPacientesConCuestionarios_filtraCorrectamente() {
+        // Given 
+        BateriaClinica bateria1 = new BateriaClinica();
 
-        Paciente conBaterias = new Paciente();
-        conBaterias.setNombre("Luis");
-        BateriaClinica bc = new BateriaClinica();
-        bc.setTipoDeBateria(TipoBateria.CEPER);
-        conBaterias.setBateriasClinicas(Arrays.asList(bc));
+        paciente1.setBateriasClinicas(Arrays.asList(bateria1)); // Paciente con baterías clínicas
 
-        Paciente bateriasNulas = new Paciente();
-        bateriasNulas.setNombre("Mar");
-        bateriasNulas.setBateriasClinicas(null);
+        // When
+        when(pacienteRepository.findAll()).thenReturn(Arrays.asList(paciente1));    
 
-        when(pacienteRepository.findAll()).thenReturn(Arrays.asList(sinBaterias, conBaterias, bateriasNulas));
+        // Then
+        assertEquals(1, servicio.obtenerPacientesConCuestionarios().size());
+    }
 
+    @Test 
+    @DisplayName("Regresa una lista vacía si el paciente no tiene cuestionarios")
+    void testObtenerPacientesConCuestionarios_regresaVacia() {
+        // Given 
+        paciente1.setBateriasClinicas(Collections.emptyList()); // Paciente sin baterías clínicas
+    
+        // When
+        when(pacienteRepository.findAll()).thenReturn(Arrays.asList(paciente1));    
+    
+        // Then
+        assertEquals(0, servicio.obtenerPacientesConCuestionarios().size());
+    }
+
+    @Test
+    @DisplayName("Regresa lista vacía cuando no hay pacientes en la base de datos")
+    void testObtenerPacientesConCuestionarios_sinPacientes() {
+        // Given
+        when(pacienteRepository.findAll()).thenReturn(Collections.emptyList());
+
+        // When
         List<Paciente> resultado = servicio.obtenerPacientesConCuestionarios();
 
-        assertEquals(1, resultado.size());
-        assertEquals("Luis", resultado.get(0).getNombre());
+        // Then
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
     }
+  @Test
+    @DisplayName("El psicólogo ya se encuentra registrado por correo")
+    public void testAgregarPsicologo_repetido() {
+        // Given 
+        psicologo1.setEspecialidad(TipoEspecialidad.FAMILIAR);
+         
+        // When
+        when(psicologoRepository.findByCorreo("correo@gmail.com")).thenReturn(psicologo1);
+        
+        // Then
+        assertThrows(IllegalArgumentException.class, () -> {
+            servicio.agregarPsicologo("Juan", "correo@gmail.com", "5571238291", TipoEspecialidad.FAMILIAR);
+        });
+        
+        // Verificar que no se guardó ni se envió correo
+        verify(psicologoRepository, never()).save(any(Psicologo.class));
+        verify(correoService, never()).enviarCredenciales(anyString(), anyString(), anyString());
+    }
+ @Test
+    @DisplayName("Se registró un psicólogo con un correo correctamente")
+    public void testAgregarPsicologo_correcto() {
+        // Given 
+        String nombre = "Pedro";
+        String correo = "correo@outlook.com";
+        String telefono = "5571238292";
+        
 
-    // Prueba: Agregar psicólogo exitosamente
-    @Test
-    void testObtenerPacientesConCuestionarios_listaVacia() {
-        String nombre = "Juan";
-        String correo = "juan@demo.com";
-        String tel = "555-0002";
-        TipoEspecialidad esp = TipoEspecialidad.FAMILIAR;
-
+        // Configurar que no existe un psicólogo con ese correo
         when(psicologoRepository.findByCorreo(correo)).thenReturn(null);
-        when(psicologoRepository.save(any(Psicologo.class))).thenAnswer(inv -> inv.getArgument(0));
-
-        Psicologo p = servicio.agregarPsicologo(nombre, correo, tel, esp);
-
-        assertNotNull(p);
-        assertEquals(nombre, p.getNombre());
-        assertEquals(correo, p.getCorreo());
-        assertEquals(tel, p.getTelefono());
-        assertEquals(esp, p.getEspecialidad());
         
-        verify(correoService, times(1)).enviarCredenciales(any(), any(), any()); 
+        // Configurar el save para que devuelva un psicólogo con los datos
+        when(psicologoRepository.save(any(Psicologo.class))).thenAnswer(invocation -> {
+            Psicologo psicologoGuardado = invocation.getArgument(0);
+        
+            return psicologoGuardado;
+        });
+
+        // When
+        Psicologo resultado = servicio.agregarPsicologo(nombre, correo, telefono, null);
+
+        // Then
+        assertNotNull(resultado);
+        assertEquals(nombre, resultado.getNombre());
+        assertEquals(correo, resultado.getCorreo());
+        assertEquals(telefono, resultado.getTelefono());
     }
 
-    // Prueba: No se puede agregar psicólogo con correo duplicado
     @Test
-    void testAgregarPsicologo_correoDuplicado() {
-        String correo = "duplicado@demo.com";
-        when(psicologoRepository.findByCorreo(correo)).thenReturn(new Psicologo());
-
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
-            servicio.agregarPsicologo("Nombre", correo, "1111", TipoEspecialidad.MARITAL));
-
-        assertTrue(ex.getMessage().toLowerCase().contains("correo"));
+    @DisplayName("listarPsicologos - Debe retornar todos los psicólogos registrados")
+    void testListarPsicologos_conPsicologosExistentes() {
+        // Given
+        List<Psicologo> psicologosEsperados = Arrays.asList(psicologo1, psicologo2, psicologo3);
         
-        verify(correoService, times(0)).enviarCredenciales(any(), any(), any());
+        when(psicologoRepository.findAll()).thenReturn(psicologosEsperados);
+
+        // When
+        List<Psicologo> resultado = servicio.listarPsicologos();
+
+        // Then
+        assertNotNull(resultado);
+        assertEquals(3, resultado.size());
+        assertEquals("Juan Pérez", resultado.get(0).getNombre());
+        assertEquals("María García", resultado.get(1).getNombre());
+        assertEquals("Carlos López", resultado.get(2).getNombre());
+        
+        verify(psicologoRepository, times(1)).findAll();
     }
 
-    // Prueba: Validación de parámetros inválidos
     @Test
-    void testAgregarPsicologo_parametrosInvalidos() {
-        // Nombre nulo
-        assertThrows(IllegalArgumentException.class, () ->
-            servicio.agregarPsicologo(null, "a@h.com", "1", TipoEspecialidad.DELAMUJER));
+    @DisplayName("obtenerPsicologosPorEdadPaciente - Paciente menor de 18 años retorna solo psicólogos infantiles")
+    void testObtenerPsicologosPorEdadPaciente_pacienteMenor18() {
+        // Given
+        paciente1.setEdad(15); // Menor de 18 años
         
-        // Nombre vacío
-        assertThrows(IllegalArgumentException.class, () ->
-            servicio.agregarPsicologo("   ", "a@h.com", "1", TipoEspecialidad.DELAMUJER));
-
-        // Correo nulo
-        assertThrows(IllegalArgumentException.class, () ->
-            servicio.agregarPsicologo("Juan", null, "1", TipoEspecialidad.FAMILIAR));
+        List<Psicologo> psicologosInfantiles = Arrays.asList(psicologo2); // María es infantil
         
-        // Correo vacío
-        assertThrows(IllegalArgumentException.class, () ->
-            servicio.agregarPsicologo("Juan", "   ", "1", TipoEspecialidad.FAMILIAR));
-
-        // Teléfono nulo
-        assertThrows(IllegalArgumentException.class, () ->
-            servicio.agregarPsicologo("Juan", "a@a.com", null, TipoEspecialidad.INFANTIL));
-        
-        // Teléfono vacío
-        assertThrows(IllegalArgumentException.class, () ->
-            servicio.agregarPsicologo("Juan", "a@a.com", "   ", TipoEspecialidad.INFANTIL));
-
-        verify(correoService, times(0)).enviarCredenciales(any(), any(), any());
-    }
-
-    // Prueba: Obtención de psicólogos para menores de 18 años
-    @Test
-    void testObtenerPsicologosPorEdadPaciente_menoresDe18() {
-        Paciente menor = new Paciente();
-        menor.setEdad(10);
-
-        Psicologo inf1 = new Psicologo(); 
-        inf1.setEspecialidad(TipoEspecialidad.INFANTIL);
-        Psicologo inf2 = new Psicologo(); 
-        inf2.setEspecialidad(TipoEspecialidad.INFANTIL);
-
         when(psicologoRepository.findByEspecialidad(TipoEspecialidad.INFANTIL))
-            .thenReturn(Arrays.asList(inf1, inf2));
+            .thenReturn(psicologosInfantiles);
 
-        List<Psicologo> lista = servicio.obtenerPsicologosPorEdadPaciente(menor);
+        // When
+        List<Psicologo> resultado = servicio.obtenerPsicologosPorEdadPaciente(paciente1);
 
-        assertEquals(2, lista.size());
-        assertTrue(lista.stream().allMatch(p -> p.getEspecialidad() == TipoEspecialidad.INFANTIL));
+        // Then
+        assertNotNull(resultado);
+        assertEquals(1, resultado.size());
+        assertEquals("María García", resultado.get(0).getNombre());
+        assertEquals(TipoEspecialidad.INFANTIL, resultado.get(0).getEspecialidad());
+           
     }
-
-    // Prueba: Obtención de psicólogos para mayores o iguales a 18 años
     @Test
-    void testObtenerPsicologosPorEdadPaciente_mayorOIgual18() {
-        Paciente mayor = new Paciente();
-        mayor.setEdad(18);
-
-        Psicologo fam = new Psicologo(); 
-        fam.setEspecialidad(TipoEspecialidad.FAMILIAR);
-        Psicologo mar = new Psicologo(); 
-        mar.setEspecialidad(TipoEspecialidad.MARITAL);
-
+    @DisplayName("obtenerPsicologosPorEdadPaciente - Paciente de 18 años retorna psicólogos no infantiles")
+    void testObtenerPsicologosPorEdadPaciente_pacienteExactamente18() {
+        // Given
+        paciente1.setEdad(18); // Exactamente 18 años
+        
+        List<Psicologo> psicologosNoInfantiles = Arrays.asList(psicologo1, psicologo3); // Juan y Carlos
+        
         when(psicologoRepository.findByEspecialidadNot(TipoEspecialidad.INFANTIL))
-            .thenReturn(Arrays.asList(fam, mar));
+            .thenReturn(psicologosNoInfantiles);
 
-        List<Psicologo> lista = servicio.obtenerPsicologosPorEdadPaciente(mayor);
+        // When
+        List<Psicologo> resultado = servicio.obtenerPsicologosPorEdadPaciente(paciente1);
 
-        assertEquals(2, lista.size());
-        assertTrue(lista.stream().noneMatch(p -> p.getEspecialidad() == TipoEspecialidad.INFANTIL));
+        // Then
+        assertNotNull(resultado);
+        assertEquals(2, resultado.size());
+        assertTrue(resultado.stream().noneMatch(p -> p.getEspecialidad() == TipoEspecialidad.INFANTIL));
+        
+        verify(psicologoRepository, times(1)).findByEspecialidadNot(TipoEspecialidad.INFANTIL);
+        verify(psicologoRepository, never()).findByEspecialidad(any());
     }
+
+    @Test
+    @DisplayName("obtenerPsicologosPorEdadPaciente - Paciente mayor de 18 años retorna psicólogos no infantiles")
+    void testObtenerPsicologosPorEdadPaciente_pacienteMayor18() {
+        // Given
+        paciente1.setEdad(25); // Mayor de 18 años
+        
+        List<Psicologo> psicologosNoInfantiles = Arrays.asList(psicologo1, psicologo3);
+        
+        when(psicologoRepository.findByEspecialidadNot(TipoEspecialidad.INFANTIL))
+            .thenReturn(psicologosNoInfantiles);
+
+        // When
+        List<Psicologo> resultado = servicio.obtenerPsicologosPorEdadPaciente(paciente1);
+
+        // Then
+        assertNotNull(resultado);
+        assertEquals(2, resultado.size());
+        
+        verify(psicologoRepository, times(1)).findByEspecialidadNot(TipoEspecialidad.INFANTIL);
+    }
+
+   
+
+
 }

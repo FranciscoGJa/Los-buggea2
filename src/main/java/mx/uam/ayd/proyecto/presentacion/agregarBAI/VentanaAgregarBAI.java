@@ -9,27 +9,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 import mx.uam.ayd.proyecto.negocio.modelo.BateriaClinica;
 
+/**
+ * Ventana JavaFX para registrar la batería clínica BAI (Inventario de Ansiedad de Beck).
+ * Permite capturar 5 respuestas, calcular puntaje y guardar los datos mediante el servicio.
+ */
 @Component
 public class VentanaAgregarBAI {
-    
+
     private Stage stage;
     private boolean initialized = false;
     private ControlAgregarBAI controlAgregarBAI;
     private Long pacienteID;
-
-    public void setControlAgregarBAI(ControlAgregarBAI controlAgregarBAI) {
-        this.controlAgregarBAI = controlAgregarBAI;
-    }
-
-    public void setPacienteID(Long pacienteID) {
-        this.pacienteID=pacienteID;
-    }
 
     @FXML private ToggleGroup q1;
     @FXML private ToggleGroup q2;
@@ -37,38 +32,17 @@ public class VentanaAgregarBAI {
     @FXML private ToggleGroup q4;
     @FXML private ToggleGroup q5;
 
-    @FXML
-    private void onGuard() {
-        try {
-            List<Integer> respuesta = Arrays.asList(
-                getSelectedValue(q1), getSelectedValue(q2), getSelectedValue(q3), 
-                getSelectedValue(q4), getSelectedValue(q5)
-            );
-
-            if (respuesta.stream().anyMatch(r -> r == null)) {
-                muestraDialogoConMensaje("Responde todas las preguntas antes de guardar.");
-                return;
-            }
-
-            String comentarios = " ";
-            controlAgregarBAI.guardarBAI(pacienteID, respuesta, comentarios);
-
-            muestraDialogoConMensaje("¡Batería BAI guardada/actualizada!");
-            stage.close();
-
-        } catch (Exception ex) {
-            new Alert(Alert.AlertType.ERROR, "Error al guardar "+ ex.getMessage()).showAndWait();
-        }
+    public void setControlAgregarBAI(ControlAgregarBAI controlAgregarBAI) {
+        this.controlAgregarBAI = controlAgregarBAI;
     }
 
-    private Integer getSelectedValue(ToggleGroup group) {
-        if (group != null && group.getSelectedToggle() != null &&
-            group.getSelectedToggle().getUserData() != null) {
-            return Integer.parseInt(group.getSelectedToggle().getUserData().toString());
-        }
-        return 0;
+    public void setPacienteID(Long pacienteID) {
+        this.pacienteID = pacienteID;
     }
 
+    /**
+     * Inicializa la interfaz gráfica (solo la primera vez).
+     */
     private void initializeUI() {
         if (initialized) return;
         if (!Platform.isFxApplicationThread()) {
@@ -86,18 +60,22 @@ public class VentanaAgregarBAI {
             initialized = true;
         } catch (IOException e) {
             e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "No se pudo cargar la ventana: " + e.getMessage()).showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Error al cargar la ventana: " + e.getMessage()).showAndWait();
         }
     }
 
-    public VentanaAgregarBAI() { }
-
+    /**
+     * Muestra la ventana limpia.
+     */
     public void muestra() {
         if (!initialized) initializeUI();
         limpiarSeleccion();
         stage.show();
     }
 
+    /**
+     * Muestra la ventana precargada con una batería existente.
+     */
     public void muestra(BateriaClinica bateria) {
         if (!initialized) initializeUI();
         cargarRespuestas(bateria);
@@ -107,8 +85,8 @@ public class VentanaAgregarBAI {
     private void cargarRespuestas(BateriaClinica bateria) {
         List<ToggleGroup> grupos = Arrays.asList(q1, q2, q3, q4, q5);
         List<Integer> valores = Arrays.asList(
-            bateria.getRespuesta1(), bateria.getRespuesta2(), bateria.getRespuesta3(), 
-            bateria.getRespuesta4(), bateria.getRespuesta5()
+            bateria.getRespuesta1(), bateria.getRespuesta2(),
+            bateria.getRespuesta3(), bateria.getRespuesta4(), bateria.getRespuesta5()
         );
 
         for (int i = 0; i < grupos.size(); i++) {
@@ -125,6 +103,36 @@ public class VentanaAgregarBAI {
         }
     }
 
+    @FXML
+    private void onGuard() {
+        try {
+            List<Integer> respuestas = Arrays.asList(
+                getSelectedValue(q1), getSelectedValue(q2),
+                getSelectedValue(q3), getSelectedValue(q4), getSelectedValue(q5)
+            );
+
+            if (respuestas.stream().anyMatch(r -> r == null)) {
+                muestraDialogoConMensaje("Responde todas las preguntas antes de guardar.");
+                return;
+            }
+
+            String comentarios = " ";
+            controlAgregarBAI.guardarBAI(pacienteID, respuestas, comentarios);
+            muestraDialogoConMensaje("¡Batería BAI guardada/actualizada exitosamente!");
+            stage.close();
+        } catch (Exception ex) {
+            new Alert(Alert.AlertType.ERROR, "Error al guardar: " + ex.getMessage()).showAndWait();
+        }
+    }
+
+    private Integer getSelectedValue(ToggleGroup group) {
+        if (group != null && group.getSelectedToggle() != null &&
+            group.getSelectedToggle().getUserData() != null) {
+            return Integer.parseInt(group.getSelectedToggle().getUserData().toString());
+        }
+        return 0;
+    }
+
     private void limpiarSeleccion() {
         if(q1!=null) q1.selectToggle(null);
         if(q2!=null) q2.selectToggle(null);
@@ -133,21 +141,12 @@ public class VentanaAgregarBAI {
         if(q5!=null) q5.selectToggle(null);
     }
 
-    public void setVisible(boolean visible) {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> this.setVisible(visible));
-            return;
-        }
-        if (!initialized) { if (visible) initializeUI(); else return; }
-        if (visible) stage.show(); else stage.hide();
-    }
-
-    public void muestraDialogoConMensaje(String mensaje) {
+    private void muestraDialogoConMensaje(String mensaje) {
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(() -> this.muestraDialogoConMensaje(mensaje));
             return;
         }
-        Alert alert = new Alert(AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
         alert.setHeaderText(null);
         alert.setContentText(mensaje);

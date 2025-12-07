@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
@@ -23,10 +22,20 @@ public class VentanaAgregarBDI {
     private ControlAgregarBDI controlAgregarBDI;
     private Long pacienteID;
 
+    @FXML private ToggleGroup q1;
+    @FXML private ToggleGroup q2;
+    @FXML private ToggleGroup q3;
+    @FXML private ToggleGroup q4;
+    @FXML private ToggleGroup q5;
+
     public void setControlAgregarBDI(ControlAgregarBDI controlAgregarBDI) {
         this.controlAgregarBDI = controlAgregarBDI;
     }
-    
+
+    public void setPacienteID(Long pacienteID) {
+        this.pacienteID = pacienteID;
+    }
+
     private void initializeUI() {
         if (initialized) return;
         if (!Platform.isFxApplicationThread()) {
@@ -35,7 +44,7 @@ public class VentanaAgregarBDI {
         }
         try {
             stage = new Stage();
-            stage.setTitle("Inventario de Depresion de Beck (BDI-II)");
+            stage.setTitle("Inventario de Depresión de Beck (BDI-II)");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-BDI.fxml"));
             loader.setController(this);
             Scene scene = new Scene(loader.load());
@@ -65,8 +74,8 @@ public class VentanaAgregarBDI {
     private void cargarRespuestas(BateriaClinica bateria) {
         List<ToggleGroup> grupos = Arrays.asList(q1, q2, q3, q4, q5);
         List<Integer> valores = Arrays.asList(
-            bateria.getRespuesta1(), bateria.getRespuesta2(), bateria.getRespuesta3(), 
-            bateria.getRespuesta4(), bateria.getRespuesta5()
+            bateria.getRespuesta1(), bateria.getRespuesta2(),
+            bateria.getRespuesta3(), bateria.getRespuesta4(), bateria.getRespuesta5()
         );
 
         for (int i = 0; i < grupos.size(); i++) {
@@ -91,43 +100,12 @@ public class VentanaAgregarBDI {
         if(q5!=null) q5.selectToggle(null);
     }
 
-    public void setVisible(boolean visible) {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> this.setVisible(visible));
-            return;
-        }
-        if (!initialized) { if (visible) initializeUI(); else return; }
-        if (visible) stage.show(); else stage.hide();
-    }
-
-    public void muestraDialogoConMensaje(String mensaje) {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> this.muestraDialogoConMensaje(mensaje));
-            return;
-        }
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Información");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
-    public void setPacienteID(Long pacienteID) {
-        this.pacienteID=pacienteID;
-    }
-
-    @FXML private ToggleGroup q1;
-    @FXML private ToggleGroup q2;
-    @FXML private ToggleGroup q3;
-    @FXML private ToggleGroup q4;
-    @FXML private ToggleGroup q5;
-
-    @FXML    
+    @FXML
     private void onGuard() {
         try {
             List<Integer> respuestas = Arrays.asList(
-                getSelectedValue(q1), getSelectedValue(q2), getSelectedValue(q3), 
-                getSelectedValue(q4), getSelectedValue(q5)
+                getSelectedValue(q1), getSelectedValue(q2),
+                getSelectedValue(q3), getSelectedValue(q4), getSelectedValue(q5)
             );
 
             if (respuestas.stream().anyMatch(r -> r == null)) {
@@ -137,10 +115,8 @@ public class VentanaAgregarBDI {
 
             String comentarios = " ";
             controlAgregarBDI.guardarBDI(pacienteID, respuestas, comentarios);
-
-            muestraDialogoConMensaje("¡Batería BDI guardada/actualizada!");
+            muestraDialogoConMensaje("¡Batería BDI-II guardada/actualizada exitosamente!");
             stage.close();
-
         } catch (Exception ex) {
             new Alert(Alert.AlertType.ERROR, "Error al guardar: " + ex.getMessage()).showAndWait();
         }
@@ -152,5 +128,17 @@ public class VentanaAgregarBDI {
             return Integer.parseInt(group.getSelectedToggle().getUserData().toString());
         }
         return 0;
+    }
+
+    private void muestraDialogoConMensaje(String mensaje) {
+        if (!Platform.isFxApplicationThread()) {
+            Platform.runLater(() -> this.muestraDialogoConMensaje(mensaje));
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

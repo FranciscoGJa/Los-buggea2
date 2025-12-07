@@ -4,10 +4,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+
 import mx.uam.ayd.proyecto.negocio.ServicioHistorialCitas;
 import mx.uam.ayd.proyecto.negocio.ServicioCita;
 import mx.uam.ayd.proyecto.negocio.modelo.Cita;
 import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
+
+import mx.uam.ayd.proyecto.presentacion.CrearCita.VentanaNuevaCita;
+import mx.uam.ayd.proyecto.presentacion.ReagendarCita.VentanaReagendarCita;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,12 +60,21 @@ public class ControladorHistorialCitas {
     @FXML
     private Button btnCerrar;
 
+    // Servicios
     @Autowired
     private ServicioHistorialCitas servicioHistorial;
 
     @Autowired
     private ServicioCita servicioCita;
 
+    // Ventanas
+    @Autowired
+    private VentanaNuevaCita ventanaNuevaCita;
+
+    @Autowired
+    private VentanaReagendarCita ventanaReagendarCita;
+
+    // Perfil actualmente mostrado en el historial
     private PerfilCitas perfilActual;
 
     @FXML
@@ -69,6 +83,9 @@ public class ControladorHistorialCitas {
         System.out.println("Servicios inyectados:");
         System.out.println("  - servicioHistorial: " + (servicioHistorial != null));
         System.out.println("  - servicioCita: " + (servicioCita != null));
+        System.out.println("Ventanas inyectadas:");
+        System.out.println("  - ventanaNuevaCita: " + (ventanaNuevaCita != null));
+        System.out.println("  - ventanaReagendarCita: " + (ventanaReagendarCita != null));
         System.out.println("Componentes FXML:");
         System.out.println("  - lblNombrePaciente: " + (lblNombrePaciente != null));
         System.out.println("  - tablaCitas: " + (tablaCitas != null));
@@ -83,9 +100,6 @@ public class ControladorHistorialCitas {
             );
         }
 
-        // Si quieres, puedes configurar explícitamente las columnas.
-        // No es estrictamente necesario porque ya tienes PropertyValueFactory en el FXML,
-        // pero NO hace daño tenerlo duplicado.
         if (colFecha != null) {
             colFecha.setCellValueFactory(new PropertyValueFactory<>("fechaCita"));
         }
@@ -118,9 +132,19 @@ public class ControladorHistorialCitas {
             lblContacto.setText("Tel: " + perfil.getTelefono());
         }
 
+        recargarCitas();
+    }
+
+    /**
+     * Recarga la tabla de citas para el perfil actual.
+     */
+    private void recargarCitas() {
+        if (perfilActual == null) {
+            return;
+        }
+
         try {
-            // Usamos el ID del perfil para obtener el historial
-            List<Cita> citas = servicioHistorial.obtenerHistorialPorPerfil(perfil.getIdPerfil());
+            List<Cita> citas = servicioHistorial.obtenerHistorialPorPerfil(perfilActual.getIdPerfil());
             if (tablaCitas != null) {
                 tablaCitas.getItems().setAll(citas);
             }
@@ -138,26 +162,26 @@ public class ControladorHistorialCitas {
         }
     }
 
-    // ================== MANEJADORES onAction (DEBEN COINCIDIR CON EL FXML) ==================
+    // ================== MANEJADORES onAction ==================
 
-    /**
-     * onAction="#nuevaCita" en el FXML
-     */
     @FXML
     private void nuevaCita() {
-        // Aquí deberías abrir la ventana para crear una nueva cita
         System.out.println("[HistorialCitas] nuevaCita() llamado");
 
-        // Lógica futura: usar servicioCita / VentanaNuevaCita, etc.
-        // Por ahora solo recargamos el historial si ya hay perfil
-        if (perfilActual != null) {
-            cargarPerfil(perfilActual);
+        if (perfilActual == null) {
+            mostrarInfo("No hay un perfil cargado. Abre este historial desde un perfil de citas.");
+            return;
         }
+
+        if (ventanaNuevaCita == null) {
+            mostrarError("La ventana de nueva cita no está inyectada (VentanaNuevaCita es null).");
+            return;
+        }
+
+        ventanaNuevaCita.mostrar(perfilActual);
+        recargarCitas();
     }
 
-    /**
-     * onAction="#reagendarCita" en el FXML
-     */
     @FXML
     private void reagendarCita() {
         System.out.println("[HistorialCitas] reagendarCita() llamado");
@@ -168,25 +192,28 @@ public class ControladorHistorialCitas {
 
         Cita seleccionada = tablaCitas.getSelectionModel().getSelectedItem();
         if (seleccionada == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Información");
-            alert.setHeaderText(null);
-            alert.setContentText("Seleccione una cita de la tabla para reagendar.");
-            alert.showAndWait();
+            mostrarInfo("Seleccione una cita de la tabla para reagendar.");
             return;
         }
 
-        // Aquí va la lógica real de reagendar (ventana de reagendar, etc.)
+        if (ventanaReagendarCita == null) {
+            mostrarError("La ventana de reagendar cita no está inyectada (VentanaReagendarCita es null).");
+            return;
+        }
 
-        // Al finalizar reagendar, recargamos:
-        if (perfilActual != null) {
-            cargarPerfil(perfilActual);
+        try {
+            // 👉 Mandamos también el perfilActual
+            ventanaReagendarCita.mostrar(perfilActual, seleccionada);
+
+            // Al cerrar la ventana, recargamos la tabla
+            recargarCitas();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarError("Ocurrió un error al abrir la ventana de reagendar:\n" + e.getMessage());
         }
     }
 
-    /**
-     * onAction="#verDetallesCita" en el FXML
-     */
     @FXML
     private void verDetallesCita() {
         System.out.println("[HistorialCitas] verDetallesCita() llamado");
@@ -197,15 +224,10 @@ public class ControladorHistorialCitas {
 
         Cita seleccionada = tablaCitas.getSelectionModel().getSelectedItem();
         if (seleccionada == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Información");
-            alert.setHeaderText(null);
-            alert.setContentText("Seleccione una cita para ver sus detalles.");
-            alert.showAndWait();
+            mostrarInfo("Seleccione una cita para ver sus detalles.");
             return;
         }
 
-        // De momento mostramos los detalles en un Alert simple
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Detalles de la cita");
         alert.setHeaderText("Cita de " + (perfilActual != null ? perfilActual.getNombreCompleto() : ""));
@@ -218,9 +240,6 @@ public class ControladorHistorialCitas {
         alert.showAndWait();
     }
 
-    /**
-     * onAction="#cerrar" en el FXML
-     */
     @FXML
     private void cerrar() {
         System.out.println("[HistorialCitas] cerrar() llamado");
@@ -231,5 +250,22 @@ public class ControladorHistorialCitas {
                 stage.close();
             }
         }
+    }
+
+    // Helpers de alertas
+    private void mostrarInfo(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void mostrarError(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

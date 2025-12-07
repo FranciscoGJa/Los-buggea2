@@ -1,6 +1,6 @@
 package mx.uam.ayd.proyecto.presentacion.agregarPaciente;
 
-//Notaciones
+// Notaciones
 import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 import javafx.scene.Node;
@@ -17,32 +17,19 @@ import mx.uam.ayd.proyecto.presentacion.contestarHistorialClinico.ControlContest
 /**
  * Controlador para agregar pacientes.
  *
- * <p>Responsabilidades:
- * <ul>
- *   <li>Inicializar la vista {@link VentanaAgregarPaciente} y mostrarla.</li>
- *   <li>Registrar un nuevo paciente mediante {@link ServicioPaciente}.</li>
- *   <li>Abrir las ventanas de captura de baterías (BAI, BDI, CEPER).</li>
- *   <li>Desencadenar el flujo para contestar el historial clínico.</li>
- * </ul>
- * </p>
- *
- * <p>Flujo típico:
- * <ol>
- *   <li>Llamar a {@link #inicia()} para mostrar la ventana de alta.</li>
- *   <li>Usar {@link #agregarPaciente(String, String, String, int)} para registrar.</li>
- *   <li>Opcionalmente abrir BAI/BDI/CEPER con los métodos correspondientes.</li>
- *   <li>Continuar a historial clínico con {@link #contestarHistorialClinico(Paciente)}.</li>
- * </ol>
- * </p>
- *
- * @author TechSolutions
- * @version 1.0
+ * Flujo:
+ *  - El menú llama a ControlAgregarPaciente.inicia()
+ *  - Se muestra la pantalla de alta con campos vacíos y baterías deshabilitadas
+ *  - Al presionar "Agregar paciente" se crea el paciente, se abre historial clínico
+ *    y se habilitan las baterías BAI / BDI / CEPER para ese paciente.
  */
 @Component
 public class ControlAgregarPaciente {
+
+    /** ID del paciente actualmente en edición / para llenar baterías */
     private Long pacienteID;
 
-    //Dependencias inyectadas
+    // Dependencias inyectadas
     private final VentanaAgregarPaciente ventanaAgregarPaciente;
     private final ServicioPaciente servicioPaciente;
     private final VentanaAgregarBAI ventanaAgregarBAI;
@@ -50,35 +37,25 @@ public class ControlAgregarPaciente {
     private final VentanaAgregarCEPER ventanaAgregarCEPER;
     private final ControlContestarHistorialClinico controlContestarHistorialClinico;
 
-    /**
-     * Constructor con inyección de dependencias.
-     *
-     * @param ventanaAgregarPaciente vista para alta de pacientes
-     * @param servicioPaciente servicio de negocio para pacientes
-     * @param ventanaAgregarBAI ventana de captura BAI
-     * @param ventanaAgregarBDI ventana de captura BDI-II
-     * @param ventanaAgregarCEPER ventana de captura CEPER
-     * @param controlContestarHistorialClinico flujo de historial clínico
-     */
     @Autowired
     public ControlAgregarPaciente(
-    VentanaAgregarPaciente ventanaAgregarPaciente, 
-    ServicioPaciente servicioPaciente, 
-    VentanaAgregarBAI ventanaAgregarBAI,
-    VentanaAgregarBDI ventanaAgregarBDI,
-    VentanaAgregarCEPER ventanaAgregarCEPER,
-    ControlContestarHistorialClinico controlContestarHistorialClinico) {
+            VentanaAgregarPaciente ventanaAgregarPaciente,
+            ServicioPaciente servicioPaciente,
+            VentanaAgregarBAI ventanaAgregarBAI,
+            VentanaAgregarBDI ventanaAgregarBDI,
+            VentanaAgregarCEPER ventanaAgregarCEPER,
+            ControlContestarHistorialClinico controlContestarHistorialClinico
+    ) {
         this.ventanaAgregarPaciente = ventanaAgregarPaciente;
         this.servicioPaciente = servicioPaciente;
         this.ventanaAgregarBAI = ventanaAgregarBAI;
         this.ventanaAgregarBDI = ventanaAgregarBDI;
-        this.ventanaAgregarCEPER=ventanaAgregarCEPER;
+        this.ventanaAgregarCEPER = ventanaAgregarCEPER;
         this.controlContestarHistorialClinico = controlContestarHistorialClinico;
     }
 
     /**
-     * Método que se ejecuta después de la construcción del bean
-     * y realiza la conexión bidireccional entre el control y la ventana
+     * Conecta control ↔ ventana después de que Spring crea los beans.
      */
     @PostConstruct
     public void inicializa() {
@@ -86,42 +63,59 @@ public class ControlAgregarPaciente {
     }
 
     /**
-     * Inicia la historia de usuario
-     * 
+     * Inicia la historia de usuario.
+     * Se llama desde el menú.
+     *
+     * - Limpia campos
+     * - Deshabilita baterías
+     * - Resetea pacienteID
      */
-    public void inicia () {
-        ventanaAgregarPaciente.cargarFXML();
+    public void inicia() {
+        pacienteID = null;
+        ventanaAgregarPaciente.inicia();               // limpia campos
+        ventanaAgregarPaciente.deshabilitarBaterias(); // deshabilita BAI/BDI/CEPER
     }
-    
-    public Node getVista() {
-    return ventanaAgregarPaciente.getVista();
-}
 
-    
+    /**
+     * Devuelve el nodo raíz para insertarlo en el StackPane del menú.
+     */
+    public Node getVista() {
+        return ventanaAgregarPaciente.getVista();
+    }
+
     /**
      * Agrega un paciente utilizando el servicio de pacientes.
-     * 
-     * @param nombre Nombre del paciente
-     * @param correo Correo del paciente
-     * @param telefono Teléfono del paciente
-     * @param edad Edad del paciente
      */
     public void agregarPaciente(String nombre, String correo, String telefono, int edad) {
         try {
-			Paciente paciente = servicioPaciente.agregarPaciente(nombre, correo, telefono, edad);
+            Paciente paciente = servicioPaciente.agregarPaciente(nombre, correo, telefono, edad);
             pacienteID = paciente.getId();
 
-			ventanaAgregarPaciente.muestraDialogoConMensaje("Paciente agregado exitosamente");
-            this.contestarHistorialClinico(paciente);
-		} catch(Exception ex) {
-			ventanaAgregarPaciente.muestraDialogoConMensaje("Error al agregar usuario:\n \n"+ex.getMessage());
-		}
+            ventanaAgregarPaciente.muestraDialogoConMensaje("Paciente agregado exitosamente");
+
+            // Habilitamos baterías para este paciente
+            ventanaAgregarPaciente.habilitarBaterias();
+
+            // Lanzamos el flujo de historial clínico
+            contestarHistorialClinico(paciente);
+
+        } catch (Exception ex) {
+            ventanaAgregarPaciente.muestraDialogoConMensaje(
+                    "Error al agregar usuario:\n\n" + ex.getMessage()
+            );
+        }
     }
 
     /**
      * Abre la ventana para capturar la batería BAI del paciente actual.
      */
     public void agregarBAI() {
+        if (pacienteID == null) {
+            ventanaAgregarPaciente.muestraDialogoConMensaje(
+                    "Primero registra al paciente antes de llenar la BAI."
+            );
+            return;
+        }
         ventanaAgregarBAI.setPacienteID(pacienteID);
         ventanaAgregarBAI.muestra();
     }
@@ -130,21 +124,32 @@ public class ControlAgregarPaciente {
      * Abre la ventana para capturar la batería BDI-II del paciente actual.
      */
     public void agregarBDI() {
+        if (pacienteID == null) {
+            ventanaAgregarPaciente.muestraDialogoConMensaje(
+                    "Primero registra al paciente antes de llenar la BDI-II."
+            );
+            return;
+        }
         ventanaAgregarBDI.setPacienteID(pacienteID);
         ventanaAgregarBDI.muestra();
     }
-    
+
     /**
      * Abre la ventana para capturar la batería CEPER del paciente actual.
      */
     public void agregarCEPER() {
+        if (pacienteID == null) {
+            ventanaAgregarPaciente.muestraDialogoConMensaje(
+                    "Primero registra al paciente antes de llenar la CEPER."
+            );
+            return;
+        }
         ventanaAgregarCEPER.setPacienteID(pacienteID);
         ventanaAgregarCEPER.muestra();
     }
 
     /**
      * Inicia el flujo para contestar el historial clínico del paciente.
-     * @param paciente instancia del paciente recién agregado
      */
     public void contestarHistorialClinico(Paciente paciente) {
         controlContestarHistorialClinico.inicia(paciente);

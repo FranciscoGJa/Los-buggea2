@@ -182,10 +182,9 @@
          <children>
             <!-- NUEVO BOTÓN AGREGADO -->
             <Button fx:id="btnGenerarPdf" mnemonicParsing="false" onAction="#generarPdfHistorial" 
-                    prefWidth="180.0" text="📄 Generar PDF Historial" 
+                    prefWidth="180.0" text="Generar PDF Historial" 
                     style="-fx-background-color: #1976d2; -fx-text-fill: white; -fx-font-weight: bold;"
                     disable="true" />
-            <Button mnemonicParsing="false" onAction="#handleCerrar" prefWidth="100.0" text="Cerrar" />
          </children>
       </HBox>
    </bottom>

@@ -3,210 +3,249 @@ package mx.uam.ayd.proyecto.presentacion.ReagendarCita;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import mx.uam.ayd.proyecto.negocio.ServicioCalendario;
+import mx.uam.ayd.proyecto.negocio.ServicioCita;
+import mx.uam.ayd.proyecto.negocio.modelo.Cita;
+import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import mx.uam.ayd.proyecto.negocio.ServicioCita;
-import mx.uam.ayd.proyecto.negocio.ServicioCalendario;
-import mx.uam.ayd.proyecto.negocio.modelo.Cita;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-/**
- * Controlador para la funcionalidad de reagendar citas.
- * Permite a los usuarios seleccionar una nueva fecha y hora para una cita existente.
- * Incluye validaciones para asegurar que la nueva cita no sea en el pasado
- * y que no coincida con la cita original.
- */
-
 @Component
 public class ControladorReagendarCita {
-    
-    @FXML private Label lblPaciente;
-    @FXML private Label lblPsicologo;
-    @FXML private Label lblCitaOriginal;
-    @FXML private DatePicker datePickerNuevaFecha;
-    @FXML private ComboBox<LocalTime> comboHorarios;
-    @FXML private Button btnVerificarDisponibilidad;
-    @FXML private Button btnConfirmarReagendo;
-    @FXML private Button btnCancelar;
-    @FXML private TextArea txtMotivo;
-    
-    @Autowired
-    private ServicioCita servicioCita;
-    
+
+    // ====== Labels (parte superior) ======
+    @FXML
+    private Label lblPaciente;
+
+    @FXML
+    private Label lblPsicologo;
+
+    @FXML
+    private Label lblCitaOriginal;
+
+    // ====== Nueva fecha y hora ======
+    @FXML
+    private DatePicker datePickerNuevaFecha;
+
+    @FXML
+    private ComboBox<LocalTime> comboHorarios;
+
+    @FXML
+    private Button btnVerificarDisponibilidad;
+
+    // ====== Motivo ======
+    @FXML
+    private TextArea txtMotivo;
+
+    // ====== Botones inferiores ======
+    @FXML
+    private Button btnConfirmarReagendo;
+
+    @FXML
+    private Button btnCancelar;
+
+    // ====== Servicios ======
     @Autowired
     private ServicioCalendario servicioCalendario;
-    
-    private Cita citaSeleccionada;
-    private LocalDate fechaSeleccionada;
-    private LocalTime horarioSeleccionado;
-    
+
+    @Autowired
+    private ServicioCita servicioCita;
+
+    // ====== Datos de la cita ======
+    private PerfilCitas perfil;
+    private Cita citaOriginal;
+
     @FXML
-    public void initialize() {
-        configurarControles();
+    private void initialize() {
+        System.out.println("[ControladorReagendarCita] initialize()");
+
+        if (comboHorarios != null) {
+            comboHorarios.setDisable(true);
+        }
+        if (btnConfirmarReagendo != null) {
+            btnConfirmarReagendo.setDisable(true);
+        }
     }
-    
-    private void configurarControles() {
-        // Configurar DatePicker para no permitir fechas pasadas
-        datePickerNuevaFecha.setDayCellFactory(picker -> new DateCell() {
-            @Override
-            public void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
-                setDisable(empty || date.isBefore(LocalDate.now()));
-            }
-        });
-        
-        // Configurar listener para fecha seleccionada
-        datePickerNuevaFecha.valueProperty().addListener((obs, oldDate, newDate) -> {
-            if (newDate != null) {
-                fechaSeleccionada = newDate;
-                cargarHorariosDisponibles();
-            }
-        });
-        
-        // Configurar listener para horario seleccionado
-        comboHorarios.valueProperty().addListener((obs, oldTime, newTime) -> {
-            horarioSeleccionado = newTime;
-            btnConfirmarReagendo.setDisable(newTime == null);
-        });
+
+    /**
+     * Método llamado desde VentanaReagendarCita.mostrar(...)
+     */
+    public void inicializarDatos(PerfilCitas perfil, Cita cita) {
+        this.perfil = perfil;
+        this.citaOriginal = cita;
+
+        try {
+            cargarInformacionCita();
+        } catch (Exception e) {
+            System.out.println("[ControladorReagendarCita] Error al cargar información de la cita:");
+            e.printStackTrace();
+            mostrarError("No se pudo cargar la información de la cita.\n" + e.getMessage());
+        }
     }
-    
-    public void setCitaSeleccionada(Cita cita) {
-        this.citaSeleccionada = cita;
-        cargarInformacionCita();
-    }
-    
+
     private void cargarInformacionCita() {
-        if (citaSeleccionada != null) {
-            // Manejo seguro de posibles valores nulos
-            String nombrePaciente = "No disponible";
-            String nombrePsicologo = "No disponible";
-            String citaOriginal = "No disponible";
-            
-            if (citaSeleccionada.getPerfilCitas() != null) {
-                nombrePaciente = citaSeleccionada.getPerfilCitas().getNombreCompleto();
+
+        if (citaOriginal == null) {
+            mostrarError("No se recibió la cita a reagendar.");
+            return;
+        }
+
+        // ====== Paciente ======
+        String nombrePaciente = "Sin asignar";
+        try {
+            if (perfil != null && perfil.getNombreCompleto() != null) {
+                nombrePaciente = perfil.getNombreCompleto();
             }
-            
-            if (citaSeleccionada.getPsicologo() != null) {
-                nombrePsicologo = citaSeleccionada.getPsicologo().getNombre();
+        } catch (Exception e) {
+            System.out.println("[ControladorReagendarCita] Error obteniendo nombre del paciente: " + e);
+        }
+        lblPaciente.setText(nombrePaciente);
+
+        // ====== Psicólogo ======
+        String nombrePsico = "Desconocido";
+        try {
+            if (citaOriginal.getPsicologo() != null &&
+                    citaOriginal.getPsicologo().getNombre() != null) {
+                nombrePsico = citaOriginal.getPsicologo().getNombre();
             }
-            
-            if (citaSeleccionada.getFechaCita() != null && citaSeleccionada.getHoraCita() != null) {
-                citaOriginal = citaSeleccionada.getFechaCita() + " " + citaSeleccionada.getHoraCita();
-            }
-            
-            lblPaciente.setText("Paciente: " + nombrePaciente);
-            lblPsicologo.setText("Psicólogo: " + nombrePsicologo);
-            lblCitaOriginal.setText("Cita Original: " + citaOriginal);
-            
-            // Establecer fecha mínima como hoy
-            datePickerNuevaFecha.setValue(LocalDate.now());
+        } catch (Exception ex) {
+            System.out.println("[ControladorReagendarCita] Error obteniendo nombre del psicólogo: " + ex);
+        }
+        lblPsicologo.setText(nombrePsico);
+
+        // ====== Cita original (fecha + hora) ======
+        String citaOrig = "";
+        if (citaOriginal.getFechaCita() != null) {
+            citaOrig += citaOriginal.getFechaCita();
+        }
+        if (citaOriginal.getHoraCita() != null) {
+            citaOrig += " " + citaOriginal.getHoraCita();
+        }
+        lblCitaOriginal.setText(citaOrig);
+
+        // ====== Fecha y motivo por defecto ======
+        if (datePickerNuevaFecha != null) {
+            datePickerNuevaFecha.setValue(citaOriginal.getFechaCita());
+        }
+        if (txtMotivo != null && citaOriginal.getDetallesAdicionalesPaciente() != null) {
+            txtMotivo.setText(citaOriginal.getDetallesAdicionalesPaciente());
         }
     }
-    
-    private void cargarHorariosDisponibles() {
-        if (fechaSeleccionada != null && citaSeleccionada != null && citaSeleccionada.getPsicologo() != null) {
-            try {
-                List<LocalTime> horariosDisponibles = servicioCalendario.obtenerHorariosDisponibles(
-                    citaSeleccionada.getPsicologo().getId(), fechaSeleccionada);
-                
-                comboHorarios.getItems().clear();
-                comboHorarios.getItems().addAll(horariosDisponibles);
-                
-                if (horariosDisponibles.isEmpty()) {
-                    mostrarAlerta("Sin horarios disponibles", 
-                                "No hay horarios disponibles para la fecha seleccionada.");
-                }
-            } catch (Exception e) {
-                mostrarAlerta("Error", "No se pudieron cargar los horarios disponibles: " + e.getMessage());
-            }
-        }
-    }
-    
+
+    // ================= BOTÓN "Verificar Disponibilidad" =================
     @FXML
     private void verificarDisponibilidad() {
-        if (fechaSeleccionada == null || horarioSeleccionado == null) {
-            mostrarAlerta("Datos incompletos", "Seleccione una fecha y horario para verificar disponibilidad.");
+
+        if (citaOriginal == null) {
+            mostrarError("No se ha cargado ninguna cita.");
             return;
         }
-        
-        if (citaSeleccionada == null || citaSeleccionada.getPsicologo() == null) {
-            mostrarAlerta("Error", "No hay información del psicólogo disponible.");
+
+        LocalDate nuevaFecha = datePickerNuevaFecha.getValue();
+        if (nuevaFecha == null) {
+            mostrarInfo("Seleccione una nueva fecha para reagendar.");
             return;
         }
-        
-        boolean disponible = servicioCalendario.verificarDisponibilidad(
-            citaSeleccionada.getPsicologo().getId(), fechaSeleccionada, horarioSeleccionado);
-        
-        if (disponible) {
-            mostrarAlerta("Disponible", "El horario seleccionado está disponible.");
+
+        Integer idPsicologo = null;
+        try {
+            if (citaOriginal.getPsicologo() != null) {
+                idPsicologo = citaOriginal.getPsicologo().getId();
+            }
+        } catch (Exception ex) {
+            System.out.println("[ControladorReagendarCita] Error obteniendo ID del psicólogo: " + ex);
+        }
+
+        if (idPsicologo == null) {
+            mostrarError("No se pudo determinar el psicólogo de la cita.");
+            return;
+        }
+
+        System.out.println("[ControladorReagendarCita] Verificando horarios para psicologo "
+                + idPsicologo + " en fecha " + nuevaFecha);
+
+        List<LocalTime> disponibles =
+                servicioCalendario.obtenerHorariosDisponibles(idPsicologo, nuevaFecha);
+
+        comboHorarios.getItems().setAll(disponibles);
+        comboHorarios.setDisable(disponibles.isEmpty());
+
+        if (disponibles.isEmpty()) {
+            mostrarInfo("No hay horarios disponibles para esa fecha.");
+            btnConfirmarReagendo.setDisable(true);
         } else {
-            mostrarAlerta("No disponible", "El horario seleccionado no está disponible.");
+            btnConfirmarReagendo.setDisable(false);
         }
     }
-    
+
+    // ================= BOTÓN "Confirmar Reagendo" =================
     @FXML
     private void confirmarReagendo() {
-        if (validarDatosReagendo()) {
-            try {
-                // Usar el método de reagendar del servicio
-                servicioCita.reagendarCita(
-                    citaSeleccionada.getId(), 
-                    fechaSeleccionada, 
-                    horarioSeleccionado, 
-                    txtMotivo.getText()
-                );
-                
-                mostrarAlerta("Éxito", "Cita reagendada exitosamente.");
-                cerrarVentana();
-                
-            } catch (Exception e) {
-                mostrarAlerta("Error", "No se pudo reagendar la cita: " + e.getMessage());
-            }
+
+        if (citaOriginal == null) {
+            mostrarError("No se ha cargado ninguna cita.");
+            return;
+        }
+
+        LocalDate nuevaFecha = datePickerNuevaFecha.getValue();
+        LocalTime nuevoHorario = comboHorarios.getValue();
+
+        if (nuevaFecha == null || nuevoHorario == null) {
+            mostrarInfo("Seleccione fecha y hora para el reagendo.");
+            return;
+        }
+
+        String nuevoMotivo = txtMotivo.getText();
+
+        try {
+            // 👉 Método que agregaremos en ServicioCita
+            servicioCita.reagendarCita(
+                    citaOriginal.getIdCita(),
+                    nuevaFecha,
+                    nuevoHorario,
+                    nuevoMotivo
+            );
+
+            mostrarInfo("La cita se reagendó correctamente.");
+            cerrarVentana();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarError("No se pudo reagendar la cita:\n" + e.getMessage());
         }
     }
-    
-    private boolean validarDatosReagendo() {
-        if (fechaSeleccionada == null) {
-            mostrarAlerta("Validación", "Seleccione una fecha para el reagendo.");
-            return false;
-        }
-        
-        if (horarioSeleccionado == null) {
-            mostrarAlerta("Validación", "Seleccione un horario para el reagendo.");
-            return false;
-        }
-        
-        if (fechaSeleccionada.isBefore(LocalDate.now())) {
-            mostrarAlerta("Validación", "No puede seleccionar una fecha pasada.");
-            return false;
-        }
-        
-        // Verificar que no sea el mismo horario original
-        if (citaSeleccionada.getFechaCita() != null && 
-            fechaSeleccionada.equals(citaSeleccionada.getFechaCita()) && 
-            horarioSeleccionado.equals(citaSeleccionada.getHoraCita())) {
-            mostrarAlerta("Validación", "La nueva cita no puede ser en la misma fecha y hora que la original.");
-            return false;
-        }
-        
-        return true;
-    }
-    
+
+    // ================= BOTÓN "Cancelar" =================
     @FXML
     private void cancelar() {
         cerrarVentana();
     }
-    
+
     private void cerrarVentana() {
-        Stage stage = (Stage) btnCancelar.getScene().getWindow();
-        stage.close();
+        if (btnCancelar != null && btnCancelar.getScene() != null) {
+            Stage stage = (Stage) btnCancelar.getScene().getWindow();
+            if (stage != null) {
+                stage.close();
+            }
+        }
     }
-    
-    private void mostrarAlerta(String titulo, String mensaje) {
+
+    // ================= Helpers de alertas =================
+    private void mostrarInfo(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void mostrarError(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error inesperado");
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();

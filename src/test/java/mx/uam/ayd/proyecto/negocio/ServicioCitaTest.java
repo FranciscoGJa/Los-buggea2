@@ -1,6 +1,7 @@
 package mx.uam.ayd.proyecto.negocio;
 
 import mx.uam.ayd.proyecto.datos.CitaRepository;
+import mx.uam.ayd.proyecto.datos.PsicologoRepository;
 import mx.uam.ayd.proyecto.negocio.modelo.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,12 +30,18 @@ class ServicioCitaTest {
     @Mock
     private ServicioPerfilCitas servicioPerfilCitas;
 
+    @Mock
+    private PsicologoRepository psicologoRepository;
+
     @InjectMocks
     private ServicioCita servicioCita;
-
+    
     private Psicologo psicologo;
+    
     private PerfilCitas perfilCitas;
+    
     private Cita cita;
+    
     private LocalDate fechaFutura;
 
     @BeforeEach
@@ -74,20 +81,30 @@ class ServicioCitaTest {
     @Test
     void crearCita_CuandoDatosSonValidos_DeberiaCrearCita() {
         // Given
-        when(servicioPerfilCitas.obtenerPerfilPorId(50L)).thenReturn(Optional.of(perfilCitas));
-        when(citaRepository.findByPsicologoIdAndFechaCitaAndHoraCita(eq(1), any(LocalDate.class), any(LocalTime.class)))
-                .thenReturn(Collections.emptyList());
+        when(servicioPerfilCitas.obtenerPerfilPorId(50L))
+                .thenReturn(Optional.of(perfilCitas));
+
+        when(psicologoRepository.findById(1))
+                .thenReturn(Optional.of(psicologo));
+
+        when(citaRepository.findByPsicologoIdAndFechaCitaAndHoraCita(
+                eq(1), any(LocalDate.class), any(LocalTime.class))
+        ).thenReturn(Collections.emptyList());
+
         when(citaRepository.save(any(Cita.class))).thenReturn(cita);
 
         // When
-        Cita resultado = servicioCita.crearCita(50L, 1, 
-                fechaFutura, LocalTime.of(10, 0), "Detalles");
+        Cita resultado = servicioCita.crearCita(
+                50L, 1,
+                fechaFutura, LocalTime.of(10, 0), "Detalles"
+        );
 
         // Then
         assertNotNull(resultado);
         assertEquals(TipoConfirmacionCita.PENDIENTE, resultado.getEstadoCita());
         verify(citaRepository).save(any(Cita.class));
     }
+    
 
     @Test
     void crearCita_CuandoPerfilNoExiste_DeberiaLanzarExcepcion() {
@@ -106,6 +123,7 @@ class ServicioCitaTest {
     void crearCita_CuandoFechaEsPasada_DeberiaLanzarExcepcion() {
         // Given
         when(servicioPerfilCitas.obtenerPerfilPorId(50L)).thenReturn(Optional.of(perfilCitas));
+        when(psicologoRepository.findById(1)).thenReturn(Optional.of(psicologo));
 
         // When & Then
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
@@ -121,6 +139,7 @@ class ServicioCitaTest {
         when(servicioPerfilCitas.obtenerPerfilPorId(50L)).thenReturn(Optional.of(perfilCitas));
         when(citaRepository.findByPsicologoIdAndFechaCitaAndHoraCita(eq(1), eq(fechaFutura), eq(LocalTime.of(10, 0))))
                 .thenReturn(List.of(cita));
+        when(psicologoRepository.findById(1)).thenReturn(Optional.of(psicologo));
 
         // When & Then
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {

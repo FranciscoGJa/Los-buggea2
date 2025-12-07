@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,32 +78,89 @@ class ServicioPacienteTest {
         assertThrows(IllegalArgumentException.class, () -> {
             servicioPaciente.agregarPaciente("Pedro", "repetido@correo.com", "111222333", 40);
         });
+
+        //caso 6: Edad negativa o muy alta
+        assertThrows(IllegalArgumentException.class, () -> {
+            servicioPaciente.agregarPaciente("Juan", "correo@dominio.com", "123456789", -1);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            servicioPaciente.agregarPaciente("Juan", "correo@dominio.com", "123456789", 123);
+        });
+
     }
 
+        //Test de Recuperar todos los pacientes
     @Test
     void testRecuperarTodosLosPacientes() {
-        // Caso 1: Lista vacía
+        /***   Caso 1: Lista vacía   ***/
+
+        //Given
         when(pacienteRepository.findAll()).thenReturn(Collections.emptyList());
+
+        //When
         List<Paciente> pacientes = servicioPaciente.recuperarTodosLosPacientes();
+
+        //Then
         assertEquals(0, pacientes.size(), "La lista de pacientes debe tener tamaño 0");
 
-        // Caso 2: Lista con pacientes
+        /***   Caso 2: Lista con pacientes   ***/
+
+        //Given
         Paciente p1 = new Paciente();
         Paciente p2 = new Paciente();
         when(pacienteRepository.findAll()).thenReturn(Arrays.asList(p1, p2));
 
+        //When
         pacientes = servicioPaciente.recuperarTodosLosPacientes();
+
+        //Then
         assertEquals(2, pacientes.size(), "La lista de pacientes debe tener tamaño 2");
     }
 
+    //Test asignar psicologo
     @Test
     void testAsignarPsicologo() {
         Paciente paciente = new Paciente();
         Psicologo psicologo = new Psicologo();
+        //Given
 
+        //When
         servicioPaciente.asignarPsicologo(paciente, psicologo);
 
+        //Then
         assertEquals(psicologo, paciente.getPsicologo());
         verify(pacienteRepository).save(paciente);
     }
+
+    //Test de obtener pacientes con detalles con ID existente
+    @Test
+    void testRecuperarPacienteCompletoConRelaciones(){
+        Paciente paciente = new Paciente();
+        paciente.setNombre("Test");
+
+        //Given
+        when(pacienteRepository.findByIdWithRelations(1L)).thenReturn(Optional.of(paciente));
+
+        //When
+        Paciente resultado = servicioPaciente.obtenerPacienteConDetalles(1L);
+        
+        //Then
+        assertNotNull(resultado);
+        assertEquals("Test", resultado.getNombre());
+    }
+
+    //Test de obtener pacientes con ID inexistente
+    @Test
+    void testRecuperarPacienteCompletoConRelacionesInexistentes(){
+        //Given
+        when(pacienteRepository.findByIdWithRelations(1L)).thenReturn(Optional.empty());
+
+        //When
+        Paciente resultado = servicioPaciente.obtenerPacienteConDetalles(1L);
+
+        //Then
+        assertNull(resultado);
+    }
+
 }

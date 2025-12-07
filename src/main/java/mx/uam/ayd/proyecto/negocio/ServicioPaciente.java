@@ -55,6 +55,10 @@ public class ServicioPaciente {
         if(telefono == null || telefono.trim().isEmpty()) {
             throw new IllegalArgumentException("El telefono no puede ser nulo o vacio");
         }
+        if (edad <= 0 || edad > 120) {
+            throw new IllegalArgumentException("Edad inválida");
+        }
+
 
         Paciente paciente = pacienteRepository.findByCorreo(correo);
         if (paciente != null){

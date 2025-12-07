@@ -38,9 +38,6 @@ public class ControlHorario {
      */
     public void iniciar() {
         ventanaHorario.setControlHorario(this);
-        //List<Cita> citasHoy = servicioCita.obtenerCitasDelDia(LocalDate.now());
-        //ventanaHorario.cargaCitasDelDia(citasHoy);
-        //ventanaHorario.setControlHorario(this);
         ventanaHorario.mostrarHorario();
         ventanaHorario.cargarCitasAsync();
     }

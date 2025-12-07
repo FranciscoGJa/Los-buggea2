@@ -8,10 +8,15 @@ import org.springframework.stereotype.Component;
 
 import mx.uam.ayd.proyecto.negocio.ServicioCita;
 import mx.uam.ayd.proyecto.negocio.modelo.Cita;
+import mx.uam.ayd.proyecto.negocio.modelo.Psicologo;
+//import mx.uam.ayd.proyecto.presentacion.menu.ControlMenu;
+import mx.uam.ayd.proyecto.negocio.ServicioCalendario;
+import mx.uam.ayd.proyecto.presentacion.menuPsicologo.ControlMenuPsicologo;
 
 @Component
 public class ControlHorario {
     private final VentanaHorario ventanaHorario;
+    private ControlMenuPsicologo controlMenu;
 
     @Autowired
     private ServicioCita servicioCita;
@@ -26,10 +31,13 @@ public class ControlHorario {
         this.ventanaHorario = ventanaHorario;
     }
 
-    /*
-     *Iniciamos la visualizacion del horario
-     *Ahora incluyendo la carga de citas del dia actual
-     */
+    public void setControlMenu(ControlMenuPsicologo controlMenu) {
+        this.controlMenu = controlMenu;
+    }
+
+    public Psicologo getPsicologo() {
+        return controlMenu.getPsicologo();
+    }
     
 
     /**
@@ -37,11 +45,17 @@ public class ControlHorario {
      * 
      */
     public void iniciar() {
+         if (controlMenu == null) {
+        System.err.println("[ControlHorario] ERROR: controlMenu NULO. Debes asignarlo antes de iniciar().");
+        return;
+    }
+        ventanaHorario.setControlMenu(controlMenu);
         ventanaHorario.setControlHorario(this);
         ventanaHorario.mostrarHorario();
         ventanaHorario.cargarCitasAsync();
     }
     public ServicioCita getServicioCita() {
+        System.out.println("Psicólogo actual en sesión: " + controlMenu.getPsicologo().getId());
         return servicioCita;
     }
 }

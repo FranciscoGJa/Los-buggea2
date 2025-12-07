@@ -19,6 +19,7 @@ import mx.uam.ayd.proyecto.negocio.modelo.Cita;
 import mx.uam.ayd.proyecto.negocio.ServicioCita;
 import mx.uam.ayd.proyecto.presentacion.Horario.ControlHorario;
 import mx.uam.ayd.proyecto.presentacion.menu.ControlMenu;
+import mx.uam.ayd.proyecto.presentacion.menuPsicologo.ControlMenuPsicologo;
 
 @Component
 public class VentanaHorario {
@@ -27,7 +28,7 @@ public class VentanaHorario {
     private ControlHorario control;
     private boolean initialized = false;
     private List<Cita> citasDelDia;
-
+    private ControlMenuPsicologo controlMenu;
     @FXML private VBox contenedorHoras;
 
     @FXML
@@ -37,6 +38,11 @@ public class VentanaHorario {
             contenedorHoras.getChildren().add(crearFilaHora(hora));
         }
     }
+
+    public void setControlMenu(ControlMenuPsicologo controlMenu) {
+        this.controlMenu = controlMenu;
+    }
+
 
     private HBox crearFilaHora(int h) {
     HBox fila = new HBox();
@@ -48,8 +54,6 @@ public class VentanaHorario {
 
     Label lbl = new Label(formatearHora(h));
     lbl.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-    //lbl.setMaxWidth(Double.MAX_VALUE);  // permite expandirse
-    //lbl.setMaxHeight(Double.MAX_VALUE);
     lbl.setMaxHeight(120);
 
     fila.getChildren().add(lbl);
@@ -76,15 +80,12 @@ public class VentanaHorario {
         if (citasDelDia == null) { return null;}
 
         for(Cita c : citasDelDia){
-            //System.out.println("Evaluando cita -> horaCita=" + c.getHoraCita());
             if(c.getHoraCita() != null && c.getHoraCita().getHour() == hora){
-                //System.out.println("Cita encontrada -> hora: " + c.getHoraCita() + " paciente: " + (c.getPerfilCitas() != null ? c.getPerfilCitas().getNombreCompleto() : "SIN PERFIL"));
                 if(c.getPerfilCitas() != null){
                     return c.getPerfilCitas().getNombreCompleto();
                 }
             }
         }
-        //System.out.println("No se encontró cita para la hora " + hora);
         return null;
     }
 
@@ -110,8 +111,14 @@ public class VentanaHorario {
 
             //llamamos al fxml donde hicimos el diseño de la ventana de pago en efectivo
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaHorario.fxml"));
-            loader.setController(this); 
+            loader.setController(this);
             Parent root = loader.load();
+
+             // Obtener el controlador REAL del FXML
+            VentanaHorario controller = loader.getController();
+
+            // Aquí se asigna el controlMenu (tu objeto real)
+            controller.setControlMenu(this.controlMenu);  
 
             //determinamos el tamaño de la ventana 
             Scene scene = new Scene(root, 1040, 800);
@@ -133,6 +140,7 @@ public class VentanaHorario {
         this.control = control;
     }
 
+
     public void mostrarHorario() {
 
         if (!Platform.isFxApplicationThread()) {
@@ -144,11 +152,6 @@ public class VentanaHorario {
         Task<Void> task = new Task<Void>() {
         @Override
         protected Void call() throws Exception {
-            // Llamar al controlador para obtener citas
-            //List<Cita> citas = control.obtenerCitasDelDia();
-
-            // Guardarlas
-            //citasDelDia = citas;
 
             // Actualizar UI
             Platform.runLater(() -> actualizarHorario());
@@ -158,11 +161,7 @@ public class VentanaHorario {
         };
     new Thread(task).start();
     stage.show();
-        /*if (stage != null) {
-            stage.show();
-        } else {
-            System.err.println("No se pudo mostrar la ventana: stage es null.");
-        }*/
+        
     }
 
     private void actualizarHorario() {
@@ -180,10 +179,20 @@ public class VentanaHorario {
     Task<List<Cita>> task = new Task<List<Cita>>() {
         @Override
         protected List<Cita> call() throws Exception {
-            return control.getServicioCita().obtenerCitasDelDia(LocalDate.now());
-            
+
+            // ID del psicólogo
+            int idPsicologo = controlMenu.getPsicologo().getId();
+            System.out.println("[AgendaPsicologo] Buscando citas para psicologo " + idPsicologo +
+                " en fecha " + LocalDate.now());
+            return control.getServicioCita()
+                    .obtenerCitasPorPsicologoYFecha(idPsicologo, LocalDate.now());   
         }
-    };
+    };  
+
+    if (controlMenu == null || controlMenu.getPsicologo() == null) {
+        System.err.println("[VentanaHorario] controlMenu NO inicializado o psicólogo nulo.");
+        return;
+    }
 
     task.setOnSucceeded(e -> {
         List<Cita> citas = task.getValue();
@@ -202,6 +211,8 @@ public class VentanaHorario {
     private void cerrarVentana() {
         if (stage != null) {
             stage.close();
+        } else {
+        System.err.println("Stage es null, no se puede cerrar la ventana");
         }
     }
 }

@@ -24,11 +24,13 @@ public interface CitaRepository extends CrudRepository<Cita, Integer> {
     // Nuevos métodos para el sistema integrado con PerfilCitas
     List<Cita> findByPerfilCitasIdPerfil(Long perfilCitasId);
     List<Cita> findByPsicologoId(Integer psicologoId);
-    List<Cita> findByPsicologoIdAndFechaCita(Integer psicologoId, LocalDate fechaCita);
+    List<Cita> findByPsicologoIdAndFechaCita(Integer psicologoId, LocalDate fechaCita);//este 
+    
     List<Cita> findByPsicologoIdAndFechaCitaAndHoraCita(Integer psicologoId, LocalDate fechaCita, LocalTime horaCita);
     List<Cita> findByPerfilCitasIdPerfilAndEstadoCita(Long perfilCitasId, TipoConfirmacionCita estadoCita);
     List<Cita> findByPsicologoAndEstadoCita(Psicologo psicologo, TipoConfirmacionCita estadoCita);
-    
+
+
     // Método para buscar citas por paciente y psicólogo
     List<Cita> findByPacienteAndPsicologo(Paciente paciente, Psicologo psicologo);
     /**
@@ -55,5 +57,12 @@ public interface CitaRepository extends CrudRepository<Cita, Integer> {
        LEFT JOIN FETCH c.perfilCitas
        WHERE c.perfilCitas.idPerfil = :perfilId
        """)
-List<Cita> cargarCitasConRelaciones(@Param("perfilId") Long perfilId);  
+       List<Cita> cargarCitasConRelaciones(@Param("perfilId") Long perfilId);  
+
+       @Query("SELECT c FROM Cita c " +
+       "LEFT JOIN FETCH c.perfilCitas  " +
+       "LEFT JOIN FETCH c.psicologo " +
+       "WHERE c.psicologo.id = :psicologoId AND c.fechaCita = :fecha")
+       List<Cita> findByPsicologoIdAndFechaCitaWithRelations(@Param("psicologoId") Integer psicologoId,
+                                                      @Param("fecha") LocalDate fechaCita);
 }

@@ -1,6 +1,7 @@
 package mx.uam.ayd.proyecto.negocio;
 
 import mx.uam.ayd.proyecto.datos.CitaRepository;
+import mx.uam.ayd.proyecto.datos.PsicologoRepository;
 import mx.uam.ayd.proyecto.negocio.modelo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class ServicioCita {
     @Autowired
     private ServicioPerfilCitas servicioPerfilCitas;
 
+    @Autowired
+    private PsicologoRepository psicologoRepository;
+
     /**
      * Crea una nueva cita para un perfil existente
      */
@@ -40,6 +44,9 @@ public class ServicioCita {
 
         PerfilCitas perfil = perfilOpt.get();
 
+        Psicologo psicologo = psicologoRepository.findById(psicologoId)
+            .orElseThrow(() -> new IllegalArgumentException("Psicólogo no encontrado"));
+
         // Verificar que la fecha no sea en el pasado
         if (fechaCita.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("No se pueden agendar citas en fechas pasadas");
@@ -52,7 +59,8 @@ public class ServicioCita {
 
         Cita cita = new Cita();
         cita.setPerfilCitas(perfil);
-        cita.setPsicologo(perfil.getPsicologo());
+        cita.setPsicologo(psicologo);
+        //cita.setPsicologo(perfil.getPsicologo());///este
         cita.setFechaCita(fechaCita);
         cita.setHoraCita(horaCita);
         cita.setDetallesAdicionalesPaciente(detallesPaciente);
@@ -61,6 +69,7 @@ public class ServicioCita {
         // Guardar directamente para evitar Lazy Loading
         return citaRepository.save(cita);
     }
+
 
     /**
      * Crea un perfil de citas para un paciente existente y agenda una cita
@@ -234,8 +243,31 @@ public class ServicioCita {
                     citaReagendada.getFechaCita() + " " + citaReagendada.getHoraCita());
             citaRepository.save(citaOriginal);
         }
-
         // Guardar nueva cita
         citaRepository.save(citaReagendada);
+    }
+    //@Transactional
+    public List<Cita> obtenerCitasPorPsicologoYFecha(Integer psicologoId, LocalDate fecha) {
+        System.out.println("FECHA enviada a la consulta: " + fecha);
+        System.out.println("PSICÓLOGO enviado a la consulta: " + psicologoId);
+        List<Cita> citas = citaRepository.findByPsicologoIdAndFechaCitaWithRelations(psicologoId, fecha);
+
+    // Si citas viene null
+    if (citas == null) {
+        System.out.println(">>> El repositorio devolvió NULL (esto no debería pasar)");
+        return null;
+    }
+
+    // Mostrar cada cita encontrada
+    for (Cita c : citas) {
+        System.out.println(">>> cita encontrada: fecha=" + c.getFechaCita() +
+            ", hora=" + c.getHoraCita() +
+            ", psicologo=" + c.getPsicologo().getId() +
+            ", paciente=" + c.getPerfilCitas().getNombreCompleto());
+    }
+
+    System.out.println("TOTAL citas devueltas: " + citas.size());
+
+    return citas;
     }
 }

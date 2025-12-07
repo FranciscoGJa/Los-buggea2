@@ -44,7 +44,7 @@ public class ControlMenuPsicologo {
     private VentanaAgendaPsicologo ventanaAgendaPsicologo; // Ventana para la agenda
 
     @Autowired
-    private ControlHorario ventanaHorario; // Control para el horario
+    private ControlHorario controlHorario; // Control para el horario
 
     private Psicologo psicologoLogueado;
 
@@ -106,7 +106,8 @@ public class ControlMenuPsicologo {
      * Abre la ventana del horario del psicólogo.
      */
     public void horario() {
-        ventanaHorario.iniciar();
+        controlHorario.setControlMenu(this); // aquí SI es ControlMenuPsicologo
+        controlHorario.iniciar();
     }
 
     /**

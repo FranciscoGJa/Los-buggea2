@@ -30,6 +30,7 @@
                       AnchorPane.topAnchor="15.0">
 
                   <children>
+                    <!-- ===================== PACIENTES ===================== -->
                     <Label text="Pacientes" style="-fx-font-weight: bold; -fx-font-size: 14px;">
                       <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />
@@ -45,9 +46,23 @@
                             maxWidth="Infinity"
                             style="-fx-background-color: linear-gradient(to bottom, #8a9cf8, #6c7df2); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;" />
 
-                     <Button mnemonicParsing="false" onAction="#handleEjerciciosRespiracion" text="Ejercicios de respiración" maxWidth="Infinity"/>
-                     <Button mnemonicParsing="false" onAction="#handleMaterialDidactico" text="Material Didáctico" maxWidth="Infinity"/>
+                    <!-- ======= NUEVA SECCIÓN: RECURSOS / EJERCICIOS ======= -->
+                    <Separator prefWidth="200.0">
+                      <VBox.margin>
+                        <Insets bottom="10.0" top="15.0" />
+                      </VBox.margin>
+                    </Separator>
 
+                    <Label text="Recursos / Ejercicios" style="-fx-font-weight: bold; -fx-font-size: 14px;">
+                      <VBox.margin>
+                        <Insets bottom="5.0" />
+                      </VBox.margin>
+                    </Label>
+
+                    <Button mnemonicParsing="false" onAction="#handleEjerciciosRespiracion" text="Ejercicios de respiración" maxWidth="Infinity"/>
+                    <Button mnemonicParsing="false" onAction="#handleMaterialDidactico" text="Material Didáctico" maxWidth="Infinity"/>
+
+                    <!-- ================= PERFIL DE CITAS ================== -->
                     <Separator prefWidth="200.0">
                       <VBox.margin>
                         <Insets bottom="10.0" top="15.0" />
@@ -65,7 +80,7 @@
                             text="Consultar Perfiles"
                             maxWidth="Infinity"/>
 
-                    <!--  NUEVO BOTÓN AGREGADO AQUÍ -->
+                    <!--  Botón ya existente: Agenda del Psicólogo -->
                     <Button mnemonicParsing="false"
                             onAction="#handleAgendaPsicologo"
                             text="Agenda del Psicólogo"
@@ -74,6 +89,8 @@
                                    -fx-text-fill: white;
                                    -fx-font-weight: bold;
                                    -fx-background-radius: 10;" />
+
+                    <!-- ===================== MIS DATOS ===================== -->
                     <Region VBox.vgrow="ALWAYS" />
 
                     <Separator prefWidth="200.0">
@@ -104,6 +121,7 @@
               </children>
             </AnchorPane>
 
+            <!-- PANEL DERECHO SE QUEDA IGUAL -->
             <AnchorPane minWidth="400.0">
               <children>
                 <BorderPane AnchorPane.bottomAnchor="30.0"

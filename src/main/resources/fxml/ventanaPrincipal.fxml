@@ -32,15 +32,32 @@
                       AnchorPane.topAnchor="15.0">
 
                   <children>
+                    <!-- ===================== PACIENTES ===================== -->
                     <Label text="Pacientes" style="-fx-font-weight: bold; -fx-font-size: 14px;">
                       <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />
                       </VBox.margin>
                     </Label>
+
                     <Button mnemonicParsing="false" onAction="#handleAgregarPaciente" text="Agregar paciente" maxWidth="Infinity"/>
                     <Button mnemonicParsing="false" onAction="#handleListarPacientes" text="Listar pacientes" maxWidth="Infinity"/>
+
+                    <!-- ======= NUEVA SECCIÓN: PAGOS / ENCUESTAS ======= -->
+                    <Separator prefWidth="200.0">
+                      <VBox.margin>
+                        <Insets bottom="10.0" top="15.0" />
+                      </VBox.margin>
+                    </Separator>
+
+                    <Label text="Pagos / Encuestas" style="-fx-font-weight: bold; -fx-font-size: 14px;">
+                      <VBox.margin>
+                        <Insets bottom="5.0" />
+                      </VBox.margin>
+                    </Label>
+
                     <!--<Button mnemonicParsing="false" onAction="#handlePagar" text="Pagar" maxWidth="Infinity"/>-->
                     <Button mnemonicParsing="false" onAction="#handlePagoEfectivo" text="Pagar en efectivo" maxWidth="Infinity"/>
+
                     <Button mnemonicParsing="false"
                             onAction="#handleEncuesta"
                             text="Responder Encuesta"
@@ -50,6 +67,7 @@
                                    -fx-font-weight: bold;
                                    -fx-background-radius: 10;" />
 
+                    <!-- ==================== PSICÓLOGOS ==================== -->
                     <Separator prefWidth="200.0">
                       <VBox.margin>
                         <Insets bottom="10.0" top="15.0" />
@@ -61,9 +79,11 @@
                         <Insets bottom="5.0" />
                       </VBox.margin>
                     </Label>
+
                     <Button mnemonicParsing="false" onAction="#handleAgregarPsicologo" text="Agregar psicólogo" maxWidth="Infinity"/>
                     <Button mnemonicParsing="false" onAction="#handleListarPsicologo" text="Listar psicólogos" maxWidth="Infinity"/>
                     
+                    <!-- ================= PERFIL DE CITAS ================== -->
                     <Separator prefWidth="200.0">
                       <VBox.margin>
                         <Insets bottom="10.0" top="15.0" />
@@ -75,8 +95,10 @@
                         <Insets bottom="5.0" />
                       </VBox.margin>
                     </Label>
+
                     <Button mnemonicParsing="false" onAction="#handlePerfilCitas" text="Consultar Perfiles" maxWidth="Infinity"/>
 
+                    <!-- ===================== SALIR ======================== -->
                     <Region VBox.vgrow="ALWAYS" />
 
                     <Separator prefWidth="200.0">
@@ -91,7 +113,7 @@
               </children>
             </AnchorPane>
 
-            <!-- PANEL DERECHO -->
+            <!-- PANEL DERECHO (igual que lo tenías) -->
             <AnchorPane minWidth="400.0">
               <children>
                 <BorderPane AnchorPane.bottomAnchor="30.0"

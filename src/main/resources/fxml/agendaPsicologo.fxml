@@ -6,36 +6,32 @@
 <VBox xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml"
       spacing="15" alignment="TOP_CENTER"
-      style="-fx-background-color: white;
-             -fx-padding: 25;
-             -fx-border-color: #c7d1ff;
-             -fx-border-width: 2;
-             -fx-border-radius: 10;
-             -fx-background-radius: 10;
-             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.20), 15, 0.2, 0, 0);">
+      stylesheets="@../css/style.css"
+      style="-fx-padding: 25;">
 
-    <Label text="Agenda del Psicólogo"
-           style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+    <VBox spacing="15" styleClass="content-card">
+        <Label text="Agenda del Psicólogo"
+               style="-fx-font-size: 24; -fx-font-weight: bold;"/>
 
-    <HBox spacing="10">
-        <Label text="Fecha:"/>
-        <DatePicker fx:id="datePicker" />
-        <Button text="Buscar"
-                onAction="#buscarPorFecha"
-                style="-fx-background-color: #4a6eff;
-                       -fx-font-weight:bold;
-                       -fx-text-fill: white;
-                       -fx-background-radius: 6;"/>
-    </HBox>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Fecha:"/>
+            <DatePicker fx:id="datePicker" />
+            <Button text="Buscar"
+                    onAction="#buscarPorFecha"
+                    style="-fx-font-weight:bold; -fx-text-fill: white;"/> 
+                    </HBox>
 
-    <TableView fx:id="tablaAgenda" prefHeight="400">
-        <columns>
-            <TableColumn fx:id="colHora" text="Hora" prefWidth="100"/>
-            <TableColumn fx:id="colPaciente" text="Paciente" prefWidth="200"/>
-            <TableColumn fx:id="colEstado" text="Estado" prefWidth="150"/>
-        </columns>
-    </TableView>
+        <TableView fx:id="tablaAgenda" prefHeight="400">
+            <columns>
+                <TableColumn fx:id="colHora" text="Hora" prefWidth="100"/>
+                <TableColumn fx:id="colPaciente" text="Paciente" prefWidth="200"/>
+                <TableColumn fx:id="colEstado" text="Estado" prefWidth="150"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
 
-    <Label fx:id="lblInfo"
-           style="-fx-text-fill: #4a4a4a; -fx-font-size: 14;"/>
+        <Label fx:id="lblInfo" style="-fx-font-size: 14;"/>
+    </VBox>
 </VBox>

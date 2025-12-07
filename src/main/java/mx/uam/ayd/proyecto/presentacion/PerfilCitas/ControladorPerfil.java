@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,39 +16,42 @@ import mx.uam.ayd.proyecto.presentacion.HistorialCitas.VentanaHistorialCitas;
 import mx.uam.ayd.proyecto.presentacion.menuPsicologo.VentanaMenuPsicologo;
 import mx.uam.ayd.proyecto.negocio.ServicioPerfilCitas;
 import mx.uam.ayd.proyecto.negocio.modelo.PerfilCitas;
-import java.util.List;
 
-/*
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
  * Controlador para la gestión de perfiles de citas.
  * Utiliza Spring para la inyección de dependencias y JavaFX para la interfaz gráfica.
- * Incluye funcionalidades para buscar, crear y ver el historial de citas de perfiles.
- * Maneja errores de manera robusta para asegurar una buena experiencia de usuario.
- * Configura la tabla de perfiles de manera segura, evitando errores si alguna columna no está definida en el FXML.
- * Proporciona mensajes informativos al usuario en caso de errores o resultados vacíos.
  */
 @Component
 public class ControladorPerfil {
 
     @FXML
     private TextField txtNombre;
-    
+
     @FXML
     private TextField txtTelefono;
-    
+
     @FXML
     private TableView<PerfilCitas> tablaResultados;
-    
+
     // Columnas (pueden ser null si no están en FXML)
     @FXML
     private TableColumn<PerfilCitas, String> colNombre;
+
     @FXML
     private TableColumn<PerfilCitas, Integer> colEdad;
+
     @FXML
     private TableColumn<PerfilCitas, String> colSexo;
+
     @FXML
     private TableColumn<PerfilCitas, String> colDireccion;
+
     @FXML
     private TableColumn<PerfilCitas, String> colOcupacion;
+
     @FXML
     private TableColumn<PerfilCitas, String> colTelefono;
 
@@ -56,34 +60,37 @@ public class ControladorPerfil {
 
     @Autowired
     private ServicioPerfilCitas servicioPerfilCitas;
-    
+
     @Autowired
     private VentanaHistorialCitas ventanaHistorialCitas;
 
-    @Autowired
+    /**
+     * Esta referencia es opcional y solo existe cuando se usa dentro del menú
+     * del psicólogo. No la usaremos para abrir el historial, para que el
+     * comportamiento sea igual en administrador y psicólogo.
+     */
+    @Autowired(required = false)
     private VentanaMenuPsicologo ventanaMenuPsicologo;
 
     /**
-     * Método initialize para configurar la tabla
+     * Método initialize para configurar la tabla.
      */
     @FXML
     public void initialize() {
-        System.out.println("ControladorPerfil inicializado");
-        System.out.println("VentanaHistorialCitas inyectada: " + (ventanaHistorialCitas != null));
-        
-        // Configurar tabla de manera segura
+        System.out.println("[ControladorPerfil] inicializado");
+        System.out.println("[ControladorPerfil] VentanaHistorialCitas inyectada: " + (ventanaHistorialCitas != null));
+        System.out.println("[ControladorPerfil] VentanaMenuPsicologo inyectada: " + (ventanaMenuPsicologo != null));
+        System.out.println("[ControladorPerfil] ServicioPerfilCitas inyectado: " + (servicioPerfilCitas != null));
+
         configurarTablaSegura();
-        
-        // Cargar todos los perfiles
         cargarTodosLosPerfiles();
     }
 
     /**
-     * Configura las columnas de la tabla de manera segura
+     * Configura las columnas de la tabla de manera segura.
      */
     private void configurarTablaSegura() {
         try {
-            // Configurar cada columna solo si no es null
             if (colNombre != null) {
                 colNombre.setCellValueFactory(new PropertyValueFactory<>("nombreCompleto"));
             }
@@ -102,28 +109,26 @@ public class ControladorPerfil {
             if (colTelefono != null) {
                 colTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
             }
-            
-            System.out.println("Tabla configurada correctamente");
-            
+
+            System.out.println("[ControladorPerfil] Tabla configurada correctamente");
+
         } catch (Exception e) {
-            System.err.println("Advertencia al configurar tabla: " + e.getMessage());
-            // No lanzamos excepción para permitir que la aplicación continúe
+            System.err.println("[ControladorPerfil] Advertencia al configurar tabla: " + e.getMessage());
         }
     }
 
     /**
-     * Carga todos los perfiles al iniciar
+     * Carga todos los perfiles al iniciar.
      */
     private void cargarTodosLosPerfiles() {
         try {
             List<PerfilCitas> perfiles = servicioPerfilCitas.obtenerTodosLosPerfiles();
             if (tablaResultados != null) {
                 tablaResultados.getItems().setAll(perfiles);
-                System.out.println("Perfiles cargados en tabla: " + perfiles.size());
+                System.out.println("[ControladorPerfil] Perfiles cargados en tabla: " + perfiles.size());
             }
         } catch (Exception e) {
-            System.err.println("Error al cargar perfiles: " + e.getMessage());
-            // En caso de error, mostrar tabla vacía
+            System.err.println("[ControladorPerfil] Error al cargar perfiles: " + e.getMessage());
             if (tablaResultados != null) {
                 tablaResultados.getItems().clear();
             }
@@ -132,123 +137,132 @@ public class ControladorPerfil {
     }
 
     /**
-     * Método para buscar perfiles de citas
+     * Método para buscar perfiles de citas.
      */
     @FXML
     public void buscarPerfiles() {
-        String nombre = txtNombre.getText().trim();
-        String telefono = txtTelefono.getText().trim();
-        
-        // Validar que al menos un campo tenga información
+        String nombre = txtNombre != null ? txtNombre.getText().trim() : "";
+        String telefono = txtTelefono != null ? txtTelefono.getText().trim() : "";
+
         if (nombre.isEmpty() && telefono.isEmpty()) {
             mostrarAlerta("Información", "Mostrando todos los perfiles registrados");
             cargarTodosLosPerfiles();
             return;
         }
-        
+
         try {
             List<PerfilCitas> resultados;
-            
+
             if (!nombre.isEmpty() && !telefono.isEmpty()) {
-                // Buscar por ambos criterios
-                resultados = servicioPerfilCitas.buscarPorNombre(nombre);
-                resultados.addAll(servicioPerfilCitas.buscarPorTelefono(telefono));
-                // Eliminar duplicados
-                resultados = resultados.stream().distinct().collect(java.util.stream.Collectors.toList());
+                List<PerfilCitas> porNombre = servicioPerfilCitas.buscarPorNombre(nombre);
+                List<PerfilCitas> porTelefono = servicioPerfilCitas.buscarPorTelefono(telefono);
+
+                resultados = porNombre;
+                resultados.addAll(porTelefono);
+
+                resultados = resultados.stream()
+                        .distinct()
+                        .collect(Collectors.toList());
+
             } else if (!nombre.isEmpty()) {
                 resultados = servicioPerfilCitas.buscarPorNombre(nombre);
             } else {
                 resultados = servicioPerfilCitas.buscarPorTelefono(telefono);
             }
-            
-            // Actualizar la tabla
+
             if (tablaResultados != null) {
                 tablaResultados.getItems().setAll(resultados);
             }
-            
+
             if (!resultados.isEmpty()) {
-                mostrarAlerta("Búsqueda completada", 
-                    "Se encontraron " + resultados.size() + " resultado(s)");
+                mostrarAlerta("Búsqueda completada",
+                        "Se encontraron " + resultados.size() + " resultado(s)");
             } else {
-                mostrarAlerta("Búsqueda completada", "No se encontraron resultados para los criterios especificados");
-                cargarTodosLosPerfiles(); // Recargar todos si no hay resultados
+                mostrarAlerta("Búsqueda completada",
+                        "No se encontraron resultados para los criterios especificados");
+                cargarTodosLosPerfiles();
             }
-            
+
         } catch (Exception e) {
             mostrarAlerta("Error", "Ocurrió un error durante la búsqueda: " + e.getMessage());
             e.printStackTrace();
-            cargarTodosLosPerfiles(); // Recargar todos en caso de error
+            cargarTodosLosPerfiles();
         }
     }
 
     /**
-     * Método para crear un nuevo perfil de citas
+     * Método para crear un nuevo perfil de citas.
      */
     @FXML
     public void crearNuevoPerfil() {
         try {
-            System.out.println("Abriendo ventana para crear nuevo perfil de citas...");
-            
+            System.out.println("[ControladorPerfil] Abriendo ventana para crear nuevo perfil de citas...");
+
             if (ventanaCrearPerfil != null) {
                 ventanaCrearPerfil.muestra();
-                // Recargar la tabla cuando se cierre la ventana de creación
                 cargarTodosLosPerfiles();
             } else {
                 mostrarAlerta("Error", "No se pudo acceder a la ventana de creación de perfiles");
             }
-            
+
         } catch (Exception e) {
             mostrarAlerta("Error", "No se pudo abrir la ventana de nuevo perfil: " + e.getMessage());
             e.printStackTrace();
         }
     }
-    
+
     /**
-    * Para ver el historial de citas de un perfil seleccionado
+     * Para ver el historial de citas de un perfil seleccionado.
+     * Ahora el comportamiento es el mismo para administrador y psicólogo:
+     * siempre se abre en una ventana independiente.
      */
     @FXML
     public void verHistorialCitas() {
         try {
-            PerfilCitas perfilSeleccionado = tablaResultados.getSelectionModel().getSelectedItem();
-            if (perfilSeleccionado != null) {
-                System.out.println("Abriendo historial para perfil: " + perfilSeleccionado.getNombreCompleto());
-                // Intentar mostrar embebido en la ventana principal y actualizar breadcrumb
-                if (ventanaHistorialCitas != null && ventanaMenuPsicologo != null) {
-                    try {
-                        javafx.scene.Parent vista = ventanaHistorialCitas.getVista(perfilSeleccionado);
-                        ventanaMenuPsicologo.actualizaBreadcrumb(java.util.List.of("Inicio", "Perfiles", "Historial"));
-                        ventanaMenuPsicologo.cargarVista(vista);
-                    } catch (Exception e) {
-                        // Fallback a ventana independiente si algo falla
-                        e.printStackTrace();
-                        ventanaHistorialCitas.mostrar(perfilSeleccionado);
-                    }
-                } else if (ventanaHistorialCitas != null) {
-                    ventanaHistorialCitas.mostrar(perfilSeleccionado);
-                } else {
-                    mostrarAlerta("Error", "No se pudo acceder al módulo de historial de citas");
-                }
-            } else {
-                mostrarAlerta("Información", "Seleccione un perfil de la tabla para ver su historial de citas");
+            PerfilCitas perfilSeleccionado = tablaResultados != null
+                    ? tablaResultados.getSelectionModel().getSelectedItem()
+                    : null;
+
+            if (perfilSeleccionado == null) {
+                mostrarAlerta("Información",
+                        "Seleccione un perfil de la tabla para ver su historial de citas");
+                return;
             }
+
+            System.out.println("[ControladorPerfil] Abriendo historial para perfil: "
+                    + perfilSeleccionado.getNombreCompleto());
+
+            if (ventanaHistorialCitas != null) {
+                // Siempre abrimos el historial como ventana independiente.
+                ventanaHistorialCitas.mostrar(perfilSeleccionado);
+            } else {
+                mostrarAlerta("Error",
+                        "No se pudo acceder al módulo de historial de citas");
+            }
+
         } catch (Exception e) {
-            mostrarAlerta("Error", "No se pudo abrir el historial: " + e.getMessage());
+            mostrarAlerta("Error",
+                    "No se pudo abrir el historial: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     /**
-     * Método para limpiar los campos de búsqueda
+     * Método para limpiar los campos de búsqueda.
      */
     @FXML
     public void limpiarCampos() {
-        if (txtNombre != null) txtNombre.clear();
-        if (txtTelefono != null) txtTelefono.clear();
-        cargarTodosLosPerfiles(); // Recargar todos los perfiles
+        if (txtNombre != null) {
+            txtNombre.clear();
+        }
+        if (txtTelefono != null) {
+            txtTelefono.clear();
+        }
+        cargarTodosLosPerfiles();
     }
 
     /**
-     * Método para mostrar alertas al usuario
+     * Método para mostrar alertas al usuario.
      */
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(AlertType.INFORMATION);

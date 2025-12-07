@@ -10,11 +10,12 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.util.List;
+
 import mx.uam.ayd.proyecto.presentacion.BreadcrumbController;
 import mx.uam.ayd.proyecto.presentacion.VentanaEncuesta;
-
 
 /**
  * Ventana (Vista) para el menú del Psicólogo.
@@ -29,8 +30,9 @@ public class VentanaMenuPsicologo {
 
     @FXML
     private FlowPane breadcrumbContainer;
+
     private BreadcrumbController breadcrumbController;
-    
+
     @FXML
     private StackPane contentArea; // Panel central para cargar otras vistas
 
@@ -38,29 +40,38 @@ public class VentanaMenuPsicologo {
         this.control = control;
     }
 
+    /**
+     * Indica si el contentArea ya fue inyectado por el FXML.
+     * Útil para evitar errores cuando se usa este componente desde otros menús.
+     */
+    public boolean isContentAreaReady() {
+        return contentArea != null;
+    }
+
     private void initializeUI() {
-        if (initialized) return;
-        
+        if (initialized) {
+            return;
+        }
+
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(this::initializeUI);
             return;
         }
-        
+
         try {
             stage = new Stage();
             stage.setTitle("Centro Psicológico - Menú Psicólogo");
-            
-            // --- APUNTA AL NUEVO FXML ---
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventanaMenuPsicologo.fxml"));
             loader.setController(this);
-            
+
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
             stage.setScene(scene);
-            
+
             stage.setMinWidth(950);
             stage.setMinHeight(700);
-            
+
             cargarBreadcrumb();
             initialized = true;
         } catch (IOException e) {
@@ -75,6 +86,9 @@ public class VentanaMenuPsicologo {
             Node breadcrumbNode = loader.load();
             breadcrumbController = loader.getController();
             breadcrumbContainer.getChildren().add(breadcrumbNode);
+
+            // Ruta inicial
+            actualizaBreadcrumb(List.of("Inicio"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,10 +123,12 @@ public class VentanaMenuPsicologo {
                 }
 
                 // Actualizar breadcrumb a la ruta inicial
-                actualizaBreadcrumb(java.util.List.of("Inicio"));
+                actualizaBreadcrumb(List.of("Inicio"));
             } catch (IOException e) {
                 e.printStackTrace();
-                if (contentArea != null) contentArea.getChildren().clear();
+                if (contentArea != null) {
+                    contentArea.getChildren().clear();
+                }
             }
         }
     }
@@ -123,61 +139,6 @@ public class VentanaMenuPsicologo {
             contentArea.getChildren().setAll(vista);
         } else {
             System.err.println("Error: contentArea no fue inyectado por FXML.");
-        }
-    }
-
-    
-    @FXML
-    private void handleAgregarPaciente() {
-        if (control != null) {
-            control.agregarPaciente();
-        }
-    }
-    
-    @FXML
-    private void handleListarPacientes() {
-        if (control != null) {
-            control.listarPacientes();
-        }
-    }
-
-    @FXML
-    private void handleEncuesta() {
-        VentanaEncuesta ventana = new VentanaEncuesta();
-        ventana.mostrarEncuesta();
-    }
-
-    @FXML
-    private void handlePerfilCitas() {
-        if (control != null) {
-            control.consultarPerfilCitas();
-        }
-    }
-    
-    @FXML
-    private void handleEjerciciosRespiracion() {
-        if (control != null) {
-            control.ejerciciosRespiracion();
-        }
-    }
-
-    @FXML
-private void handleMaterialDidactico() {
-    if (control != null) {
-        control.mostrarMaterialDidactico();
-    }
-}
-    @FXML
-    private void handleHorario() {
-        if (control != null) {
-            control.horario();
-        }
-    }
-
-    @FXML
-    private void handleAgendaPsicologo() {
-        if (control != null) {
-            control.abrirAgendaPsicologo();
         }
     }
 
@@ -199,13 +160,67 @@ private void handleMaterialDidactico() {
         }
     }
 
-    
+    // ================== HANDLERS DE BOTONES DEL MENÚ ==================
+
+    @FXML
+    private void handleAgregarPaciente() {
+        if (control != null) {
+            control.agregarPaciente();
+        }
+    }
+
+    @FXML
+    private void handleListarPacientes() {
+        if (control != null) {
+            control.listarPacientes();
+        }
+    }
+
+    @FXML
+    private void handleEncuesta() {
+        VentanaEncuesta ventana = new VentanaEncuesta();
+        ventana.mostrarEncuesta();
+    }
+
+    @FXML
+    private void handlePerfilCitas() {
+        if (control != null) {
+            control.consultarPerfilCitas();
+        }
+    }
+
+    @FXML
+    private void handleEjerciciosRespiracion() {
+        if (control != null) {
+            control.ejerciciosRespiracion();
+        }
+    }
+
+    @FXML
+    private void handleMaterialDidactico() {
+        if (control != null) {
+            control.mostrarMaterialDidactico();
+        }
+    }
+
+    @FXML
+    private void handleHorario() {
+        if (control != null) {
+            control.horario();
+        }
+    }
+
+    @FXML
+    private void handleAgendaPsicologo() {
+        if (control != null) {
+            control.abrirAgendaPsicologo();
+        }
+    }
+
     @FXML
     private void handleSalir() {
         if (control != null) {
             control.salir();
         }
     }
-    
-
 }

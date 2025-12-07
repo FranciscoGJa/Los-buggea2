@@ -38,10 +38,10 @@ public class ControlMenuPsicologo {
     private ControlAgregarPaciente controlAgregarPaciente;
 
     @Autowired
-    private VentanaPelfil ventanaPelfil; // Para "Consultar Perfiles de Citas"
+    private VentanaPelfil ventanaPelfil; // Ventana de "Consultar Perfiles de Citas"
 
     @Autowired
-    private VentanaAgendaPsicologo ventanaAgendaPsicologo; // Nueva ventana para la agenda
+    private VentanaAgendaPsicologo ventanaAgendaPsicologo; // Ventana para la agenda
 
     @Autowired
     private ControlHorario ventanaHorario; // Control para el horario
@@ -66,28 +66,39 @@ public class ControlMenuPsicologo {
         ventana.muestra();
     }
 
-    // --- Funciones permitidas ---
+    // -------------------------------------------------------------------------
+    // FUNCIONES DISPONIBLES EN EL MENÚ DEL PSICÓLOGO
+    // -------------------------------------------------------------------------
 
+    /**
+     * Abre la vista para agregar un nuevo paciente.
+     */
     public void agregarPaciente() {
         ventana.actualizaBreadcrumb(List.of("Inicio", "Pacientes", "Agregar Paciente"));
         controlAgregarPaciente.inicia();
         ventana.cargarVista(controlAgregarPaciente.getVista());
     }
 
+    /**
+     * Muestra la lista de pacientes del psicólogo.
+     */
     public void listarPacientes() {
         ventana.actualizaBreadcrumb(List.of("Inicio", "Pacientes", "Listar Pacientes"));
         controlListarPacientes.inicia();
         ventana.cargarVista(controlListarPacientes.getVista());
     }
 
+    /**
+     * Abre la ventana de consulta de perfiles de citas.
+     * Ahora usa la misma lógica que el menú de administrador (ventana independiente).
+     */
     public void consultarPerfilCitas() {
         try {
-            Parent vista = ventanaPelfil.getVista();
-            ventana.actualizaBreadcrumb(List.of("Inicio", "Perfiles", "Consultar"));
-            ventana.cargarVista(vista);
+            // Abrimos la misma ventana que el administrador
+            // para evitar errores en la carga de la tabla o estilos.
+            ventanaPelfil.muestra();
         } catch (Exception e) {
             e.printStackTrace();
-            ventanaPelfil.muestra(); // fallback a la forma anterior
         }
     }
 
@@ -99,7 +110,7 @@ public class ControlMenuPsicologo {
     }
 
     /**
-     * Muestra ejercicios de respiración en una vista incrustada.
+     * Muestra ejercicios de respiración (PDF) dentro del panel central o en ventana aparte.
      */
     public void ejerciciosRespiracion() {
         try {
@@ -108,8 +119,7 @@ public class ControlMenuPsicologo {
             ventana.cargarVista(vista);
         } catch (Exception e) {
             e.printStackTrace();
-            // Fallback: mostrar en ventana independiente
-            ventanaPDF.muestra();
+            ventanaPDF.muestra(); // Fallback: abrir en nueva ventana
         }
     }
 
@@ -121,28 +131,26 @@ public class ControlMenuPsicologo {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ventana-GestionRecursos.fxml"));
             loader.setControllerFactory(context::getBean);
 
-            // Carga la UI como un Parent para insertarlo en el contentArea de la misma ventana
             Parent root = loader.load();
 
-            // Si el controlador necesita contexto (ej. id del psicólogo), se lo pasamos
+            // Pasar el ID del psicólogo si el controlador lo requiere
             Object controller = loader.getController();
             if (controller != null && psicologoLogueado != null) {
                 try {
-                    controller.getClass().getMethod("setIdPsicologo", int.class)
-                              .invoke(controller, psicologoLogueado.getId());
+                    controller.getClass()
+                            .getMethod("setIdPsicologo", int.class)
+                            .invoke(controller, psicologoLogueado.getId());
                 } catch (NoSuchMethodException nsme) {
-                    // El controlador no requiere el id, ignorar
+                    // El controlador no requiere el ID, se ignora
                 }
             }
 
-            // Actualizar breadcrumb y cargar la vista en el panel central
             ventana.actualizaBreadcrumb(List.of("Inicio", "Material Didáctico", "Gestión"));
             ventana.cargarVista(root);
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
-            // Captura reflectiva u otros errores al invocar setIdPsicologo
             e.printStackTrace();
         }
     }
@@ -157,13 +165,14 @@ public class ControlMenuPsicologo {
 
     /**
      * Devuelve el psicólogo actualmente autenticado.
-     * @return el psicólogo logueado
      */
     public Psicologo getPsicologo() {
         return psicologoLogueado;
     }
 
-    // --- Salir ---
+    /**
+     * Cierra la aplicación (salida completa).
+     */
     public void salir() {
         System.exit(0);
     }
